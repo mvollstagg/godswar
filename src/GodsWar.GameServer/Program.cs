@@ -1,12 +1,16 @@
 ﻿using GodsWar.Database;
-using GodsWar.Database.Models;
-using GodsWar.Database.Repositories;
+using GodsWar.GameServer;
+using GodsWar.GameServer.Auth;
+using GodsWar.GameServer.Network;
+using GodsWar.GameServer.World;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 
 HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
+
+builder.Services.Configure<GameServerOptions>(
+    builder.Configuration.GetSection(GameServerOptions.SectionName));
 
 builder.Services.AddGodsWarDatabase(opts =>
 {
@@ -18,28 +22,11 @@ builder.Services.AddGodsWarDatabase(opts =>
     }
 });
 
-builder.Services.AddHostedService<GameServerWorker>();
+builder.Services.AddSingleton<ValidationTokenStore>();
+builder.Services.AddSingleton<WorldManager>();
+builder.Services.AddSingleton<GameSessionHandler>();
+builder.Services.AddHostedService<LoginServerClient>();
+builder.Services.AddHostedService<GameServerListener>();
 
 using IHost host = builder.Build();
 await host.RunAsync();
-
-internal sealed class GameServerWorker(
-    ILogger<GameServerWorker> logger,
-    ICharacterRepository characterRepository,
-    IConfiguration configuration) : BackgroundService
-{
-    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
-    {
-        int port = configuration.GetValue("GameServer:Port", 6001);
-        logger.LogInformation("GodsWar.GameServer (Phase 1 scaffold) starting on port {Port}...", port);
-
-        CharacterBase? seeded = await characterRepository.GetCharacterByIdAsync(3795, stoppingToken);
-        logger.LogInformation(
-            "PostgreSQL connected: seeded character 3795 = {Name} (Account={Account}, Map={Map}).",
-            seeded?.Name ?? "<none>",
-            seeded?.Accounts ?? "<none>",
-            seeded?.Map ?? 0);
-
-        await Task.Delay(Timeout.Infinite, stoppingToken);
-    }
-}

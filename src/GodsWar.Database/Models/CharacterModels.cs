@@ -50,3 +50,28 @@ public sealed class CharacterKitbag
     public string? Storage { get; set; }
     public string? Equip { get; set; }
 }
+
+public sealed record CreateCharacterParams(
+    string Account,
+    string Name,
+    string Gender,
+    short Camp,
+    short Profession,
+    short Belief,
+    short HairStyle,
+    short FaceShap,
+    short Map,
+    float PosX,
+    float PosZ,
+    int MaxHp,
+    int MaxMp);
+
+public enum CreateCharacterStatus
+{
+    Success = 1,
+    NameTooLong = 2,
+    DuplicateName = 5,
+    LimitReached = 4,
+}
+
+public sealed record CreateCharacterResult(CreateCharacterStatus Status, CharacterBase? Character);

@@ -57,14 +57,14 @@ src/
   3. Support clean session handoff / token validation with `GameServer`.
 - **Verified:** `GodsWar.Protocol/Packets/LoginPackets.cs` (`MSG_LOGIN` 72B/140B, `MSG_LOGIN_RETURN_INFO` opcode `3`/`2`, `MSG_GAMESERVER_INFO` 78B/76B, `MSG_REQUEST_GAMESERVER` `3`/`4`, `MSG_VALIDATE_GAMESERVER` `300`, `MSG_RESPONSE_GAMESERVER` `10001`), `GodsWar.LoginServer` (`LoginServerListener`, `LoginSessionHandler`, `GameServerRegistry`), `dotnet build` + `dotnet test` (21/21 passing), and live `login_probe.py --test --account test --password test --version 1000270` (plus `test2`/`123456` and invalid password `0x00` check) against `GodsWar.LoginServer` + PostgreSQL + `6001` validation stub.
 
-### Phase 3 â€” `GameServer` Core: Character Select, World Entry & Movement
+### Phase 3 — `GameServer` Core: Character Select, World Entry & Movement ✅
 - **Goal:** Replace `GameServer.exe` for login-to-world spawn, NPC/mob visibility, and walking around.
 - **Tasks:**
   1. Port `GameServer` TCP listener (port `6001`), session management, and character list / create / delete (`10002`, `10006`, etc.) backed by PostgreSQL.
   2. Load scene/map metadata, NPC spawns (`NPC00.INI` + `gw_npc_map.py` US name resolution), and Monster spawns (`Monster.ini`) from `GW 2.0/Server Files (Compiled)/Scene/`.
   3. Implement exact `1.0.282` world-entry packets (`10019 MSG_SELFINFO`, `10005` ready handshake, `10031 MSG_KITBAG`, `10041 MSG_SELFPROPERTY`, `10160 MSG_SYN_GAMEDATA`, `10020 MSG_OBJECTINFO`, `10074/10077` skills, `10040/10039` altars/relations).
   4. Implement spatial grid / AOI broadcasting, player movement (`10187`), and heartbeat (`10015`, `10303`).
-- **Done when:** `Client/play.cmd` logs in with `test / test`, enters `Athens' Suburb`, renders NPCs/monsters with English names and proper stats/level, and walks smoothly with no `"Loading..."` hang.
+- **Verified:** `GodsWar.Protocol/Packets/GamePackets.cs` (`10000`, `10002` 356B, `10003`/`10004`/`10158`, `10006`/`10005`/`10007`, `10019` 1192B, `10031` 888B, `10041` 132B, `10160` 236B, `10020` 628B+, `10021`, `10039`/`10040`, `10093`/`10156`, `10187` 20B, `10303` 16B), `GodsWar.Database` character create/delete/position/skills repositories, `GodsWar.GameServer` (`LoginServerClient`, `ValidationTokenStore`, `WorldDataLoader`, `NpcNameResolver`, `WorldMap` 16x16 AOI grid with walk self-echo suppression, `GameSessionHandler`, `GameServerListener`), `dotnet build` + `dotnet test` (31/31 passing), and live `login_probe.py --test --account test --password test --version 1000270` + E2E character create/enter/ready/walk/delete probe (`npcs=13`, `monsters=12`, `Athens_Newbie_013_MaleHero2`, zero walk self-echo) against `GodsWar.LoginServer` + `GodsWar.GameServer` + PostgreSQL.
 
 ### Phase 4 â€” Combat, Monster AI, Stats, Drops & Inventory
 - **Goal:** Playable combat loop, monster AI, leveling, loot, and equipment.
