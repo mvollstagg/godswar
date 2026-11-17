@@ -21,3 +21,7 @@ NewClient/
 # local build/probe logs
 gw-*.log
 client-commit.log
+
+# .NET build outputs
+src/**/bin/
+src/**/obj/

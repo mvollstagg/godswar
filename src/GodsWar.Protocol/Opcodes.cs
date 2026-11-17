@@ -8,8 +8,9 @@ public enum LoginOpcode : ushort
 {
     MsgLogin = 1,
     MsgLoginReturnInfoLegacy = 2,
-    MsgLoginReturnInfo = 3,       // 1.0.282 US client reply
-    MsgRequestGameServer = 4,     // 1.0.282 US client request
+    MsgLoginReturnInfo = 3,          // S2C: 1.0.282 US client reply
+    MsgRequestGameServerLegacy = 3,  // C2S: 1.0.145 / login_probe.py request
+    MsgRequestGameServer = 4,        // C2S: 1.0.282 US client request
     MsgValidateGameServer = 300,
     MsgLoginGameServer = 10000,
     MsgResponseGameServer = 10001,

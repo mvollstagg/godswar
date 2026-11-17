@@ -21,6 +21,7 @@
   <ItemGroup>
     <ProjectReference Include="..\GodsWar.Protocol\GodsWar.Protocol.csproj" />
     <ProjectReference Include="..\GodsWar.Database\GodsWar.Database.csproj" />
+    <ProjectReference Include="..\GodsWar.LoginServer\GodsWar.LoginServer.csproj" />
   </ItemGroup>
 
 </Project>

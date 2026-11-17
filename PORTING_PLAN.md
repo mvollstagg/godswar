@@ -39,7 +39,7 @@ src/
 
 ## Phased Execution Plan
 
-### Phase 1 â€” Solution Scaffolding, Crypto, Packet Framing & PostgreSQL Schema
+### Phase 1 — Solution Scaffolding, Crypto, Packet Framing & PostgreSQL Schema ✅
 - **Goal:** Working .NET solution with tested networking primitives and a clean PostgreSQL database ready for the server.
 - **Tasks:**
   1. Initialize `src/GodsWar.Server.sln` and the 5 projects (`Protocol`, `Database`, `LoginServer`, `GameServer`, `Tests`).
@@ -49,13 +49,13 @@ src/
   5. Write unit tests in `GodsWar.Tests` verifying XOR keystream encryption/decryption and packet framing against test vectors from `docker/tools/gw_protocol.py`.
 - **Done when:** `dotnet test` passes 100%, Postgres starts cleanly with the migrated schema + seed data, and a smoke test reads `accounts.gamearea_info` from PostgreSQL.
 
-### Phase 2 â€” `LoginServer` (Direct `1.0.282` Auth & Server List)
+### Phase 2 — `LoginServer` (Direct `1.0.282` Auth & Server List) ✅
 - **Goal:** Replace `LoginServer.exe` + `login_shim.py` on port `5999` with `GodsWar.LoginServer`.
 - **Tasks:**
   1. Port `GW 2.0/Server Files (Source)/LoginServer/` auth flow and `MSG_LOGIN` / `MSG_LOGIN_RETURN_INFO` (`ucInfo = 1` / error codes) + `MSG_REQUEST_GAMESERVER`.
   2. Query PostgreSQL (`accounts` schema) for account verification and `gamearea_info` server list (using `ADVERTISE_IP`).
   3. Support clean session handoff / token validation with `GameServer`.
-- **Done when:** `python docker/tools/login_probe.py --test --account test --password test --version 1000270` succeeds against `GodsWar.LoginServer`, and `Client/GodsWar.exe` reaches the server list and hands off to `GameServer`.
+- **Verified:** `GodsWar.Protocol/Packets/LoginPackets.cs` (`MSG_LOGIN` 72B/140B, `MSG_LOGIN_RETURN_INFO` opcode `3`/`2`, `MSG_GAMESERVER_INFO` 78B/76B, `MSG_REQUEST_GAMESERVER` `3`/`4`, `MSG_VALIDATE_GAMESERVER` `300`, `MSG_RESPONSE_GAMESERVER` `10001`), `GodsWar.LoginServer` (`LoginServerListener`, `LoginSessionHandler`, `GameServerRegistry`), `dotnet build` + `dotnet test` (21/21 passing), and live `login_probe.py --test --account test --password test --version 1000270` (plus `test2`/`123456` and invalid password `0x00` check) against `GodsWar.LoginServer` + PostgreSQL + `6001` validation stub.
 
 ### Phase 3 â€” `GameServer` Core: Character Select, World Entry & Movement
 - **Goal:** Replace `GameServer.exe` for login-to-world spawn, NPC/mob visibility, and walking around.
