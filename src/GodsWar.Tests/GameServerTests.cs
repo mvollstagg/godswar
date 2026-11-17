@@ -93,7 +93,11 @@ public class GameServerTests
 
         var options = Options.Create(new GameServerOptions());
         var worldManager = new WorldManager(options, NullLogger<WorldManager>.Instance);
-        var handler = new GameSessionHandler(repo, tokenStore, worldManager, NullLogger<GameSessionHandler>.Instance);
+        var gameplay = new GodsWar.GameServer.Game.GameplayHandlers(
+            worldManager,
+            repo,
+            NullLogger<GodsWar.GameServer.Game.GameplayHandlers>.Instance);
+        var handler = new GameSessionHandler(repo, tokenStore, worldManager, gameplay, NullLogger<GameSessionHandler>.Instance);
 
         await using var link = DuplexPipeStream.CreatePair();
         await using var serverConn = new PacketConnection(link.ServerStream, encrypted: false);
@@ -157,7 +161,7 @@ public class GameServerTests
             var pkt = await clientConn.ReadPacketAsync(ct);
             Assert.NotNull(pkt);
             receivedOpcodes.Add(pkt.Value.Opcode);
-            if (pkt.Value.Opcode == (ushort)GameOpcode.MsgAltarInfo)
+            if (pkt.Value.Opcode == (ushort)GameOpcode.MsgParamater)
             {
                 break;
             }
@@ -170,6 +174,7 @@ public class GameServerTests
         Assert.Contains((ushort)GameOpcode.MsgActiveSkillInfo, receivedOpcodes);
         Assert.Contains((ushort)GameOpcode.MsgRelationAll, receivedOpcodes);
         Assert.Contains((ushort)GameOpcode.MsgAltarInfo, receivedOpcodes);
+        Assert.Contains((ushort)GameOpcode.MsgParamater, receivedOpcodes);
 
         // 5. Heartbeat ping (10015) and ServerTime (10303)
         await clientConn.SendPacketAsync((ushort)GameOpcode.MsgHeartbeatPing, new byte[] { 1, 2, 3, 4 }, ct);
@@ -299,6 +304,15 @@ public class GameServerTests
             PositionSaveCount++;
             return Task.CompletedTask;
         }
+
+        public Task UpdateCharacterStateAsync(CharacterBase character, CancellationToken ct = default)
+        {
+            PositionSaveCount++;
+            return Task.CompletedTask;
+        }
+
+        public Task UpdateKitbagAsync(int userId, string kitbag1, string? kitbag2, string? kitbag3, string? kitbag4, string equip, CancellationToken ct = default)
+            => Task.CompletedTask;
     }
 
     private sealed class DuplexPipeStream : Stream, IAsyncDisposable

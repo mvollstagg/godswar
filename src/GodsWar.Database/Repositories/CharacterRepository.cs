@@ -15,6 +15,8 @@ public interface ICharacterRepository
     Task<CreateCharacterResult> CreateCharacterAsync(CreateCharacterParams request, CancellationToken cancellationToken = default);
     Task<bool> DeleteCharacterAsync(string account, string name, CancellationToken cancellationToken = default);
     Task UpdateCharacterPositionAsync(int id, short map, float posX, float posZ, CancellationToken cancellationToken = default);
+    Task UpdateCharacterStateAsync(CharacterBase character, CancellationToken cancellationToken = default);
+    Task UpdateKitbagAsync(int userId, string kitbag1, string? kitbag2, string? kitbag3, string? kitbag4, string equip, CancellationToken cancellationToken = default);
 }
 
 public sealed class CharacterRepository : ICharacterRepository
@@ -243,6 +245,62 @@ public sealed class CharacterRepository : ICharacterRepository
         await using DbConnection conn = await _connectionFactory.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
         await conn.ExecuteAsync(
             new CommandDefinition(sql, new { Id = id, Map = map, PosX = posX, PosZ = posZ }, cancellationToken: cancellationToken)
+        ).ConfigureAwait(false);
+    }
+
+    public async Task UpdateCharacterStateAsync(CharacterBase character, CancellationToken cancellationToken = default)
+    {
+        const string sql = """
+            UPDATE godswar.character_base
+            SET fighter_job_lv = @FighterJobLv,
+                scholar_job_lv = @ScholarJobLv,
+                fighter_job_exp = @FighterJobExp,
+                scholar_job_exp = @ScholarJobExp,
+                cur_hp = @CurHp,
+                cur_mp = @CurMp,
+                max_hp = @MaxHp,
+                max_mp = @MaxMp,
+                map = @Map,
+                pos_x = @PosX,
+                pos_z = @PosZ,
+                money = @Money,
+                skill_point = @SkillPoint,
+                skill_exp = @SkillExp,
+                last_login_time = NOW()
+            WHERE id = @Id;
+            """;
+
+        await using DbConnection conn = await _connectionFactory.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
+        await conn.ExecuteAsync(
+            new CommandDefinition(sql, character, cancellationToken: cancellationToken)
+        ).ConfigureAwait(false);
+    }
+
+    public async Task UpdateKitbagAsync(
+        int userId,
+        string kitbag1,
+        string? kitbag2,
+        string? kitbag3,
+        string? kitbag4,
+        string equip,
+        CancellationToken cancellationToken = default)
+    {
+        const string sql = """
+            UPDATE godswar.character_kitbag
+            SET kitbag_1 = @Kitbag1,
+                kitbag_2 = @Kitbag2,
+                kitbag_3 = @Kitbag3,
+                kitbag_4 = @Kitbag4,
+                equip = @Equip
+            WHERE user_id = @UserId;
+            """;
+
+        await using DbConnection conn = await _connectionFactory.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
+        await conn.ExecuteAsync(
+            new CommandDefinition(
+                sql,
+                new { UserId = userId, Kitbag1 = kitbag1, Kitbag2 = kitbag2, Kitbag3 = kitbag3, Kitbag4 = kitbag4, Equip = equip },
+                cancellationToken: cancellationToken)
         ).ConfigureAwait(false);
     }
 }

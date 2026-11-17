@@ -39,7 +39,14 @@ public sealed record MonsterSpawnData(
     float Z,
     float Atan2,
     byte Faction,
-    int RefreshTimeSeconds);
+    int RefreshTimeSeconds,
+    byte Mode = 0,
+    int MoveTime = 0,
+    int DropNum = 0,
+    int DropProbability = 0,
+    int ConfirmDropNum = 0,
+    int ConfirmProbability = 0,
+    string ConfirmItemTable = "NULL");
 
 public sealed record LoadedWorldData(
     IReadOnlyList<SceneDefinition> Scenes,
@@ -248,7 +255,16 @@ public static class WorldDataLoader
                 hpMult = tpl.HpMultiplier > 0 ? tpl.HpMultiplier : 1.0f;
             }
 
-            uint maxHp = (uint)Math.Max(80, (int)MathF.Round(level * 50f * hpMult));
+            int tableHp = GodsWar.GameServer.Game.GameTables.GetMonsterMaxHp((int)level);
+            uint maxHp = (uint)Math.Max(80, (int)MathF.Round(tableHp * hpMult));
+            byte mode = byte.TryParse(kv.GetValueOrDefault("Mode"), out byte m) ? m : (byte)0;
+            int moveTime = int.TryParse(kv.GetValueOrDefault("MoveTime"), out int mt) ? mt : 0;
+            int dropNum = int.TryParse(kv.GetValueOrDefault("DropNum"), out int dn) ? dn : 0;
+            int dropProb = int.TryParse(kv.GetValueOrDefault("DropProbability"), out int dp) ? dp : 0;
+            int confirmDropNum = int.TryParse(kv.GetValueOrDefault("ConfimDropNum"), out int cdn) ? cdn : 0;
+            int confirmProb = int.TryParse(kv.GetValueOrDefault("ConfimProbability"), out int cp) ? cp : 0;
+            string confirmTable = kv.GetValueOrDefault("ConfimItemTable", "NULL").Trim();
+
             monsters.Add(new MonsterSpawnData(
                 nextMonsterId++,
                 mapId,
@@ -259,7 +275,14 @@ public static class WorldDataLoader
                 z,
                 atan2,
                 faction,
-                refreshTime));
+                refreshTime,
+                mode,
+                moveTime,
+                dropNum,
+                dropProb,
+                confirmDropNum,
+                confirmProb,
+                confirmTable));
         }
 
         return monsters;

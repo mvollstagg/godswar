@@ -66,13 +66,13 @@ src/
   4. Implement spatial grid / AOI broadcasting, player movement (`10187`), and heartbeat (`10015`, `10303`).
 - **Verified:** `GodsWar.Protocol/Packets/GamePackets.cs` (`10000`, `10002` 356B, `10003`/`10004`/`10158`, `10006`/`10005`/`10007`, `10019` 1192B, `10031` 888B, `10041` 132B, `10160` 236B, `10020` 628B+, `10021`, `10039`/`10040`, `10093`/`10156`, `10187` 20B, `10303` 16B), `GodsWar.Database` character create/delete/position/skills repositories, `GodsWar.GameServer` (`LoginServerClient`, `ValidationTokenStore`, `WorldDataLoader`, `NpcNameResolver`, `WorldMap` 16x16 AOI grid with walk self-echo suppression, `GameSessionHandler`, `GameServerListener`), `dotnet build` + `dotnet test` (31/31 passing), and live `login_probe.py --test --account test --password test --version 1000270` + E2E character create/enter/ready/walk/delete probe (`npcs=13`, `monsters=12`, `Athens_Newbie_013_MaleHero2`, zero walk self-echo) against `GodsWar.LoginServer` + `GodsWar.GameServer` + PostgreSQL.
 
-### Phase 4 â€” Combat, Monster AI, Stats, Drops & Inventory
+### Phase 4 — Combat, Monster AI, Stats, Drops & Inventory ✅
 - **Goal:** Playable combat loop, monster AI, leveling, loot, and equipment.
 - **Tasks:**
   1. Port `Combat.cpp`, `Buff.cpp`, `GameObject.cpp`, `DropItemMgr.cpp`, `Bag.cpp`, and `Item.cpp` from `GW 2.0/Server Files (Source)/GameServer/GameCore/`.
   2. Implement monster AI loop (idle, patrol, aggro, chase, attack, death, respawn timer).
   3. Implement damage calculation, XP/level-up, skill casting & cooldowns, buff/debuff ticks, ground loot drops, pickup, equip/unequip, and DB persistence.
-- **Done when:** A player can fight monsters, take/deal damage, cast skills, gain XP/level up, pick up/equip items, and persist state across relogs.
+- **Verified:** `GodsWar.Protocol/Packets/CombatPackets.cs` & `InventoryPackets.cs` (`10023`–`10028`, `10037`–`10038`, `10042`–`10045`, `10048`–`10050`, `10056`, `10129`, `10161`), `GodsWar.Database` (`UpdateCharacterStateAsync`, `UpdateKitbagAsync`), `GodsWar.GameServer/Game/` (`GameTables` 200-level tables from `Mat.cpp`, `GameDataCatalog` loading `ItemBaseAttribute.xml`/`ItemAppendAttribute.xml`/`Magic.ini`/`Status.ini`/`Drop*.ini`, `CombatCalculator`, `MonsterEntity`, `GameplayHandlers`, `WorldSimulationService` 200ms AI/buff/regen loop), `dotnet build src/GodsWar.Server.sln` + `dotnet test src/GodsWar.Server.sln` (37/37 passing), and live E2E probe against `GodsWar.LoginServer` + `GodsWar.GameServer` + PostgreSQL (skill cast `10038`->`10044`/`10129`/`10043`, combat kill `10024`->`10025`, drop `10027` + pickup `10048`, and XP/money persistence across relog).
 
 ### Phase 5 â€” NPCs, Quests, Shops, Forging, Portals & Social Systems
 - **Goal:** Full core RPG world systems.

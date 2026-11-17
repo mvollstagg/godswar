@@ -1,6 +1,7 @@
 using GodsWar.Database.Models;
 using GodsWar.Database.Repositories;
 using GodsWar.GameServer.Auth;
+using GodsWar.GameServer.Game;
 using GodsWar.GameServer.World;
 using GodsWar.Protocol;
 using GodsWar.Protocol.Packets;
@@ -13,17 +14,20 @@ public sealed class GameSessionHandler
     private readonly ICharacterRepository _characterRepository;
     private readonly ValidationTokenStore _tokenStore;
     private readonly WorldManager _worldManager;
+    private readonly GameplayHandlers _gameplay;
     private readonly ILogger<GameSessionHandler> _logger;
 
     public GameSessionHandler(
         ICharacterRepository characterRepository,
         ValidationTokenStore tokenStore,
         WorldManager worldManager,
+        GameplayHandlers gameplay,
         ILogger<GameSessionHandler> logger)
     {
         _characterRepository = characterRepository;
         _tokenStore = tokenStore;
         _worldManager = worldManager;
+        _gameplay = gameplay;
         _logger = logger;
     }
 
@@ -85,7 +89,7 @@ public sealed class GameSessionHandler
                         break;
 
                     case GameOpcode.MsgWalk:
-                        if (player is not null && player.InWorld)
+                        if (player is not null && player.InWorld && !player.IsDead)
                         {
                             MsgWalk walk = MsgWalk.Parse(payload);
                             WorldMap? map = _worldManager.GetMap(player.MapId);
@@ -93,6 +97,62 @@ public sealed class GameSessionHandler
                             {
                                 await map.MoveAsync(player, walk.X, walk.Z, walk.Atan2, walk.State, cancellationToken).ConfigureAwait(false);
                             }
+                        }
+                        break;
+
+                    case GameOpcode.MsgFight:
+                        if (player is not null && player.InWorld)
+                        {
+                            await _gameplay.HandleFightAsync(player, payload, cancellationToken).ConfigureAwait(false);
+                        }
+                        break;
+
+                    case GameOpcode.MsgAttack:
+                        if (player is not null && player.InWorld)
+                        {
+                            await _gameplay.HandleAttackAsync(player, payload, cancellationToken).ConfigureAwait(false);
+                        }
+                        break;
+
+                    case GameOpcode.MsgSkill:
+                        if (player is not null && player.InWorld)
+                        {
+                            await _gameplay.HandleSkillAsync(player, payload, cancellationToken).ConfigureAwait(false);
+                        }
+                        break;
+
+                    case GameOpcode.MsgBackHome:
+                        if (player is not null && player.InWorld)
+                        {
+                            await _gameplay.HandleBackHomeAsync(player, payload, cancellationToken).ConfigureAwait(false);
+                        }
+                        break;
+
+                    case GameOpcode.MsgPickupDrops:
+                        if (player is not null && player.InWorld)
+                        {
+                            await _gameplay.HandlePickupDropsAsync(player, payload, cancellationToken).ConfigureAwait(false);
+                        }
+                        break;
+
+                    case GameOpcode.MsgUseOrEquip:
+                        if (player is not null && player.InWorld)
+                        {
+                            await _gameplay.HandleUseOrEquipAsync(player, payload, cancellationToken).ConfigureAwait(false);
+                        }
+                        break;
+
+                    case GameOpcode.MsgMoveItem:
+                        if (player is not null && player.InWorld)
+                        {
+                            await _gameplay.HandleMoveItemAsync(player, payload, cancellationToken).ConfigureAwait(false);
+                        }
+                        break;
+
+                    case GameOpcode.MsgBreakItem:
+                        if (player is not null && player.InWorld)
+                        {
+                            await _gameplay.HandleBreakItemAsync(player, payload, cancellationToken).ConfigureAwait(false);
                         }
                         break;
 
@@ -317,6 +377,10 @@ public sealed class GameSessionHandler
         List<PassiveSkillEntry> passiveSkills = ParsePassiveSkills(skillStr);
 
         uint uiId = _worldManager.AllocatePlayerUiId();
+        if (ch.CurHp <= 0)
+        {
+            ch.CurHp = Math.Max(1, ch.MaxHp);
+        }
         var session = new PlayerSession(uiId, account, ch, connection, equips, kitbags, activeSkills, passiveSkills);
         _worldManager.RegisterPlayer(session);
 
@@ -388,6 +452,7 @@ public sealed class GameSessionHandler
 
         await player.SendAsync(GameOpcode.MsgRelationAll, new MsgRelationAll(player.UiId, 0).ToPayload(), cancellationToken).ConfigureAwait(false);
         await player.SendAsync(GameOpcode.MsgAltarInfo, new MsgAltarInfo(0).ToPayload(), cancellationToken).ConfigureAwait(false);
+        await player.SendAsync(GameOpcode.MsgParamater, MsgParamater.CreateDefaultPayload(), cancellationToken).ConfigureAwait(false);
 
         _logger.LogInformation("Player {Name} (UiId={UiId}) ready in Map={Map}", player.Character.Name, player.UiId, player.MapId);
     }
@@ -404,11 +469,10 @@ public sealed class GameSessionHandler
                     await map.LeaveAsync(player).ConfigureAwait(false);
                 }
 
-                await _characterRepository.UpdateCharacterPositionAsync(
-                    player.Character.Id,
-                    (short)player.MapId,
-                    player.X,
-                    player.Z).ConfigureAwait(false);
+                player.Character.Map = (short)player.MapId;
+                player.Character.PosX = player.X;
+                player.Character.PosZ = player.Z;
+                await _characterRepository.UpdateCharacterStateAsync(player.Character).ConfigureAwait(false);
             }
         }
         catch (Exception ex)

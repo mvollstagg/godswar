@@ -1,11 +1,12 @@
 using System.Collections.Concurrent;
+using GodsWar.GameServer.Game;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace GodsWar.GameServer.World;
 
 /// <summary>
-/// Manages all loaded <see cref="WorldMap"/> instances and active <see cref="PlayerSession"/>s.
+/// Manages all loaded <see cref="WorldMap"/> instances, <see cref="GameDataCatalog"/>, and active <see cref="PlayerSession"/>s.
 /// </summary>
 public sealed class WorldManager
 {
@@ -18,6 +19,7 @@ public sealed class WorldManager
     {
         string sceneDir = WorldDataLoader.ResolveSceneDirectory(options.Value.SceneDataPath);
         LoadedWorldData data = WorldDataLoader.Load(sceneDir);
+        Catalog = GameDataCatalog.LoadFromSceneParent(sceneDir);
 
         int totalNpcs = 0;
         int totalMonsters = 0;
@@ -31,14 +33,20 @@ public sealed class WorldManager
         }
 
         logger.LogInformation(
-            "Loaded {MapCount} maps, {NpcCount} NPCs, and {MonsterCount} monster spawns from {SceneDir}",
+            "Loaded {MapCount} maps, {NpcCount} NPCs, {MonsterCount} monsters, {ItemCount} items, {MagicCount} magics, and {DropCount} drop tables from {SceneDir}",
             _maps.Count,
             totalNpcs,
             totalMonsters,
+            Catalog.Items.Count,
+            Catalog.Magics.Count,
+            Catalog.DropTables.Count,
             sceneDir);
     }
 
+    public GameDataCatalog Catalog { get; }
     public IReadOnlyDictionary<ushort, WorldMap> Maps => _maps;
+
+    public PlayerSession? GetPlayerByUiId(uint uiId) => _playersByUiId.GetValueOrDefault(uiId);
 
     public WorldMap? GetMap(ushort mapId) => _maps.GetValueOrDefault(mapId);
 

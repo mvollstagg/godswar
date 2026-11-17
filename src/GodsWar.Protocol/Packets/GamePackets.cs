@@ -89,6 +89,48 @@ public readonly record struct ItemEquipSlot(
             src[27]);
     }
 
+    public void WriteServerItem32(Span<byte> dest)
+    {
+        if (dest.Length < 32)
+        {
+            throw new ArgumentException("Destination must be at least 32 bytes.", nameof(dest));
+        }
+
+        dest[..32].Clear();
+        BinaryPrimitives.WriteInt32LittleEndian(dest.Slice(0, 4), Base);
+        dest[4] = BaseLevel;
+        BinaryPrimitives.WriteInt32LittleEndian(dest.Slice(8, 4), Append0);
+        BinaryPrimitives.WriteInt32LittleEndian(dest.Slice(12, 4), Append1);
+        BinaryPrimitives.WriteInt32LittleEndian(dest.Slice(16, 4), Append2);
+        BinaryPrimitives.WriteInt32LittleEndian(dest.Slice(20, 4), Append3);
+        BinaryPrimitives.WriteInt32LittleEndian(dest.Slice(24, 4), Append4);
+        dest[28] = AppendLevel;
+        dest[29] = Binding;
+        dest[30] = Overlap;
+    }
+
+    public static string FormatDbKitbagString(IReadOnlyList<ItemEquipSlot> slots)
+    {
+        var sb = new System.Text.StringBuilder(slots.Count * 16);
+        foreach (ItemEquipSlot slot in slots)
+        {
+            if (slot.IsEmpty)
+            {
+                sb.Append("[]#");
+            }
+            else
+            {
+                string a0 = slot.Append0 > 0 ? slot.Append0.ToString() : string.Empty;
+                string a1 = slot.Append1 > 0 ? slot.Append1.ToString() : string.Empty;
+                string a2 = slot.Append2 > 0 ? slot.Append2.ToString() : string.Empty;
+                string a3 = slot.Append3 > 0 ? slot.Append3.ToString() : string.Empty;
+                string a4 = slot.Append4 > 0 ? slot.Append4.ToString() : string.Empty;
+                sb.Append($"[{slot.Base},{a0},{a1},{a2},{a3},{a4},{slot.Binding},{slot.Overlap},{slot.BaseLevel},{slot.AppendLevel}]#");
+            }
+        }
+        return sb.ToString();
+    }
+
     /// <summary>
     /// Parses a legacy <c>character_kitbag</c> string (<c>[4000,,,,,,0,20,1,1,0]#[]#...</c>)
     /// into fixed-length item slots.

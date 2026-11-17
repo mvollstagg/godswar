@@ -1,6 +1,7 @@
 ﻿using GodsWar.Database;
 using GodsWar.GameServer;
 using GodsWar.GameServer.Auth;
+using GodsWar.GameServer.Game;
 using GodsWar.GameServer.Network;
 using GodsWar.GameServer.World;
 using Microsoft.Extensions.Configuration;
@@ -24,9 +25,11 @@ builder.Services.AddGodsWarDatabase(opts =>
 
 builder.Services.AddSingleton<ValidationTokenStore>();
 builder.Services.AddSingleton<WorldManager>();
+builder.Services.AddSingleton<GameplayHandlers>();
 builder.Services.AddSingleton<GameSessionHandler>();
 builder.Services.AddHostedService<LoginServerClient>();
 builder.Services.AddHostedService<GameServerListener>();
+builder.Services.AddHostedService<WorldSimulationService>();
 
 using IHost host = builder.Build();
 await host.RunAsync();

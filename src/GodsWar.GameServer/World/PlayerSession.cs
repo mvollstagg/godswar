@@ -1,8 +1,21 @@
 using GodsWar.Database.Models;
+using GodsWar.GameServer.Game;
 using GodsWar.Protocol;
 using GodsWar.Protocol.Packets;
 
 namespace GodsWar.GameServer.World;
+
+public readonly record struct PlayerCombatStats(
+    int Attack,
+    int Defend,
+    int MagicAttack,
+    int MagicDefend,
+    int Hit,
+    int Dodge,
+    int CritAppend,
+    int CritDefend,
+    int MaxHpBonus,
+    int MaxMpBonus);
 
 /// <summary>
 /// Live in-world player entity and its network session.
@@ -28,16 +41,6 @@ public sealed class PlayerSession
         ActiveSkills = activeSkills;
         PassiveSkills = passiveSkills;
 
-        ushort mask = 0;
-        for (int i = 0; i < Math.Min(12, equips.Length); i++)
-        {
-            if (!equips[i].IsEmpty)
-            {
-                mask |= (ushort)(1 << i);
-            }
-        }
-        EquipMask = mask;
-
         MapId = (ushort)Math.Max(0, (int)character.Map);
         X = character.PosX;
         Y = 0f;
@@ -49,7 +52,7 @@ public sealed class PlayerSession
     public CharacterBase Character { get; }
     public PacketConnection Connection { get; }
     public ItemEquipSlot[] Equips { get; }
-    public ushort EquipMask { get; }
+    public ushort EquipMask => ComputeEquipMask();
     public ItemEquipSlot[][] Kitbags { get; }
     public IReadOnlyList<ActiveSkillEntry> ActiveSkills { get; }
     public IReadOnlyList<PassiveSkillEntry> PassiveSkills { get; }
@@ -63,6 +66,29 @@ public sealed class PlayerSession
     public int CellZ { get; set; } = -1;
     public bool InWorld { get; set; }
 
+    public bool InCombat { get; set; }
+    public uint? TargetUiId { get; set; }
+    public DateTime NextAttackAtUtc { get; set; }
+    public DateTime LastCombatAtUtc { get; set; }
+    public DateTime LastRegenAtUtc { get; set; } = DateTime.UtcNow;
+    public Dictionary<int, DateTime> SkillCooldowns { get; } = [];
+    public List<ActiveStatus> ActiveStatuses { get; } = [];
+
+    public bool IsDead => Character.CurHp <= 0;
+
+    public bool FactionEquals(byte monsterFaction)
+    {
+        // MonsterObject.ini: 0 = Sparta guard, 1 = Athens guard, 2 = Wild monster
+        // Character.Camp:    0 = Athens, 1 = Sparta
+        if (monsterFaction >= 2)
+        {
+            return false;
+        }
+
+        byte playerMonsterFaction = Character.Camp == 0 ? (byte)1 : (byte)0;
+        return playerMonsterFaction == monsterFaction;
+    }
+
     public byte GenderByte => string.Equals(Character.Gender, "male", StringComparison.OrdinalIgnoreCase)
         ? (byte)1
         : (byte)0;
@@ -72,10 +98,162 @@ public sealed class PlayerSession
         1,
         255);
 
-    public uint EffectiveMaxHp => (uint)Math.Max(1, Character.MaxHp > 0 ? Character.MaxHp : Character.CurHp);
-    public uint EffectiveMaxMp => (uint)Math.Max(1, Character.MaxMp > 0 ? Character.MaxMp : Character.CurMp);
-    public uint EffectiveCurHp => (uint)Math.Clamp(Character.CurHp > 0 ? Character.CurHp : (int)EffectiveMaxHp, 1, (int)EffectiveMaxHp);
+    public uint EffectiveMaxHp => (uint)Math.Max(1, Character.MaxHp > 0 ? Character.MaxHp : GameTables.GetPlayerMaxHp(EffectiveLevel, Character.Profession));
+    public uint EffectiveMaxMp => (uint)Math.Max(1, Character.MaxMp > 0 ? Character.MaxMp : GameTables.GetPlayerMaxMp(EffectiveLevel, Character.Profession));
+    public uint EffectiveCurHp => (uint)Math.Clamp(Character.CurHp, 0, (int)EffectiveMaxHp);
     public uint EffectiveCurMp => (uint)Math.Clamp(Character.CurMp, 0, (int)EffectiveMaxMp);
+
+    private ushort ComputeEquipMask()
+    {
+        ushort mask = 0;
+        for (int i = 0; i < Math.Min(12, Equips.Length); i++)
+        {
+            if (!Equips[i].IsEmpty)
+            {
+                mask |= (ushort)(1 << i);
+            }
+        }
+        return mask;
+    }
+
+    public PlayerCombatStats ComputeCombatStats(GameDataCatalog catalog)
+    {
+        int lv = EffectiveLevel;
+        int atk = 18 + lv * 4;
+        int def = 8 + lv * 3;
+        int matk = 18 + lv * 4;
+        int mdef = 8 + lv * 3;
+        int hit = 85 + lv;
+        int dodge = 10 + lv / 2;
+        int critAdd = 5;
+        int critDef = 0;
+        int hpBonus = 0;
+        int mpBonus = 0;
+
+        foreach (ItemEquipSlot eq in Equips)
+        {
+            if (eq.IsEmpty || !catalog.Items.TryGetValue(eq.Base, out ItemBaseDef? defItem))
+            {
+                continue;
+            }
+
+            int blvIdx = Math.Clamp(eq.BaseLevel - 1, 0, 4);
+            if (defItem.AttackByLevel.Length > blvIdx) atk += defItem.AttackByLevel[blvIdx];
+            if (defItem.DefendByLevel.Length > blvIdx) def += defItem.DefendByLevel[blvIdx];
+            if (defItem.MagicAttackByLevel.Length > blvIdx) matk += defItem.MagicAttackByLevel[blvIdx];
+            if (defItem.MagicDefendByLevel.Length > blvIdx) mdef += defItem.MagicDefendByLevel[blvIdx];
+            if (defItem.MaxHpByLevel.Length > blvIdx) hpBonus += defItem.MaxHpByLevel[blvIdx];
+            if (defItem.MaxMpByLevel.Length > blvIdx) mpBonus += defItem.MaxMpByLevel[blvIdx];
+
+            int alvIdx = Math.Clamp(eq.AppendLevel - 1, 0, 11);
+            int[] appIds = [eq.Append0, eq.Append1, eq.Append2, eq.Append3, eq.Append4];
+            foreach (int appId in appIds)
+            {
+                if (appId < 0 || !catalog.Appends.TryGetValue(appId, out ItemAppendDef? app))
+                {
+                    continue;
+                }
+
+                float val = app.ValuesByLevel[alvIdx];
+                switch (app.Type)
+                {
+                    case 0: atk += (int)val; break;
+                    case 1: def += (int)val; break;
+                    case 2: matk += (int)val; break;
+                    case 3: mdef += (int)val; break;
+                    case 4: hit += (int)val; break;
+                    case 5: dodge += (int)val; break;
+                    case 6: critAdd += (int)val; break;
+                    case 7: critDef += (int)val; break;
+                    case 13: hpBonus += (int)val; break;
+                    case 14: mpBonus += (int)val; break;
+                }
+            }
+        }
+
+        float atkPct = 0f, defPct = 0f, matkPct = 0f, mdefPct = 0f;
+        foreach (ActiveStatus st in ActiveStatuses)
+        {
+            if (catalog.Statuses.TryGetValue(st.StatusId, out StatusDef? sdef))
+            {
+                atkPct += sdef.AttackPct;
+                defPct += sdef.DefendPct;
+                matkPct += sdef.MagicAttackPct;
+                mdefPct += sdef.MagicDefendPct;
+            }
+        }
+
+        atk = Math.Max(1, (int)(atk * (1f + atkPct)));
+        def = Math.Max(0, (int)(def * (1f + defPct)));
+        matk = Math.Max(1, (int)(matk * (1f + matkPct)));
+        mdef = Math.Max(0, (int)(mdef * (1f + mdefPct)));
+
+        return new PlayerCombatStats(atk, def, matk, mdef, hit, dodge, critAdd, critDef, hpBonus, mpBonus);
+    }
+
+    public bool AddExp(uint gainedExp, GameDataCatalog catalog, out bool leveledUp)
+    {
+        leveledUp = false;
+        if (EffectiveLevel >= GameTables.PlayerMaxLevel || gainedExp == 0)
+        {
+            return false;
+        }
+
+        long exp = (long)Math.Max(0, Character.FighterJobExp) + gainedExp;
+        int level = EffectiveLevel;
+
+        while (level < GameTables.PlayerMaxLevel)
+        {
+            uint nextExp = GameTables.GetPlayerNextGradeExp(level);
+            if (exp < nextExp)
+            {
+                break;
+            }
+
+            exp -= nextExp;
+            level++;
+            leveledUp = true;
+        }
+
+        Character.FighterJobExp = (int)Math.Min(int.MaxValue, exp);
+        Character.ScholarJobExp = Character.FighterJobExp;
+        Character.FighterJobLv = (short)level;
+        Character.ScholarJobLv = (short)level;
+
+        if (leveledUp)
+        {
+            PlayerCombatStats stats = ComputeCombatStats(catalog);
+            Character.MaxHp = GameTables.GetPlayerMaxHp(level, Character.Profession) + stats.MaxHpBonus;
+            Character.MaxMp = GameTables.GetPlayerMaxMp(level, Character.Profession) + stats.MaxMpBonus;
+            Character.CurHp = Character.MaxHp;
+            Character.CurMp = Character.MaxMp;
+            Character.SkillPoint += 1;
+        }
+
+        return leveledUp;
+    }
+
+    public bool TryAddItemToBag(ItemEquipSlot item, out int bagIndex, out int slotIndex)
+    {
+        int bagCount = Math.Clamp(Character.BagNum, 1, 4);
+        for (int b = 0; b < bagCount; b++)
+        {
+            for (int s = 0; s < 24; s++)
+            {
+                if (Kitbags[b][s].IsEmpty)
+                {
+                    Kitbags[b][s] = item;
+                    bagIndex = b;
+                    slotIndex = s;
+                    return true;
+                }
+            }
+        }
+
+        bagIndex = -1;
+        slotIndex = -1;
+        return false;
+    }
 
     public ValueTask SendAsync(GameOpcode opcode, ReadOnlyMemory<byte> payload, CancellationToken cancellationToken = default)
         => Connection.SendPacketAsync((ushort)opcode, payload, cancellationToken);
@@ -100,7 +278,7 @@ public sealed class PlayerSession
         EffectiveCurHp,
         EffectiveCurMp,
         (uint)Math.Max(0, Character.FighterJobExp),
-        1000u,
+        GameTables.GetPlayerNextGradeExp(EffectiveLevel),
         (uint)Math.Max(0, Character.SkillPoint),
         (uint)Math.Max(0, Character.SkillExp),
         Equips);
