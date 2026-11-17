@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "KH5qeXRng6w=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\muham\\Github\\godswar\\src\\GodsWar.Database\\GodsWar.Database.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\muham\\.nuget\\packages\\dapper\\2.1.89\\dapper.2.1.89.nupkg.sha512",
+    "C:\\Users\\muham\\.nuget\\packages\\npgsql\\10.0.3\\npgsql.10.0.3.nupkg.sha512"
+  ],
+  "logs": []
+}

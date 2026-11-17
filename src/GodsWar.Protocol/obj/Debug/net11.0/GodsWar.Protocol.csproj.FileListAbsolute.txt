@@ -1,0 +1,13 @@
+C:\Users\muham\Github\godswar\src\GodsWar.Protocol\bin\Debug\net11.0\GodsWar.Protocol.deps.json
+C:\Users\muham\Github\godswar\src\GodsWar.Protocol\bin\Debug\net11.0\GodsWar.Protocol.dll
+C:\Users\muham\Github\godswar\src\GodsWar.Protocol\bin\Debug\net11.0\GodsWar.Protocol.pdb
+C:\Users\muham\Github\godswar\src\GodsWar.Protocol\obj\Debug\net11.0\GodsWar.Protocol.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\muham\Github\godswar\src\GodsWar.Protocol\obj\Debug\net11.0\GodsWar.Protocol.AssemblyInfoInputs.cache
+C:\Users\muham\Github\godswar\src\GodsWar.Protocol\obj\Debug\net11.0\GodsWar.Protocol.AssemblyInfo.cs
+C:\Users\muham\Github\godswar\src\GodsWar.Protocol\obj\Debug\net11.0\GodsWar.Protocol.csproj.CoreCompileInputs.cache
+C:\Users\muham\Github\godswar\src\GodsWar.Protocol\obj\Debug\net11.0\GodsWar.Protocol.sourcelink.json
+C:\Users\muham\Github\godswar\src\GodsWar.Protocol\obj\Debug\net11.0\GodsWar.Protocol.dll
+C:\Users\muham\Github\godswar\src\GodsWar.Protocol\obj\Debug\net11.0\refint\GodsWar.Protocol.dll
+C:\Users\muham\Github\godswar\src\GodsWar.Protocol\obj\Debug\net11.0\GodsWar.Protocol.pdb
+C:\Users\muham\Github\godswar\src\GodsWar.Protocol\obj\Debug\net11.0\ref\GodsWar.Protocol.dll
+C:\Users\muham\Github\godswar\src\GodsWar.Protocol\obj\Debug\net11.0\GodsWar..C0A856E3.Up2Date

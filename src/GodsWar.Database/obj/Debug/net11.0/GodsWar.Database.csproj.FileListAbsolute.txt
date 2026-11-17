@@ -1,0 +1,14 @@
+C:\Users\muham\Github\godswar\src\GodsWar.Database\bin\Debug\net11.0\GodsWar.Database.deps.json
+C:\Users\muham\Github\godswar\src\GodsWar.Database\bin\Debug\net11.0\GodsWar.Database.dll
+C:\Users\muham\Github\godswar\src\GodsWar.Database\bin\Debug\net11.0\GodsWar.Database.pdb
+C:\Users\muham\Github\godswar\src\GodsWar.Database\obj\Debug\net11.0\GodsWar.Database.csproj.AssemblyReference.cache
+C:\Users\muham\Github\godswar\src\GodsWar.Database\obj\Debug\net11.0\GodsWar.Database.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\muham\Github\godswar\src\GodsWar.Database\obj\Debug\net11.0\GodsWar.Database.AssemblyInfoInputs.cache
+C:\Users\muham\Github\godswar\src\GodsWar.Database\obj\Debug\net11.0\GodsWar.Database.AssemblyInfo.cs
+C:\Users\muham\Github\godswar\src\GodsWar.Database\obj\Debug\net11.0\GodsWar.Database.csproj.CoreCompileInputs.cache
+C:\Users\muham\Github\godswar\src\GodsWar.Database\obj\Debug\net11.0\GodsWar.Database.sourcelink.json
+C:\Users\muham\Github\godswar\src\GodsWar.Database\obj\Debug\net11.0\GodsWar.Database.dll
+C:\Users\muham\Github\godswar\src\GodsWar.Database\obj\Debug\net11.0\refint\GodsWar.Database.dll
+C:\Users\muham\Github\godswar\src\GodsWar.Database\obj\Debug\net11.0\GodsWar.Database.pdb
+C:\Users\muham\Github\godswar\src\GodsWar.Database\obj\Debug\net11.0\ref\GodsWar.Database.dll
+C:\Users\muham\Github\godswar\src\GodsWar.Database\obj\Debug\net11.0\GodsWar..B07F89DC.Up2Date
