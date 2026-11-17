@@ -17,6 +17,7 @@ public interface ICharacterRepository
     Task UpdateCharacterPositionAsync(int id, short map, float posX, float posZ, CancellationToken cancellationToken = default);
     Task UpdateCharacterStateAsync(CharacterBase character, CancellationToken cancellationToken = default);
     Task UpdateKitbagAsync(int userId, string kitbag1, string? kitbag2, string? kitbag3, string? kitbag4, string equip, CancellationToken cancellationToken = default);
+    Task UpdateStorageAsync(int userId, string storage, CancellationToken cancellationToken = default);
 }
 
 public sealed class CharacterRepository : ICharacterRepository
@@ -264,6 +265,12 @@ public sealed class CharacterRepository : ICharacterRepository
                 pos_x = @PosX,
                 pos_z = @PosZ,
                 money = @Money,
+                stone = @Stone,
+                prestige = @Prestige,
+                belief = @Belief,
+                consortia = @Consortia,
+                consortia_job = @ConsortiaJob,
+                consortia_contribute = @ConsortiaContribute,
                 skill_point = @SkillPoint,
                 skill_exp = @SkillExp,
                 last_login_time = NOW()
@@ -273,6 +280,20 @@ public sealed class CharacterRepository : ICharacterRepository
         await using DbConnection conn = await _connectionFactory.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
         await conn.ExecuteAsync(
             new CommandDefinition(sql, character, cancellationToken: cancellationToken)
+        ).ConfigureAwait(false);
+    }
+
+    public async Task UpdateStorageAsync(int userId, string storage, CancellationToken cancellationToken = default)
+    {
+        const string sql = """
+            UPDATE godswar.character_kitbag
+            SET storage = @Storage
+            WHERE user_id = @UserId;
+            """;
+
+        await using DbConnection conn = await _connectionFactory.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
+        await conn.ExecuteAsync(
+            new CommandDefinition(sql, new { UserId = userId, Storage = storage }, cancellationToken: cancellationToken)
         ).ConfigureAwait(false);
     }
 

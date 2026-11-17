@@ -27,6 +27,7 @@ public static class ServiceCollectionExtensions
 
         services.AddSingleton<IAccountRepository, AccountRepository>();
         services.AddSingleton<ICharacterRepository, CharacterRepository>();
+        services.AddSingleton<IWorldSocialRepository, WorldSocialRepository>();
         return services;
     }
 }

@@ -17,10 +17,16 @@ public sealed class WorldMap
     private readonly object _sync = new();
     private readonly GridCell[,] _cells = new GridCell[GridDimension, GridDimension];
     private readonly Dictionary<uint, MonsterEntity> _monstersById = [];
+    private readonly Dictionary<uint, NpcSpawnData> _npcsById = [];
 
-    public WorldMap(SceneDefinition scene, IReadOnlyList<NpcSpawnData> npcs, IReadOnlyList<MonsterSpawnData> monsters)
+    public WorldMap(
+        SceneDefinition scene,
+        IReadOnlyList<NpcSpawnData> npcs,
+        IReadOnlyList<MonsterSpawnData> monsters,
+        IReadOnlyList<PortalZone>? portals = null)
     {
         Scene = scene;
+        Portals = portals ?? [];
         for (int x = 0; x < GridDimension; x++)
         {
             for (int z = 0; z < GridDimension; z++)
@@ -33,6 +39,7 @@ public sealed class WorldMap
         {
             (int cx, int cz) = ToCellCoords(npc.X, npc.Z);
             _cells[cx, cz].Npcs[npc.UiId] = npc;
+            _npcsById[npc.UiId] = npc;
         }
 
         foreach (MonsterSpawnData spawn in monsters)
@@ -44,6 +51,23 @@ public sealed class WorldMap
 
         NpcCount = npcs.Count;
         MonsterCount = monsters.Count;
+    }
+
+    public IReadOnlyList<PortalZone> Portals { get; }
+
+    public NpcSpawnData? GetNpc(uint npcId) => _npcsById.GetValueOrDefault(npcId);
+
+    public PortalZone? FindPortalAt(float x, float z)
+    {
+        for (int i = 0; i < Portals.Count; i++)
+        {
+            if (Portals[i].Contains(x, z))
+            {
+                return Portals[i];
+            }
+        }
+
+        return null;
     }
 
     public SceneDefinition Scene { get; }

@@ -74,6 +74,19 @@ public sealed class PlayerSession
     public Dictionary<int, DateTime> SkillCooldowns { get; } = [];
     public List<ActiveStatus> ActiveStatuses { get; } = [];
 
+    // Phase 5 state
+    public ItemEquipSlot[] Storage { get; set; } = Enumerable.Repeat(ItemEquipSlot.Empty, 24).ToArray();
+    public Dictionary<int, ActiveQuestState> ActiveQuests { get; } = [];
+    public HashSet<int> CompletedQuests { get; } = [];
+    public HashSet<string> Friends { get; } = new(StringComparer.OrdinalIgnoreCase);
+    public HashSet<string> Blacklist { get; } = new(StringComparer.OrdinalIgnoreCase);
+    public int[] Altars { get; } = new int[12];
+    public int? TeamId { get; set; }
+    public uint TalkingNpcId { get; set; }
+    public byte ActiveChatChannel { get; set; } = (byte)ChatChannel.Local;
+    public (int Bag, int Slot)? ForgeEquipSlot { get; set; }
+    public (int Bag, int Slot)? ForgeMaterialSlot { get; set; }
+
     public bool IsDead => Character.CurHp <= 0;
 
     public bool FactionEquals(byte monsterFaction)

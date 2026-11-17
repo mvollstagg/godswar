@@ -48,10 +48,25 @@ public sealed record MonsterSpawnData(
     int ConfirmProbability = 0,
     string ConfirmItemTable = "NULL");
 
+public sealed record PortalZone(
+    float MinX,
+    float MaxX,
+    float MinZ,
+    float MaxZ,
+    string TargetMapName,
+    ushort TargetMapId,
+    float TargetX,
+    float TargetZ)
+{
+    public bool Contains(float x, float z)
+        => x >= MinX && x <= MaxX && z >= MinZ && z <= MaxZ;
+}
+
 public sealed record LoadedWorldData(
     IReadOnlyList<SceneDefinition> Scenes,
     IReadOnlyDictionary<ushort, IReadOnlyList<NpcSpawnData>> NpcsByMap,
-    IReadOnlyDictionary<ushort, IReadOnlyList<MonsterSpawnData>> MonstersByMap);
+    IReadOnlyDictionary<ushort, IReadOnlyList<MonsterSpawnData>> MonstersByMap,
+    IReadOnlyDictionary<ushort, IReadOnlyList<PortalZone>> PortalsByMap);
 
 /// <summary>
 /// Loads map metadata (<c>SceneDefine.ini</c>), monster templates (<c>MonsterObject.ini</c>),
@@ -95,6 +110,8 @@ public static class WorldDataLoader
 
         var npcsByMap = new Dictionary<ushort, IReadOnlyList<NpcSpawnData>>();
         var monstersByMap = new Dictionary<ushort, IReadOnlyList<MonsterSpawnData>>();
+        var portalsByMap = new Dictionary<ushort, IReadOnlyList<PortalZone>>();
+        Dictionary<string, ushort> mapIdByName = scenes.ToDictionary(s => s.Name, s => s.MapId, StringComparer.OrdinalIgnoreCase);
 
         uint nextNpcId = 5000;
         uint nextMonsterId = 10000;
@@ -106,6 +123,7 @@ public static class WorldDataLoader
             {
                 npcsByMap[scene.MapId] = [];
                 monstersByMap[scene.MapId] = [];
+                portalsByMap[scene.MapId] = [];
                 continue;
             }
 
@@ -130,9 +148,14 @@ public static class WorldDataLoader
             {
                 monstersByMap[scene.MapId] = [];
             }
+
+            string conveyIni = Path.Combine(sceneDir, "Convey.ini");
+            portalsByMap[scene.MapId] = File.Exists(conveyIni)
+                ? ParseConveyIni(conveyIni, mapIdByName)
+                : [];
         }
 
-        return new LoadedWorldData(scenes, npcsByMap, monstersByMap);
+        return new LoadedWorldData(scenes, npcsByMap, monstersByMap, portalsByMap);
     }
 
     private static List<SceneDefinition> ParseSceneDefine(string path)
@@ -418,9 +441,57 @@ public static class WorldDataLoader
             return fallback;
         }
 
-        string v = Encoding.Latin1.GetString(raw).Trim().TrimEnd('f', 'F');
+        string v = StripInlineComment(Encoding.Latin1.GetString(raw)).Trim().TrimEnd('f', 'F');
         return float.TryParse(v, NumberStyles.Float, CultureInfo.InvariantCulture, out float parsed)
             ? parsed
             : fallback;
+    }
+
+    private static string StripInlineComment(string raw)
+    {
+        int semi = raw.IndexOf(';');
+        return semi >= 0 ? raw[..semi] : raw;
+    }
+
+    private static List<PortalZone> ParseConveyIni(string path, Dictionary<string, ushort> mapIdByName)
+    {
+        var portals = new List<PortalZone>();
+        foreach ((string section, Dictionary<string, byte[]> kv) in ReadIniSectionsRaw(File.ReadAllBytes(path)))
+        {
+            if (!section.StartsWith("Convey", StringComparison.OrdinalIgnoreCase))
+            {
+                continue;
+            }
+
+            if (!kv.TryGetValue("to", out byte[]? toBytes))
+            {
+                continue;
+            }
+
+            string toMap = StripInlineComment(Encoding.Latin1.GetString(toBytes)).Trim();
+            if (!mapIdByName.TryGetValue(toMap, out ushort targetMapId))
+            {
+                continue;
+            }
+
+            float left = ParseFloat(kv, "rect_left", 0f);
+            float right = ParseFloat(kv, "rect_right", 0f);
+            float top = ParseFloat(kv, "rect_top", 0f);
+            float bottom = ParseFloat(kv, "rect_bottom", 0f);
+            float toX = ParseFloat(kv, "to_x", 0f);
+            float toZ = ParseFloat(kv, "to_z", 0f);
+
+            portals.Add(new PortalZone(
+                Math.Min(left, right),
+                Math.Max(left, right),
+                Math.Min(bottom, top),
+                Math.Max(bottom, top),
+                toMap,
+                targetMapId,
+                toX,
+                toZ));
+        }
+
+        return portals;
     }
 }

@@ -883,17 +883,36 @@ public readonly record struct MsgWalk(ushort IdOrMap, ushort State, float X, flo
     }
 }
 
+public readonly record struct RelationEntry(string Name, byte Camp, byte Profession, byte Level, byte Online);
+
 /// <summary>
-/// S2C <c>MSG_RELATIONALL</c> (opcode 10093, 12B framed when empty).
+/// S2C <c>MSG_RELATIONALL</c> (opcode 10093, 12B framed when empty, +32B per entry).
 /// </summary>
-public readonly record struct MsgRelationAll(uint UiId, byte RelationType, byte Count = 0)
+public readonly record struct MsgRelationAll(
+    uint UiId,
+    byte RelationType,
+    byte Count = 0,
+    IReadOnlyList<RelationEntry>? Entries = null)
 {
     public byte[] ToPayload()
     {
-        byte[] payload = new byte[8];
+        int count = Entries?.Count ?? Count;
+        byte[] payload = new byte[8 + count * 32];
         BinaryPrimitives.WriteUInt32LittleEndian(payload.AsSpan(0, 4), UiId);
         payload[4] = RelationType;
-        payload[5] = Count;
+        payload[5] = (byte)count;
+        if (Entries is not null)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                Span<byte> entry = payload.AsSpan(8 + i * 32, 32);
+                FixedStringCodec.WriteFixedString(entry[..18], Entries[i].Name);
+                entry[22] = Entries[i].Camp;
+                entry[23] = Entries[i].Profession;
+                entry[24] = Entries[i].Level;
+                entry[25] = Entries[i].Online;
+            }
+        }
         return payload;
     }
 }

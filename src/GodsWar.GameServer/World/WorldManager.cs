@@ -11,8 +11,10 @@ namespace GodsWar.GameServer.World;
 public sealed class WorldManager
 {
     private readonly Dictionary<ushort, WorldMap> _maps = [];
+    private readonly Dictionary<string, WorldMap> _mapsByName = new(StringComparer.OrdinalIgnoreCase);
     private readonly ConcurrentDictionary<uint, PlayerSession> _playersByUiId = new();
     private readonly ConcurrentDictionary<string, PlayerSession> _playersByAccount = new(StringComparer.OrdinalIgnoreCase);
+    private readonly ConcurrentDictionary<string, PlayerSession> _playersByName = new(StringComparer.OrdinalIgnoreCase);
     private int _nextPlayerUiId;
 
     public WorldManager(IOptions<GameServerOptions> options, ILogger<WorldManager> logger)
@@ -23,23 +25,30 @@ public sealed class WorldManager
 
         int totalNpcs = 0;
         int totalMonsters = 0;
+        int totalPortals = 0;
         foreach (SceneDefinition scene in data.Scenes)
         {
             IReadOnlyList<NpcSpawnData> npcs = data.NpcsByMap.GetValueOrDefault(scene.MapId) ?? [];
             IReadOnlyList<MonsterSpawnData> monsters = data.MonstersByMap.GetValueOrDefault(scene.MapId) ?? [];
-            _maps[scene.MapId] = new WorldMap(scene, npcs, monsters);
+            IReadOnlyList<PortalZone> portals = data.PortalsByMap.GetValueOrDefault(scene.MapId) ?? [];
+            var map = new WorldMap(scene, npcs, monsters, portals);
+            _maps[scene.MapId] = map;
+            _mapsByName[scene.Name] = map;
             totalNpcs += npcs.Count;
             totalMonsters += monsters.Count;
+            totalPortals += portals.Count;
         }
 
         logger.LogInformation(
-            "Loaded {MapCount} maps, {NpcCount} NPCs, {MonsterCount} monsters, {ItemCount} items, {MagicCount} magics, and {DropCount} drop tables from {SceneDir}",
+            "Loaded {MapCount} maps, {NpcCount} NPCs, {MonsterCount} monsters, {PortalCount} portals, {ItemCount} items, {MagicCount} magics, {QuestCount} quests, and {ForgeCount} forge recipes from {SceneDir}",
             _maps.Count,
             totalNpcs,
             totalMonsters,
+            totalPortals,
             Catalog.Items.Count,
             Catalog.Magics.Count,
-            Catalog.DropTables.Count,
+            Catalog.Quests.Count,
+            Catalog.EquipForges.Count,
             sceneDir);
     }
 
@@ -48,7 +57,27 @@ public sealed class WorldManager
 
     public PlayerSession? GetPlayerByUiId(uint uiId) => _playersByUiId.GetValueOrDefault(uiId);
 
+    public PlayerSession? GetPlayerByName(string name) => _playersByName.GetValueOrDefault(name);
+
+    public IEnumerable<PlayerSession> GetAllPlayers() => _playersByUiId.Values;
+
     public WorldMap? GetMap(ushort mapId) => _maps.GetValueOrDefault(mapId);
+
+    public WorldMap? GetMapByName(string name) => _mapsByName.GetValueOrDefault(name);
+
+    public NpcSpawnData? FindNpc(uint npcId)
+    {
+        foreach (WorldMap map in _maps.Values)
+        {
+            NpcSpawnData? npc = map.GetNpc(npcId);
+            if (npc is not null)
+            {
+                return npc;
+            }
+        }
+
+        return null;
+    }
 
     public uint AllocatePlayerUiId()
     {
@@ -66,12 +95,14 @@ public sealed class WorldManager
     {
         _playersByUiId[session.UiId] = session;
         _playersByAccount[session.Account] = session;
+        _playersByName[session.Character.Name] = session;
     }
 
     public void UnregisterPlayer(PlayerSession session)
     {
         _playersByUiId.TryRemove(new KeyValuePair<uint, PlayerSession>(session.UiId, session));
         _playersByAccount.TryRemove(new KeyValuePair<string, PlayerSession>(session.Account, session));
+        _playersByName.TryRemove(new KeyValuePair<string, PlayerSession>(session.Character.Name, session));
     }
 
     public PlayerSession? GetPlayerByAccount(string account)

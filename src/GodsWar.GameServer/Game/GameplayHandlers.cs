@@ -15,15 +15,18 @@ public sealed class GameplayHandlers
     private readonly WorldManager _worldManager;
     private readonly ICharacterRepository _characterRepository;
     private readonly ILogger<GameplayHandlers> _logger;
+    private readonly QuestService? _quests;
 
     public GameplayHandlers(
         WorldManager worldManager,
         ICharacterRepository characterRepository,
-        ILogger<GameplayHandlers> logger)
+        ILogger<GameplayHandlers> logger,
+        QuestService? quests = null)
     {
         _worldManager = worldManager;
         _characterRepository = characterRepository;
         _logger = logger;
+        _quests = quests;
     }
 
     public async Task HandleFightAsync(PlayerSession player, byte[] payload, CancellationToken ct)
@@ -588,6 +591,11 @@ public sealed class GameplayHandlers
                 ct).ConfigureAwait(false);
         }
 
+        if (_quests is not null)
+        {
+            await _quests.OnMonsterKilledAsync(killer, monster, ct).ConfigureAwait(false);
+        }
+
         if (leveledUp)
         {
             var upgrade = new MsgUpgrade(
@@ -624,7 +632,7 @@ public sealed class GameplayHandlers
             monster.GroundDrops.Count);
     }
 
-    private static async Task SendKitbagPageForSlotAsync(PlayerSession player, int bagIdx, int slotIdx, CancellationToken ct)
+    public static async Task SendKitbagPageForSlotAsync(PlayerSession player, int bagIdx, int slotIdx, CancellationToken ct)
     {
         int bagNum = Math.Clamp(player.Character.BagNum, 1, 4);
         int half = slotIdx < 12 ? 0 : 12;
@@ -646,6 +654,18 @@ public sealed class GameplayHandlers
             player.Kitbags[bagIdx][half..(half + 12)]);
         await player.SendAsync(GameOpcode.MsgKitbag, page.ToPayload(), ct).ConfigureAwait(false);
     }
+
+    public static MsgUpgrade BuildUpgradePacket(PlayerSession player) => new(
+        player.UiId,
+        player.EffectiveLevel,
+        GameTables.GetPlayerNextGradeExp(player.EffectiveLevel),
+        (uint)player.Character.FighterJobExp,
+        player.EffectiveMaxHp,
+        player.EffectiveCurHp,
+        player.EffectiveMaxMp,
+        player.EffectiveCurMp);
+
+    public Task PersistKitbagPublicAsync(PlayerSession player, CancellationToken ct) => PersistKitbagAsync(player, ct);
 
     private Task PersistKitbagAsync(PlayerSession player, CancellationToken ct)
     {

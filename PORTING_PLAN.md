@@ -74,13 +74,13 @@ src/
   3. Implement damage calculation, XP/level-up, skill casting & cooldowns, buff/debuff ticks, ground loot drops, pickup, equip/unequip, and DB persistence.
 - **Verified:** `GodsWar.Protocol/Packets/CombatPackets.cs` & `InventoryPackets.cs` (`10023`–`10028`, `10037`–`10038`, `10042`–`10045`, `10048`–`10050`, `10056`, `10129`, `10161`), `GodsWar.Database` (`UpdateCharacterStateAsync`, `UpdateKitbagAsync`), `GodsWar.GameServer/Game/` (`GameTables` 200-level tables from `Mat.cpp`, `GameDataCatalog` loading `ItemBaseAttribute.xml`/`ItemAppendAttribute.xml`/`Magic.ini`/`Status.ini`/`Drop*.ini`, `CombatCalculator`, `MonsterEntity`, `GameplayHandlers`, `WorldSimulationService` 200ms AI/buff/regen loop), `dotnet build src/GodsWar.Server.sln` + `dotnet test src/GodsWar.Server.sln` (37/37 passing), and live E2E probe against `GodsWar.LoginServer` + `GodsWar.GameServer` + PostgreSQL (skill cast `10038`->`10044`/`10129`/`10043`, combat kill `10024`->`10025`, drop `10027` + pickup `10048`, and XP/money persistence across relog).
 
-### Phase 5 â€” NPCs, Quests, Shops, Forging, Portals & Social Systems
+### Phase 5 — NPCs, Quests, Shops, Forging, Portals & Social Systems ✅
 - **Goal:** Full core RPG world systems.
 - **Tasks:**
   1. Port `Dial.cpp` (NPC dialogs), shops (buy/sell), `EquipForge.cpp`, `ChangeRegion.cpp` (portals/map transitions), `Altar.cpp`, `Country.cpp`, and `ChatCommand.cpp` (local/world/whisper/GM commands).
   2. Port or bridge `GameScript.cpp` (~745 quest/NPC scripts in `GW 2.0/Server Files (Compiled)/Script/`).
   3. Port Parties and Guilds + DB persistence.
-- **Done when:** Players can talk to NPCs, accept/complete quests, buy/sell/forge items, and travel between maps (e.g. `Athens' Suburb` -> `Athens`).
+- **Verified:** `GodsWar.Protocol/Packets/` (`ChatAndPortalPackets.cs`, `NpcShopPackets.cs`, `QuestPackets.cs`, `ForgePackets.cs`, `SocialPackets.cs` covering `10018`, `10033`–`10034`, `10057`–`10058`, `10064`–`10070`, `10072`–`10087`, `10093`–`10107`, `10117`–`10128`, `10131`–`10146`), `GodsWar.Database` (`WorldSocialRepository` for `user_quest`, `user_relation`, `user_altar`, `consortia`, and `character_kitbag.storage`), `GodsWar.GameServer/Game/` (`ScriptDataLoader` loading `Convey.ini`, `EquipForge.xml`, `Script/Item.py`, `Script/Quest.py`, and `Script/*/*.py`, plus `QuestService`, `NpcShopAndForgeService`, `ChatAndPortalService`, and `SocialService`), `dotnet build src/GodsWar.Server.sln` + `dotnet test src/GodsWar.Server.sln` (43/43 passing), and live two-client E2E probe against `GodsWar.LoginServer` + `GodsWar.GameServer` + PostgreSQL (chat `10033`, NPC talk `10064`->`10074`, quest find `10087` + accept `10079` + complete `10081`->`10083`, party `10119`->`10117`->`10120`->`10127`, trade `10098`/`10099`->state `3`, guild create `10131`/`10132`/`10137` + exit `10143`, and bidirectional portal transitions `10187`->`10018` `Athens_Newbie (1) <-> Athens (0)`).
 
 ### Phase 6 â€” `1.0.282`-Exclusive Features (Pet System, AFK System & Polish)
 - **Goal:** Implement features present in `Client/GodsWar.exe` (`1.0.282`) that were missing or incomplete in the 2007/2008 C++ server.

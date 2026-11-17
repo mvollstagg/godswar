@@ -94,19 +94,31 @@ public sealed class GameDataCatalog
     public IReadOnlyDictionary<int, MagicDef> Magics { get; }
     public IReadOnlyDictionary<int, StatusDef> Statuses { get; }
     public IReadOnlyDictionary<string, IReadOnlyList<DropEntryDef>> DropTables { get; }
+    public IReadOnlyDictionary<int, EquipForgeDef> EquipForges { get; }
+    public IReadOnlyDictionary<int, List<ShopItemDef>> ShopItemLists { get; }
+    public IReadOnlyDictionary<int, QuestDef> Quests { get; }
+    public IReadOnlyDictionary<string, NpcScriptDef> NpcScripts { get; }
 
     private GameDataCatalog(
         Dictionary<int, ItemBaseDef> items,
         Dictionary<int, ItemAppendDef> appends,
         Dictionary<int, MagicDef> magics,
         Dictionary<int, StatusDef> statuses,
-        Dictionary<string, IReadOnlyList<DropEntryDef>> dropTables)
+        Dictionary<string, IReadOnlyList<DropEntryDef>> dropTables,
+        Dictionary<int, EquipForgeDef> equipForges,
+        Dictionary<int, List<ShopItemDef>> shopItemLists,
+        Dictionary<int, QuestDef> quests,
+        Dictionary<string, NpcScriptDef> npcScripts)
     {
         Items = items;
         Appends = appends;
         Magics = magics;
         Statuses = statuses;
         DropTables = dropTables;
+        EquipForges = equipForges;
+        ShopItemLists = shopItemLists;
+        Quests = quests;
+        NpcScripts = npcScripts;
     }
 
     public static GameDataCatalog LoadFromSceneParent(string sceneDir)
@@ -118,7 +130,11 @@ public sealed class GameDataCatalog
         var magics = LoadMagics(Path.Combine(gameServerRoot, "Skill", "Magic.ini"));
         var statuses = LoadStatuses(Path.Combine(gameServerRoot, "Skill", "Status.ini"));
         var drops = LoadDropTables(Path.Combine(gameServerRoot, "Drop"));
-        return new GameDataCatalog(items, appends, magics, statuses, drops);
+        var forges = ScriptDataLoader.LoadEquipForges(Path.Combine(gameServerRoot, "Item", "EquipForge.xml"));
+        var shops = ScriptDataLoader.LoadShopItemLists(Path.Combine(gameServerRoot, "Script", "Item.py"));
+        var quests = ScriptDataLoader.LoadQuests(Path.Combine(gameServerRoot, "Script", "Quest.py"));
+        var npcScripts = ScriptDataLoader.LoadNpcScripts(Path.Combine(gameServerRoot, "Script"));
+        return new GameDataCatalog(items, appends, magics, statuses, drops, forges, shops, quests, npcScripts);
     }
 
     public ItemEquipSlot CreateDropItem(string tableKey, Random? rng = null)

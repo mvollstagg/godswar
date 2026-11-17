@@ -15,6 +15,10 @@ public sealed class GameSessionHandler
     private readonly ValidationTokenStore _tokenStore;
     private readonly WorldManager _worldManager;
     private readonly GameplayHandlers _gameplay;
+    private readonly QuestService? _quests;
+    private readonly NpcShopAndForgeService? _npcShopAndForge;
+    private readonly ChatAndPortalService? _chatAndPortal;
+    private readonly SocialService? _social;
     private readonly ILogger<GameSessionHandler> _logger;
 
     public GameSessionHandler(
@@ -22,13 +26,21 @@ public sealed class GameSessionHandler
         ValidationTokenStore tokenStore,
         WorldManager worldManager,
         GameplayHandlers gameplay,
-        ILogger<GameSessionHandler> logger)
+        ILogger<GameSessionHandler> logger,
+        QuestService? quests = null,
+        NpcShopAndForgeService? npcShopAndForge = null,
+        ChatAndPortalService? chatAndPortal = null,
+        SocialService? social = null)
     {
         _characterRepository = characterRepository;
         _tokenStore = tokenStore;
         _worldManager = worldManager;
         _gameplay = gameplay;
         _logger = logger;
+        _quests = quests;
+        _npcShopAndForge = npcShopAndForge;
+        _chatAndPortal = chatAndPortal;
+        _social = social;
     }
 
     public async Task HandleConnectionAsync(
@@ -96,6 +108,11 @@ public sealed class GameSessionHandler
                             if (map is not null)
                             {
                                 await map.MoveAsync(player, walk.X, walk.Z, walk.Atan2, walk.State, cancellationToken).ConfigureAwait(false);
+                                PortalZone? portal = map.FindPortalAt(walk.X, walk.Z);
+                                if (portal is not null && _chatAndPortal is not null)
+                                {
+                                    await _chatAndPortal.TransitionMapAsync(player, portal.TargetMapId, portal.TargetX, portal.TargetZ, cancellationToken).ConfigureAwait(false);
+                                }
                             }
                         }
                         break;
@@ -153,6 +170,251 @@ public sealed class GameSessionHandler
                         if (player is not null && player.InWorld)
                         {
                             await _gameplay.HandleBreakItemAsync(player, payload, cancellationToken).ConfigureAwait(false);
+                        }
+                        break;
+
+                    case GameOpcode.MsgTalk:
+                        if (player is not null && player.InWorld && _chatAndPortal is not null)
+                        {
+                            await _chatAndPortal.HandleTalkAsync(player, payload, cancellationToken).ConfigureAwait(false);
+                        }
+                        break;
+
+                    case GameOpcode.MsgTalkChannel:
+                        if (player is not null && player.InWorld && _chatAndPortal is not null)
+                        {
+                            await _chatAndPortal.HandleTalkChannelAsync(player, payload).ConfigureAwait(false);
+                        }
+                        break;
+
+                    case GameOpcode.MsgTalkNpc:
+                        if (player is not null && player.InWorld && _npcShopAndForge is not null)
+                        {
+                            await _npcShopAndForge.HandleTalkNpcAsync(player, payload, cancellationToken).ConfigureAwait(false);
+                        }
+                        break;
+
+                    case GameOpcode.MsgSysNpcData:
+                        if (player is not null && player.InWorld && _npcShopAndForge is not null && _chatAndPortal is not null)
+                        {
+                            await _npcShopAndForge.HandleSysNpcDataAsync(player, payload, _chatAndPortal, cancellationToken).ConfigureAwait(false);
+                        }
+                        break;
+
+                    case GameOpcode.MsgNpcSell:
+                        if (player is not null && player.InWorld && _npcShopAndForge is not null)
+                        {
+                            await _npcShopAndForge.HandleNpcBuyAsync(player, payload, cancellationToken).ConfigureAwait(false);
+                        }
+                        break;
+
+                    case GameOpcode.MsgSell:
+                        if (player is not null && player.InWorld && _npcShopAndForge is not null)
+                        {
+                            await _npcShopAndForge.HandleSellToNpcAsync(player, payload, cancellationToken).ConfigureAwait(false);
+                        }
+                        break;
+
+                    case GameOpcode.MsgStorageItem:
+                        if (player is not null && player.InWorld && _npcShopAndForge is not null)
+                        {
+                            await _npcShopAndForge.HandleStorageItemAsync(player, payload, cancellationToken).ConfigureAwait(false);
+                        }
+                        break;
+
+                    case GameOpcode.MsgNpcAcceptQuest:
+                        if (player is not null && player.InWorld && _quests is not null)
+                        {
+                            await _quests.HandleAcceptQuestAsync(player, payload, cancellationToken).ConfigureAwait(false);
+                        }
+                        break;
+
+                    case GameOpcode.MsgNpcCancelQuest:
+                        if (player is not null && player.InWorld && _quests is not null)
+                        {
+                            await _quests.HandleCancelQuestAsync(player, payload, cancellationToken).ConfigureAwait(false);
+                        }
+                        break;
+
+                    case GameOpcode.MsgNpcCompleteQuest:
+                        if (player is not null && player.InWorld && _quests is not null)
+                        {
+                            await _quests.HandleCompleteQuestAsync(player, payload, cancellationToken).ConfigureAwait(false);
+                        }
+                        break;
+
+                    case GameOpcode.MsgFindQuest:
+                        if (player is not null && player.InWorld && _quests is not null)
+                        {
+                            await _quests.HandleFindQuestAsync(player, cancellationToken).ConfigureAwait(false);
+                        }
+                        break;
+
+                    case GameOpcode.MsgEquipForgeEquip:
+                        if (player is not null && player.InWorld && _npcShopAndForge is not null)
+                        {
+                            await _npcShopAndForge.HandleForgeEquipSelectAsync(player, payload, cancellationToken).ConfigureAwait(false);
+                        }
+                        break;
+
+                    case GameOpcode.MsgEquipForgeMaterial:
+                        if (player is not null && player.InWorld && _npcShopAndForge is not null)
+                        {
+                            await _npcShopAndForge.HandleForgeMaterialSelectAsync(player, payload, cancellationToken).ConfigureAwait(false);
+                        }
+                        break;
+
+                    case GameOpcode.MsgEquipForge:
+                        if (player is not null && player.InWorld && _npcShopAndForge is not null)
+                        {
+                            await _npcShopAndForge.HandleEquipForgeAsync(player, payload, cancellationToken).ConfigureAwait(false);
+                        }
+                        break;
+
+                    case GameOpcode.MsgRelationRequest:
+                        if (player is not null && player.InWorld && _social is not null)
+                        {
+                            await _social.HandleRelationRequestAsync(player, payload, cancellationToken).ConfigureAwait(false);
+                        }
+                        break;
+
+                    case GameOpcode.MsgRelationResponse:
+                        if (player is not null && player.InWorld && _social is not null)
+                        {
+                            await _social.HandleRelationResponseAsync(player, payload, cancellationToken).ConfigureAwait(false);
+                        }
+                        break;
+
+                    case GameOpcode.MsgRelationDelete:
+                        if (player is not null && player.InWorld && _social is not null)
+                        {
+                            await _social.HandleRelationDeleteAsync(player, payload, cancellationToken).ConfigureAwait(false);
+                        }
+                        break;
+
+                    case GameOpcode.MsgTrade:
+                        if (player is not null && player.InWorld && _social is not null)
+                        {
+                            await _social.HandleTradeAsync(player, payload, cancellationToken).ConfigureAwait(false);
+                        }
+                        break;
+
+                    case GameOpcode.MsgTradeMoney:
+                        if (player is not null && player.InWorld && _social is not null)
+                        {
+                            await _social.HandleTradeMoneyAsync(player, payload, cancellationToken).ConfigureAwait(false);
+                        }
+                        break;
+
+                    case GameOpcode.MsgTradeAddItem:
+                        if (player is not null && player.InWorld && _social is not null)
+                        {
+                            await _social.HandleTradeAddItemAsync(player, payload, cancellationToken).ConfigureAwait(false);
+                        }
+                        break;
+
+                    case GameOpcode.MsgTradeRemoveItem:
+                        if (player is not null && player.InWorld && _social is not null)
+                        {
+                            await _social.HandleTradeRemoveItemAsync(player, payload, cancellationToken).ConfigureAwait(false);
+                        }
+                        break;
+
+                    case GameOpcode.MsgTeamInfo:
+                        if (player is not null && player.InWorld && _social is not null)
+                        {
+                            await _social.HandleTeamInfoAsync(player, payload, cancellationToken).ConfigureAwait(false);
+                        }
+                        break;
+
+                    case GameOpcode.MsgTeam:
+                        if (player is not null && player.InWorld && _social is not null)
+                        {
+                            await _social.HandleTeamInviteAsync(player, payload, cancellationToken).ConfigureAwait(false);
+                        }
+                        break;
+
+                    case GameOpcode.MsgTeamAccept:
+                        if (player is not null && player.InWorld && _social is not null)
+                        {
+                            await _social.HandleTeamAcceptAsync(player, payload, cancellationToken).ConfigureAwait(false);
+                        }
+                        break;
+
+                    case GameOpcode.MsgTeamReject:
+                        if (player is not null && player.InWorld && _social is not null)
+                        {
+                            await _social.HandleTeamRejectAsync(player, payload, cancellationToken).ConfigureAwait(false);
+                        }
+                        break;
+
+                    case GameOpcode.MsgTeamLeave:
+                        if (player is not null && player.InWorld && _social is not null)
+                        {
+                            await _social.HandleTeamLeaveAsync(player, cancellationToken).ConfigureAwait(false);
+                        }
+                        break;
+
+                    case GameOpcode.MsgTeamDelete:
+                        if (player is not null && player.InWorld && _social is not null)
+                        {
+                            await _social.HandleTeamDeleteAsync(player, payload, cancellationToken).ConfigureAwait(false);
+                        }
+                        break;
+
+                    case GameOpcode.MsgTeamReplaceLeader:
+                        if (player is not null && player.InWorld && _social is not null)
+                        {
+                            await _social.HandleTeamReplaceLeaderAsync(player, payload, cancellationToken).ConfigureAwait(false);
+                        }
+                        break;
+
+                    case GameOpcode.MsgTeamDissolve:
+                        if (player is not null && player.InWorld && _social is not null)
+                        {
+                            await _social.HandleTeamDissolveAsync(player, cancellationToken).ConfigureAwait(false);
+                        }
+                        break;
+
+                    case GameOpcode.MsgConsortiaInvite:
+                        if (player is not null && player.InWorld && _social is not null)
+                        {
+                            await _social.HandleConsortiaInviteAsync(player, payload, cancellationToken).ConfigureAwait(false);
+                        }
+                        break;
+
+                    case GameOpcode.MsgConsortiaRequest:
+                        if (player is not null && player.InWorld && _social is not null)
+                        {
+                            await _social.HandleConsortiaResponseAsync(player, payload, cancellationToken).ConfigureAwait(false);
+                        }
+                        break;
+
+                    case GameOpcode.MsgConsortiaExit:
+                        if (player is not null && player.InWorld && _social is not null)
+                        {
+                            await _social.HandleConsortiaExitAsync(player, payload, cancellationToken).ConfigureAwait(false);
+                        }
+                        break;
+
+                    case GameOpcode.MsgConsortiaText:
+                        if (player is not null && player.InWorld && _social is not null)
+                        {
+                            await _social.HandleConsortiaTextAsync(player, payload, cancellationToken).ConfigureAwait(false);
+                        }
+                        break;
+
+                    case GameOpcode.MsgConsortiaDuty:
+                        if (player is not null && player.InWorld && _social is not null)
+                        {
+                            await _social.HandleConsortiaDutyAsync(player, payload, cancellationToken).ConfigureAwait(false);
+                        }
+                        break;
+
+                    case GameOpcode.MsgConsortiaMemberDel:
+                        if (player is not null && player.InWorld && _social is not null)
+                        {
+                            await _social.HandleConsortiaMemberDelAsync(player, payload, cancellationToken).ConfigureAwait(false);
                         }
                         break;
 
@@ -381,7 +643,13 @@ public sealed class GameSessionHandler
         {
             ch.CurHp = Math.Max(1, ch.MaxHp);
         }
-        var session = new PlayerSession(uiId, account, ch, connection, equips, kitbags, activeSkills, passiveSkills);
+        var session = new PlayerSession(uiId, account, ch, connection, equips, kitbags, activeSkills, passiveSkills)
+        {
+            Storage = ItemEquipSlot.ParseDbKitbagString(kitbag?.Storage, 24),
+        };
+        if (_quests is not null) await _quests.LoadPlayerQuestsAsync(session, cancellationToken).ConfigureAwait(false);
+        if (_social is not null) await _social.LoadRelationsAsync(session, cancellationToken).ConfigureAwait(false);
+        if (_npcShopAndForge is not null) await _npcShopAndForge.LoadAltarsAsync(session, cancellationToken).ConfigureAwait(false);
         _worldManager.RegisterPlayer(session);
 
         // 1.0.282 world-entry sequence: MSG_SELFINFO (10019) -> MSG_CLIENTSERVERREADY (10005) -> MSG_KITBAG (10031)
@@ -450,7 +718,21 @@ public sealed class GameSessionHandler
             new MsgActiveSkillInfo(player.UiId, player.ActiveSkills).ToPayload(),
             cancellationToken).ConfigureAwait(false);
 
-        await player.SendAsync(GameOpcode.MsgRelationAll, new MsgRelationAll(player.UiId, 0).ToPayload(), cancellationToken).ConfigureAwait(false);
+        if (_social is not null)
+        {
+            await _social.SendRelationsOnLoginAsync(player, cancellationToken).ConfigureAwait(false);
+            await _social.SendGuildOnLoginAsync(player, cancellationToken).ConfigureAwait(false);
+        }
+        else
+        {
+            await player.SendAsync(GameOpcode.MsgRelationAll, new MsgRelationAll(player.UiId, 0).ToPayload(), cancellationToken).ConfigureAwait(false);
+        }
+
+        if (_quests is not null)
+        {
+            await _quests.SendActiveQuestsOnLoginAsync(player, cancellationToken).ConfigureAwait(false);
+        }
+
         await player.SendAsync(GameOpcode.MsgAltarInfo, new MsgAltarInfo(0).ToPayload(), cancellationToken).ConfigureAwait(false);
         await player.SendAsync(GameOpcode.MsgParamater, MsgParamater.CreateDefaultPayload(), cancellationToken).ConfigureAwait(false);
 
@@ -461,6 +743,12 @@ public sealed class GameSessionHandler
     {
         try
         {
+            if (_social is not null)
+            {
+                await _social.CancelTradeAsync(player, CancellationToken.None).ConfigureAwait(false);
+                await _social.HandleTeamLeaveAsync(player, CancellationToken.None).ConfigureAwait(false);
+            }
+
             if (player.InWorld)
             {
                 WorldMap? map = _worldManager.GetMap(player.MapId);

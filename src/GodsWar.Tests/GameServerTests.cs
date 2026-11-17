@@ -313,6 +313,9 @@ public class GameServerTests
 
         public Task UpdateKitbagAsync(int userId, string kitbag1, string? kitbag2, string? kitbag3, string? kitbag4, string equip, CancellationToken ct = default)
             => Task.CompletedTask;
+
+        public Task UpdateStorageAsync(int userId, string storage, CancellationToken ct = default)
+            => Task.CompletedTask;
     }
 
     private sealed class DuplexPipeStream : Stream, IAsyncDisposable

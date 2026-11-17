@@ -222,3 +222,42 @@ public sealed class PacketWriter
         }
     }
 }
+
+public static class FixedStringCodec
+{
+    public static string ReadFixedString(ReadOnlySpan<byte> raw)
+    {
+        int nul = raw.IndexOf((byte)0);
+        if (nul >= 0)
+        {
+            raw = raw[..nul];
+        }
+
+        return Encoding.Latin1.GetString(raw);
+    }
+
+    public static void WriteFixedString(Span<byte> dest, string? value)
+    {
+        dest.Clear();
+        if (string.IsNullOrEmpty(value) || dest.Length <= 1)
+        {
+            return;
+        }
+
+        int maxChars = Math.Min(value.Length, dest.Length - 1);
+        Encoding.Latin1.GetBytes(value.AsSpan(0, maxChars), dest);
+    }
+
+    public static void WriteUnicodeFixedString(Span<byte> dest, string? value)
+    {
+        dest.Clear();
+        if (string.IsNullOrEmpty(value) || dest.Length < 2)
+        {
+            return;
+        }
+
+        byte[] encoded = Encoding.Unicode.GetBytes(value);
+        int copyLen = Math.Min(encoded.Length, dest.Length - 2);
+        encoded.AsSpan(0, copyLen).CopyTo(dest);
+    }
+}
