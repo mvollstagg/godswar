@@ -1,0 +1,9 @@
+# Override for live daemon output: `docker compose -f compose.yaml -f compose.debug.yaml up -d --force-recreate server`.
+# GW_DEBUG=1 makes entrypoint.sh run the daemons attached to the container's
+# stdout instead of redirecting them to buffered log files, so crashes and
+# protocol prints (e.g. the GameServer's login rejection) show up immediately
+# in `docker compose logs`.
+services:
+  server:
+    environment:
+      GW_DEBUG: "1"

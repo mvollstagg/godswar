@@ -1,0 +1,10 @@
+.git
+.freebuff
+Client
+GodsWar-Private-Server-master
+**/Log
+**/*.log
+**/*.pdb
+**/*.suo
+**/.vs
+**/.idea

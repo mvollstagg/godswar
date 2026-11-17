@@ -1,0 +1,23 @@
+.env
+docker/.env
+logs/
+*.log
+__pycache__/
+
+# Local client trees (Client/ is the one committed; keep backups out)
+Client_1.0.145/
+NewClient/
+
+# AI / agent scratch folders
+.claude/
+.freebuff/
+.perch/
+.cloud-attachments/
+.cursor/
+.codex/
+.aider*
+.windsurf/
+
+# local build/probe logs
+gw-*.log
+client-commit.log

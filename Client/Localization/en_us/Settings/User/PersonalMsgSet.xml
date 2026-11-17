@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--this is PersonalMsgConfig-->
+<PersonalMsgConfig>
+    <player3796 edition="1005" TradeMsg="1" QuestMsg="1" TeamMsg="1" PKMsg="1" ConsortiaMsg="1" OtherMsg="1" PetMsg="1" ConstMsg="1" />
+    <player3797 edition="1005" TradeMsg="1" QuestMsg="1" TeamMsg="1" PKMsg="1" ConsortiaMsg="1" OtherMsg="1" PetMsg="1" ConstMsg="1" />
+    <player3798 edition="1005" TradeMsg="1" QuestMsg="1" TeamMsg="1" PKMsg="1" ConsortiaMsg="1" OtherMsg="1" PetMsg="1" ConstMsg="1" />
+</PersonalMsgConfig>

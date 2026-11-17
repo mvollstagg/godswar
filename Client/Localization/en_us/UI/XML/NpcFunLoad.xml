@@ -1,0 +1,58 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Copyright (c) 2009,欢乐连线工作室
+		All rights reserved
+
+		文件名称：UILoad.xml
+		摘    要：用于配置表的加载
+
+		当前版本：1.00
+		作    者：Tavia
+		完成日期：2009-01-21
+ 
+-->
+<UIConfig>
+  <Script File="./Localization/en_us/UI/Base/LuaText.lua" />
+  <Script File="./Localization/en_us/UI/XML/NpcFun/NpcFun.lua" />
+
+  <Script File="./Localization/en_us/UI/XML/NpcFun/NpcFunTranmit.lua" />
+  <Script File="./Localization/en_us/UI/XML/NpcFun/NpcFunCredit.lua" />
+  <Script File="./Localization/en_us/UI/XML/NpcFun/NpcFunWar.lua" />
+  <Script File="./Localization/en_us/UI/XML/NpcFun/NpcFunBreak.lua" />
+  <Script File="./Localization/en_us/UI/XML/NpcFun/NpcFunAltar.lua" />
+  <Script File="./Localization/en_us/UI/XML/NpcFun/NpcFunGuildQuest.lua" />
+  <Script File="./Localization/en_us/UI/XML/NpcFun/NpcFunActivity.lua" />
+  <Script File="./Localization/en_us/UI/XML/NpcFun/NpcFunUionTime.lua" />
+  <Script File="./Localization/en_us/UI/XML/NpcFun/NpcFunRepetition.lua" />
+  <Script File="./Localization/en_us/UI/XML/NpcFun/NpcFunPan.lua" />
+  <Script File="./Localization/en_us/UI/XML/NpcFun/NpcFunMessenger.lua" />
+  <Script File="./Localization/en_us/UI/XML/NpcFun/NpcFunDesidentify.lua" />
+  <Script File="./Localization/en_us/UI/XML/NpcFun/NpcFunDesaward.lua" />
+  <Script File="./Localization/en_us/UI/XML/NpcFun/NpcFunAward.lua" />
+  <Script File="./Localization/en_us/UI/XML/NpcFun/NpcFunSignact.lua" />
+  <Script File="./Localization/en_us/UI/XML/NpcFun/NpcFunSkillbook.lua" />
+  <Script File="./Localization/en_us/UI/XML/NpcFun/NpcFunMaterialBack.lua" />
+  <Script File="./Localization/en_us/UI/XML/NpcFun/NpcFunNewMan.lua" />
+  <Script File="./Localization/en_us/UI/XML/NpcFun/NpcFunStar.lua" />
+  <Script File="./Localization/en_us/UI/XML/NpcFun/NpcFunUnionWar.lua" />
+  <Script File="./Localization/en_us/UI/XML/NpcFun/NpcFunAssociation.lua" />
+  <Script File="./Localization/en_us/UI/XML/NpcFun/NpcFunHealth.lua" />
+  <Script File="./Localization/en_us/UI/XML/NpcFun/NpcFunOldMan.lua" />
+  <Script File="./Localization/en_us/UI/XML/NpcFun/NpcFunLostBook.lua" />
+  <Script File="./Localization/en_us/UI/XML/NpcFun/NpcFunRemain.lua" />
+  <Script File="./Localization/en_us/UI/XML/NpcFun/NpcFunZeus.lua" />
+  <Script File="./Localization/en_us/UI/XML/NpcFun/NpcFunWarTxt.lua" /> 
+  <Script File="./Localization/en_us/UI/XML/NpcFun/NpcFunGift.lua" /> 
+  <Script File="./Localization/en_us/UI/XML/NpcFun/NpcFunSanLoad.lua" />
+  <Script File="./Localization/en_us/UI/XML/NpcFun/NpcFunEment.lua" />
+  <Script File="./Localization/en_us/UI/XML/NpcFun/NpcFunPet.lua" />
+  <Script File="./Localization/en_us/UI/XML/NpcFun/NpcFunSound.lua" />
+  <Script File="./Localization/en_us/UI/XML/NpcFun/NpcFunHpmp.lua" />
+  <Script File="./Localization/en_us/UI/XML/NpcFun/NpcFunFood.lua" />
+  <Script File="./Localization/en_us/UI/XML/NpcFun/NpcFunMoon.lua" />
+  <Script File="./Localization/en_us/UI/XML/NpcFun/NpcFunMooncake.lua" />
+  <Script File="./Localization/en_us/UI/XML/NpcFun/NpcFunPett.lua" />
+  <Script File="./Localization/en_us/UI/XML/NpcFun/NpcFunVocation.lua" />
+  <Script File="./Localization/en_us/UI/XML/NpcFun/NpcFunHallo.lua" />
+  <Script File="./Localization/en_us/UI/XML/NpcFun/NpcFunThank.lua" />
+</UIConfig>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="GB2312"?>
+<!--this is Message config-->
+<Message>
+    <PetRandomEvent>
+        <PetAddA ID="1">
+            <Pet1 Message="Good luck! %PetName% discovered a %Event% in the grass at the roadside."/>
+            <Pet2 Message="%PetName% picked up an unexpected parcel, %Event% was inside it!"/>
+            <Pet3 Message="%PetName% came back to you with a broken jar and you discovered %Event% in it."/>
+        </PetAddA>
+        <PetAddB ID="2">
+            <Pet4 Message="Your %PetName% fought bravely against the Boars as a result you have obtained %Event% as a reward!"/>
+            <Pet5 Message="%PetName% has helped the farmers to drive away all of those wretched birds as a result you have obtained %Event% as a reward!"/>
+            <Pet6 Message="%PetName% has won the competition in the village as a result you have obtained %Event% as a reward!"/>
+        </PetAddB>
+        <PetAddC ID="3">
+            <Pet7 Message="%PetName% has stumbled over something, oh it is a %Event%!"/>
+            <Pet8 Message="%PetName% ran very fast past you and you found the %Event% it dropped."/>
+            <Pet9 Message="%PetName% got %Event% from a well on the roadside, you admire its keen intuition."/>
+        </PetAddC>
+        <PetAddD ID="4">
+            <Pet10 Message="Artemis appeared near %PetName% as a result you have obtained %Event% as a reward!"/>
+        </PetAddD>
+        <PetAddE ID="5">
+            <Pet11 Message="%PetName% kicked 1 Silver into a well as a result you have obtained Buff: %Event%!"/>
+            <Pet12 Message="%PetName% yawned towards the alter at the roadside as a result you have suddenly obtained Buff: %Event%！"/>
+        </PetAddE>
+        <PetLoseA ID="6">
+            <Pet13 Message="%PetName% was caught trying to steal food from the garden as a result you had to pay %Event% fine to the owner."/>
+            <Pet14 Message="You were absorbed in playing with %PetName% as a result you have carelessly lost %Event%."/>
+        </PetLoseA>
+        <PetLoseB ID="7">
+            <Pet15 Message="%PetName% has been defeated by the Vipers as a result you have lost %Event%!"/>
+        </PetLoseB>
+        <PetAddF ID="8">
+            <Pet16 Message="A serpent appear on the road suddenly, %PetName% defeated the enemy to protects its host, and won %Event%! "/>
+            <Pet17 Message="You and %PetName% cooperated well and won the Marathon Relay. %PetName% obtained %Event%！"/>
+        </PetAddF>
+    </PetRandomEvent>
+</Message>

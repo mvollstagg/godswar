@@ -1,0 +1,65 @@
+name: godswar
+
+services:
+  db:
+    image: mariadb:10.11
+    # MariaDB is used because it still speaks mysql_native_password to the
+    # 2009-era libmySQL.dll shipped with the server, and supports the gb2312 /
+    # utf8_unicode_ci collations used by the legacy dumps.
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_PASSWORD:-godswar}
+      MARIADB_ROOT_HOST: "%"
+    volumes:
+      - gw-db-data:/var/lib/mysql
+      - ./docker/db:/docker-entrypoint-initdb.d:ro
+      - "./GW 2.0/Server Files (Compiled)/-- RESTORE DATABASES:/restore:ro"
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
+      timeout: 5s
+      retries: 40
+      start_period: 30s
+    restart: unless-stopped
+
+  server:
+    build:
+      context: .
+      dockerfile: docker/server/Dockerfile
+      additional_contexts:
+        # Named context because the folder name contains spaces.
+        gw: "./GW 2.0/Server Files (Compiled)"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DB_HOST: db
+      DB_USER: root
+      DB_PASSWORD: ${DB_PASSWORD:-godswar}
+      # 1_000_000 + client build: 1.0.270 -> 1000270 (Client/GodsWar.exe).
+      CLIENT_VERSION: ${CLIENT_VERSION:-1000270}
+      SERVER_NAME: ${SERVER_NAME:-GodsWar}
+      MAX_ONLINE: ${MAX_ONLINE:-200}
+      # 127.0.0.1 = play on this PC. For LAN play set this to the host's LAN
+      # IPv4 address (e.g. 192.168.68.54) and keep the ports published.
+      ADVERTISE_IP: ${ADVERTISE_IP:-127.0.0.1}
+    ports:
+      - "${LOGIN_PORT:-5999}:5999"
+      - "${GAME_PORT:-6001}:6001"
+    cap_add:
+      - NET_ADMIN          # needed to add ADVERTISE_IP to lo for LAN mode
+    volumes:
+      - gw-logs:/opt/gw/logs
+    healthcheck:
+      test: ["CMD-SHELL", "nc -z 127.0.0.1 5999 && nc -z 127.0.0.1 6001"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 300s     # GameServer needs minutes to load maps and scripts
+    restart: unless-stopped
+
+volumes:
+  gw-db-data:
+  gw-logs:
