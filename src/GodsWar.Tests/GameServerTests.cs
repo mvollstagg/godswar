@@ -316,6 +316,12 @@ public class GameServerTests
 
         public Task UpdateStorageAsync(int userId, string storage, CancellationToken ct = default)
             => Task.CompletedTask;
+
+        public Task UpdateUserMagicAsync(int userId, string magicInfo, CancellationToken ct = default)
+            => Task.CompletedTask;
+
+        public Task UpdateUserSkillAsync(int userId, string skillInfo, CancellationToken ct = default)
+            => Task.CompletedTask;
     }
 
     private sealed class DuplexPipeStream : Stream, IAsyncDisposable

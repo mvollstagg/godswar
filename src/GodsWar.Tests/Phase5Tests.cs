@@ -307,6 +307,8 @@ public sealed class Phase5Tests
         public Task UpdateCharacterStateAsync(CharacterBase character, CancellationToken ct = default) => Task.CompletedTask;
         public Task UpdateKitbagAsync(int userId, string k1, string? k2, string? k3, string? k4, string eq, CancellationToken ct = default) => Task.CompletedTask;
         public Task UpdateStorageAsync(int userId, string storage, CancellationToken ct = default) => Task.CompletedTask;
+        public Task UpdateUserMagicAsync(int userId, string magicInfo, CancellationToken ct = default) => Task.CompletedTask;
+        public Task UpdateUserSkillAsync(int userId, string skillInfo, CancellationToken ct = default) => Task.CompletedTask;
     }
 
     private sealed class StubSocialRepo : IWorldSocialRepository
@@ -326,6 +328,15 @@ public sealed class Phase5Tests
         public Task DeleteConsortiaAsync(int consortiaId, CancellationToken ct = default) => Task.CompletedTask;
         public Task<IReadOnlyList<ConsortiaMemberView>> GetConsortiaMembersAsync(int consortiaId, CancellationToken ct = default) => Task.FromResult<IReadOnlyList<ConsortiaMemberView>>([]);
         public Task UpdateMemberConsortiaAsync(int userId, int consortiaId, short job, int contribute, CancellationToken ct = default) => Task.CompletedTask;
+        public Task EnsurePhase6SchemaAsync(CancellationToken ct = default) => Task.CompletedTask;
+        public Task<UserSkillBackupRecord?> GetSkillBackupAsync(int userId, CancellationToken ct = default) => Task.FromResult<UserSkillBackupRecord?>(null);
+        public Task SaveSkillBackupAsync(UserSkillBackupRecord record, CancellationToken ct = default) => Task.CompletedTask;
+        public Task<IReadOnlyList<UserPetRecord>> GetUserPetsAsync(int userId, CancellationToken ct = default) => Task.FromResult<IReadOnlyList<UserPetRecord>>([]);
+        public Task<UserPetRecord> CreatePetAsync(UserPetRecord pet, CancellationToken ct = default) => Task.FromResult(pet);
+        public Task UpdatePetAsync(UserPetRecord pet, CancellationToken ct = default) => Task.CompletedTask;
+        public Task DeletePetAsync(int userId, int petId, CancellationToken ct = default) => Task.CompletedTask;
+        public Task<IReadOnlyList<UserMentorRecord>> GetMentorRecordsAsync(string playerName, CancellationToken ct = default) => Task.FromResult<IReadOnlyList<UserMentorRecord>>([]);
+        public Task AddMentorAsync(string masterName, string prenticeName, CancellationToken ct = default) => Task.CompletedTask;
     }
 
     private sealed class DuplexStreamPair : Stream

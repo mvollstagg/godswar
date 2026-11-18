@@ -69,6 +69,39 @@ public sealed record NpcScriptDef(
     IReadOnlyList<int> RewardQuestIds,
     string TalkKey);
 
+public sealed record MallItemBaseDef(int Id, int Discount, byte New, byte Hot);
+
+public sealed record AssociationDiscountDef(byte Level, int StoneDiscount, int GloryDiscount);
+
+public sealed record BijouForgeDef(int Id, int NextId, int MaterialType, int MaterialProbAdd);
+
+public sealed record MallScriptConfig(
+    IReadOnlyList<int> AthensMallItemLists,
+    IReadOnlyList<byte> AthensMallSellTypes,
+    IReadOnlyList<int> SpartaMallItemLists,
+    IReadOnlyList<byte> SpartaMallSellTypes,
+    IReadOnlyList<int> AthensAssociationItemLists,
+    IReadOnlyList<int> SpartaAssociationItemLists);
+
+public sealed record DialEntryDef(
+    uint ItemId,
+    int BaseId,
+    int[] Appends,
+    byte AppendLevel,
+    byte BaseLevel,
+    byte Binding,
+    byte Overlap,
+    bool IsNonsuch,
+    int RandInDial,
+    int Probability);
+
+public sealed record GoldBoxConfig(
+    uint GoldBoxId,
+    int KeyBoxId,
+    DialEntryDef DefaultItem,
+    IReadOnlyList<DialEntryDef> NormalItems,
+    IReadOnlyList<DialEntryDef> NonsuchItems);
+
 public static partial class ScriptDataLoader
 {
     private static readonly Dictionary<string, int> NpcFlagConstants = new(StringComparer.Ordinal)
@@ -384,6 +417,246 @@ public static partial class ScriptDataLoader
         }
 
         return scripts;
+    }
+
+    public static (Dictionary<int, MallItemBaseDef> ShopItems, List<AssociationDiscountDef> Discounts) LoadItemShop(string xmlPath)
+    {
+        var shopItems = new Dictionary<int, MallItemBaseDef>();
+        var discounts = new List<AssociationDiscountDef>();
+        if (!File.Exists(xmlPath))
+        {
+            return (shopItems, discounts);
+        }
+
+        XDocument doc = XDocument.Load(xmlPath);
+        if (doc.Root is null)
+        {
+            return (shopItems, discounts);
+        }
+
+        XElement? shopEl = doc.Root.Element("Shop");
+        if (shopEl is not null)
+        {
+            foreach (XElement el in shopEl.Elements())
+            {
+                int id = ParseAttrInt(el, "ID");
+                if (id <= 0)
+                {
+                    continue;
+                }
+
+                int discount = ParseIntSafe(el.Attribute("Discount")?.Value, 100);
+                byte isNew = (byte)Math.Clamp(ParseAttrInt(el, "New"), 0, 1);
+                byte isHot = (byte)Math.Clamp(ParseAttrInt(el, "Hot"), 0, 1);
+                shopItems[id] = new MallItemBaseDef(id, discount, isNew, isHot);
+            }
+        }
+
+        XElement? guildEl = doc.Root.Element("Guild");
+        if (guildEl is not null)
+        {
+            foreach (XElement el in guildEl.Elements())
+            {
+                int glevel = ParseAttrInt(el, "Glevel");
+                if (glevel <= 0)
+                {
+                    continue;
+                }
+
+                int discA = ParseIntSafe(el.Attribute("DiscountA")?.Value, 100);
+                int discB = ParseIntSafe(el.Attribute("DiscountB")?.Value, 100);
+                discounts.Add(new AssociationDiscountDef((byte)glevel, discA, discB));
+            }
+        }
+
+        return (shopItems, discounts);
+    }
+
+    public static Dictionary<int, BijouForgeDef> LoadBijouForges(string xmlPath)
+    {
+        var result = new Dictionary<int, BijouForgeDef>();
+        if (!File.Exists(xmlPath))
+        {
+            return result;
+        }
+
+        XDocument doc = XDocument.Load(xmlPath);
+        if (doc.Root is null)
+        {
+            return result;
+        }
+
+        foreach (XElement el in doc.Root.Elements())
+        {
+            int id = ParseAttrInt(el, "ID");
+            if (id <= 0)
+            {
+                continue;
+            }
+
+            result[id] = new BijouForgeDef(
+                id,
+                ParseAttrInt(el, "NextID"),
+                ParseAttrInt(el, "MaterialType"),
+                ParseAttrInt(el, "MaterialProyAdd"));
+        }
+
+        return result;
+    }
+
+    public static MallScriptConfig LoadMallScripts(string scriptRoot)
+    {
+        (List<int> athensLists, List<byte> athensSell) = LoadSingleMallScript(Path.Combine(scriptRoot, "Athens_GameMall.py"));
+        (List<int> spartaLists, List<byte> spartaSell) = LoadSingleMallScript(Path.Combine(scriptRoot, "Sparta_GameMall.py"));
+        (List<int> athensAssoc, _) = LoadSingleMallScript(Path.Combine(scriptRoot, "Athens_AssociationMall.py"));
+        (List<int> spartaAssoc, _) = LoadSingleMallScript(Path.Combine(scriptRoot, "Sparta_AssociationMall.py"));
+
+        return new MallScriptConfig(athensLists, athensSell, spartaLists, spartaSell, athensAssoc, spartaAssoc);
+    }
+
+    public static Dictionary<uint, GoldBoxConfig> LoadGoldBoxes(string dropDir)
+    {
+        var result = new Dictionary<uint, GoldBoxConfig>();
+        string dialIndex = Path.Combine(dropDir, "dial.ini");
+        if (!File.Exists(dialIndex))
+        {
+            return result;
+        }
+
+        foreach (string line in File.ReadLines(dialIndex))
+        {
+            string trimmed = line.Trim();
+            int eq = trimmed.IndexOf('=');
+            if (eq <= 0 || !trimmed[..eq].StartsWith("ID", StringComparison.OrdinalIgnoreCase))
+            {
+                continue;
+            }
+
+            if (!uint.TryParse(trimmed[(eq + 1)..].Trim(), out uint boxId))
+            {
+                continue;
+            }
+
+            string boxFile = Path.Combine(dropDir, $"dial{boxId}.ini");
+            if (!File.Exists(boxFile))
+            {
+                continue;
+            }
+
+            GoldBoxConfig? cfg = ParseSingleGoldBoxFile(boxId, boxFile);
+            if (cfg is not null)
+            {
+                result[boxId] = cfg;
+            }
+        }
+
+        return result;
+    }
+
+    private static GoldBoxConfig? ParseSingleGoldBoxFile(uint boxId, string path)
+    {
+        var sections = new Dictionary<string, Dictionary<string, string>>(StringComparer.OrdinalIgnoreCase);
+        string current = string.Empty;
+        foreach (string rawLine in File.ReadLines(path))
+        {
+            string line = rawLine.Trim();
+            if (string.IsNullOrEmpty(line) || line.StartsWith(';') || line.StartsWith("//"))
+            {
+                continue;
+            }
+
+            if (line.StartsWith('[') && line.EndsWith(']'))
+            {
+                current = line[1..^1].Trim();
+                sections[current] = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+                continue;
+            }
+
+            int eq = line.IndexOf('=');
+            if (eq > 0 && !string.IsNullOrEmpty(current))
+            {
+                sections[current][line[..eq].Trim()] = line[(eq + 1)..].Trim();
+            }
+        }
+
+        int keyBoxId = sections.TryGetValue("ItemCount", out Dictionary<string, string>? ic)
+            ? ParseIntSafe(ic.GetValueOrDefault("BoxID"), 2)
+            : 2;
+        int count = ic is not null ? ParseIntSafe(ic.GetValueOrDefault("Count"), 0) : 0;
+
+        DialEntryDef defaultItem = sections.TryGetValue("DefaultItem", out Dictionary<string, string>? defSec)
+            ? ParseDialEntry(defSec, 10000)
+            : new DialEntryDef(10000, 2900, [-1, -1, -1, -1, -1], 1, 1, 0, 1, false, 1, 100);
+
+        var normal = new List<DialEntryDef>();
+        var nonsuch = new List<DialEntryDef>();
+        for (int i = 0; i < count; i++)
+        {
+            if (!sections.TryGetValue($"DialItem{i}", out Dictionary<string, string>? dsec))
+            {
+                continue;
+            }
+
+            DialEntryDef entry = ParseDialEntry(dsec, (uint)(10001 + i));
+            if (entry.BaseId <= 0)
+            {
+                continue;
+            }
+
+            if (entry.IsNonsuch)
+            {
+                nonsuch.Add(entry);
+            }
+            else
+            {
+                normal.Add(entry);
+            }
+        }
+
+        return new GoldBoxConfig(boxId, keyBoxId, defaultItem, normal, nonsuch);
+    }
+
+    private static DialEntryDef ParseDialEntry(Dictionary<string, string> sec, uint fallbackItemId)
+    {
+        uint itemId = uint.TryParse(sec.GetValueOrDefault("ItemID"), out uint iid) ? iid : fallbackItemId;
+        int baseId = ParseIntSafe(sec.GetValueOrDefault("BaseID"), -1);
+        int[] rawApp = ParseCsvIntArray(sec.GetValueOrDefault("Append"));
+        int[] appends =
+        [
+            rawApp.Length > 0 ? rawApp[0] : -1,
+            rawApp.Length > 1 ? rawApp[1] : -1,
+            rawApp.Length > 2 ? rawApp[2] : -1,
+            rawApp.Length > 3 ? rawApp[3] : -1,
+            rawApp.Length > 4 ? rawApp[4] : -1,
+        ];
+        byte appLv = (byte)Math.Clamp(ParseIntSafe(sec.GetValueOrDefault("AppLV"), 1), 1, 12);
+        byte baseLv = (byte)Math.Clamp(ParseIntSafe(sec.GetValueOrDefault("BaseLV"), 1), 1, 5);
+        byte binding = (byte)Math.Clamp(ParseIntSafe(sec.GetValueOrDefault("Binding"), 0), 0, 1);
+        byte overlap = (byte)Math.Clamp(ParseIntSafe(sec.GetValueOrDefault("OverLap"), 1), 1, 99);
+        bool nonsuch = ParseIntSafe(sec.GetValueOrDefault("Nonsuch"), 0) != 0;
+        int randInDial = Math.Max(1, ParseIntSafe(sec.GetValueOrDefault("RandInDial"), 1));
+        int prob = Math.Max(1, ParseIntSafe(sec.GetValueOrDefault("Probability"), 100));
+
+        return new DialEntryDef(itemId, baseId, appends, appLv, baseLv, binding, overlap, nonsuch, randInDial, prob);
+    }
+
+    private static (List<int> ItemLists, List<byte> SellTypes) LoadSingleMallScript(string path)
+    {
+        if (!File.Exists(path))
+        {
+            return ([], []);
+        }
+
+        string text = File.ReadAllText(path);
+        List<int> itemLists = ExtractIntMatches(text, "GetItemList", @"ItemList(\d+)");
+        List<int> sellTypeInts = ExtractIntMatches(text, "GetItemListType", @"(\d+)");
+        List<byte> sellTypes = sellTypeInts.Select(v => (byte)Math.Clamp(v, 0, 255)).ToList();
+        while (sellTypes.Count < itemLists.Count)
+        {
+            sellTypes.Add(0);
+        }
+
+        return (itemLists, sellTypes);
     }
 
     private static int ExtractFlagSum(string text, string funcName, Dictionary<string, int> constants)

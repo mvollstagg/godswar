@@ -77,3 +77,43 @@ public sealed class ConsortiaMemberView
     public short ConsortiaJob { get; set; }
     public int ConsortiaContribute { get; set; }
 }
+
+public sealed class UserSkillBackupRecord
+{
+    public int UserId { get; set; }
+    public string SkillIds { get; set; } = string.Empty;
+    public string ItemIds { get; set; } = string.Empty;
+    public int RSkillId { get; set; } = -1;
+    public int RItemId { get; set; } = -1;
+}
+
+public sealed class UserPetRecord
+{
+    public int Id { get; set; }
+    public int UserId { get; set; }
+    public string Name { get; set; } = "ZodiacPet";
+    public short TemplateId { get; set; } = 1;
+    public short Level { get; set; } = 1;
+    public int Exp { get; set; }
+    public short Quality { get; set; } = 1;
+    public short Sex { get; set; }
+    public short Savvy { get; set; } = 10;
+    public short State { get; set; } = 1; // 1 = rest, 2 = summoned, 3 = merged, 4 = work
+    public short Loyalty { get; set; } = 100;
+    public short Satiety { get; set; } = 100;
+    public short Rebirth { get; set; }
+    public int Hp { get; set; } = 200;
+    public int MaxHp { get; set; } = 200;
+    public int Attack { get; set; } = 25;
+    public int Defend { get; set; } = 12;
+    public int MagicAttack { get; set; } = 25;
+    public int MagicDefend { get; set; } = 12;
+    public int Hit { get; set; } = 90;
+}
+
+public sealed class UserMentorRecord
+{
+    public string MasterName { get; set; } = string.Empty;
+    public string PrenticeName { get; set; } = string.Empty;
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+}

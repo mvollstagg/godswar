@@ -1,24 +1,82 @@
-# GodsWar Online — local revival
+# GodsWar Online — .NET 11 + PostgreSQL Server & Local Revival
 
-Legacy GodsWar Online (众神之战) server from 2007/2008, running in Docker.
-The three server daemons are 32-bit Windows binaries, so they run under a
-32-bit Wine prefix inside a Linux container; MariaDB serves the legacy schema.
+A clean-room **C# (.NET 11) + PostgreSQL 17** port of the GodsWar Online (众神之战) server (`LoginServer` + `GameServer`), binary-compatible with the **1.0.282 US client** (`Client/GodsWar.exe`), alongside the original legacy Wine + MariaDB reference stack.
 
 ```
-Client/                             game client (Windows, run play.cmd)
-GW 2.0/Server Files (Compiled)/     LoginServer / DBServer / GameServer + content
-GW 2.0/Server Files (Source)/       C++ source (VS2008 era), reference only
-GodsWar-Private-Server-master/      abandoned C# emu, not used
-docker/                             container images, DB bootstrap, tools
-compose.yaml                        db + server
+src/
+  GodsWar.Database/                 Npgsql + PostgreSQL repositories & schema models
+  GodsWar.Protocol/                 1.0.282 wire framing, XOR cipher & binary packet structs
+  GodsWar.LoginServer/              LoginServer (5999) + account auth + server list + GameServer IPC
+  GodsWar.GameServer/               GameServer (6001) + world AOI, combat, quests, social, mall, pets, stalls
+  GodsWar.Tests/                    xUnit protocol, gameplay & PostgreSQL integration tests
+docker/postgres/init/               PostgreSQL schema & seed SQL (01-03)
+compose.dotnet.yaml                 PostgreSQL 17 + GodsWar.LoginServer + GodsWar.GameServer
+compose.yaml                        Legacy Wine + MariaDB reference oracle
+Client/                             1.0.282 US game client (Windows, run play.cmd)
+GW 2.0/Server Files (Compiled)/     Game data (Scene/, Item/, Skill/, Drop/, Script/)
+GW 2.0/Server Files (Source)/       Original C++ source (reference only)
 ```
 
-## Requirements
+## Quick Start (.NET + PostgreSQL in Docker)
 
+### Requirements
 - Docker Desktop (Linux containers)
-- Windows for the client
+- Windows for `Client/GodsWar.exe` (or .NET 11 SDK if running servers natively)
 
-## Start the server
+### 1. Start the .NET + PostgreSQL stack
+```bash
+docker compose -f compose.dotnet.yaml up -d --build
+docker compose -f compose.dotnet.yaml logs -f loginserver gameserver
+```
+
+This starts:
+- `postgres` (`postgres:17-alpine`, port `5432`, auto-initializes `accounts` and `godswar` schemas from `docker/postgres/init/`)
+- `loginserver` (`GodsWar.LoginServer`, port `5999`)
+- `gameserver` (`GodsWar.GameServer`, port `6001`, mounts `./GW 2.0/Server Files (Compiled)/gameserver` read-only)
+
+Verify health:
+```bash
+docker compose -f compose.dotnet.yaml ps
+docker compose -f compose.dotnet.yaml exec postgres psql -U godswar -d godswar -c "SELECT COUNT(*) FROM godswar.character_base;"
+```
+
+### 2. Playtest with the 1.0.282 Client
+Run `Client/play.cmd` (it launches `GodsWar.exe` directly — **do not** run `Launch.exe` or `Patcher.exe`).
+- Default test account: **`test` / `test`**
+- Client config (`Client/config.ini`): `IP=127.0.0.1`, `Region=11`, `ISFB=0`
+
+### 3. Local Development & Debugging (Host .NET 11 SDK)
+You can run PostgreSQL in Docker and debug `LoginServer` / `GameServer` directly from your IDE or terminal:
+```bash
+# Start only PostgreSQL
+docker compose -f compose.dotnet.yaml up -d postgres
+
+# Build & run all unit + database tests
+dotnet build src/GodsWar.Server.sln
+dotnet test src/GodsWar.Server.sln
+
+# Run LoginServer and GameServer locally (in separate terminals)
+dotnet run --project src/GodsWar.LoginServer
+dotnet run --project src/GodsWar.GameServer -- --GameServer:SceneDataPath="GW 2.0/Server Files (Compiled)/gameserver/Scene"
+```
+
+### 4. Protocol Probe & Troubleshooting
+- **Headless login + world probe:**
+  ```bash
+  python docker/tools/login_probe.py --test --account test --password test --version 1000282
+  ```
+- **LAN Play:** Set `ADVERTISE_IP=<host-lan-ipv4>` when starting `compose.dotnet.yaml` (e.g. `ADVERTISE_IP=192.168.1.50 docker compose -f compose.dotnet.yaml up -d`), and point `Client/config.ini` on LAN PCs to that IP.
+- **Database inspection:**
+  ```bash
+  docker compose -f compose.dotnet.yaml exec postgres psql -U godswar -d godswar
+  ```
+- **Logs:** Increase verbosity via `Logging__LogLevel__Default=Debug` in `compose.dotnet.yaml` or `appsettings.json`.
+
+---
+
+## Legacy Wine + MariaDB Stack (Reference Oracle)
+
+The original 32-bit Windows server binaries can still be run under Wine + MariaDB via `compose.yaml` as a behavioral reference:
 
 ```bash
 cp docker/.env.example .env       # then edit DB_PASSWORD / ADVERTISE_IP

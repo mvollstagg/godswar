@@ -246,6 +246,8 @@ public sealed class Phase4Tests
         public Task UpdateCharacterStateAsync(CharacterBase character, CancellationToken ct = default) { StateSavedCount++; return Task.CompletedTask; }
         public Task UpdateKitbagAsync(int userId, string k1, string? k2, string? k3, string? k4, string eq, CancellationToken ct = default) { KitbagSavedCount++; return Task.CompletedTask; }
         public Task UpdateStorageAsync(int userId, string storage, CancellationToken ct = default) => Task.CompletedTask;
+        public Task UpdateUserMagicAsync(int userId, string magicInfo, CancellationToken ct = default) => Task.CompletedTask;
+        public Task UpdateUserSkillAsync(int userId, string skillInfo, CancellationToken ct = default) => Task.CompletedTask;
     }
 
     private sealed class DuplexStreamPair : Stream

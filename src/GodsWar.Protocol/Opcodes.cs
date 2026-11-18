@@ -92,6 +92,7 @@ public enum GameOpcode : ushort
     MsgNpcItemData = 10068,
     MsgNpcStorageData = 10069,
     MsgNpcSell = 10070,
+    MsgLearnSucceed = 10071,
     MsgNpcQuest = 10072,
     MsgNpcNextQuest = 10073,
     MsgNpcQuests = 10074,
@@ -127,6 +128,7 @@ public enum GameOpcode : ushort
     MsgQuickbarInit = 10111,
     MsgGoldBox = 10112,
     MsgGoldBoxReturn = 10114,
+    MsgGoldBoxInDial = 10115,
 
     // Party / Team
     MsgTeam = 10117,
@@ -183,6 +185,33 @@ public enum GameOpcode : ushort
     MsgDelayExit = 10185,
     MsgWalk = 10187,
     MsgMentorListQuery = 10227,
+    MsgPrentice = 10227,
+    MsgPrenticeList = 10228,
+    MsgPrenticeTip = 10229,
+
+    // 1.0.282 Pet System (10230..10243)
+    MsgPetList = 10230,
+    MsgPetSummon = 10231,
+    MsgPetRecall = 10232,
+    MsgPetRelease = 10233,
+    MsgPetFeed = 10234,
+    MsgPetRename = 10235,
+    MsgPetMerge = 10236,
+    MsgPetAction = 10237,
+    MsgPetState = 10238,
+    MsgPetEquip = 10239,
+    MsgPetUpdate = 10240,
+    MsgPetView = 10241,
+    MsgPetTip = 10242,
+    MsgPetAdd = 10243,
+
+    // 1.0.282 AFK / Auto-Hunt System (10295..10299)
+    MsgAfkRequest = 10295,
+    MsgAfkState = 10296,
+    MsgAfkSync = 10297,
+    MsgAfkTime = 10298,
+    MsgAfkBroadcast = 10299,
+
     MsgServerTime = 10303,
     MsgKeepalivePing = 10304,
 }

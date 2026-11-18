@@ -41,7 +41,19 @@ public sealed record ItemBaseDef(
     int[] MagicAttackByLevel,
     int[] MagicDefendByLevel,
     int[] MaxHpByLevel,
-    int[] MaxMpByLevel);
+    int[] MaxMpByLevel,
+    bool IsSkillBook = false,
+    int PrevSkillId = -1,
+    int SkillLearnId = -1,
+    int GoldBoxIdx = -1,
+    int KeyIdx = -1);
+
+public sealed record PassiveSkillDef(
+    int Id,
+    string Name,
+    int PrefixId,
+    int PrefixRank,
+    int TotalRank);
 
 public sealed record ItemAppendDef(
     int Id,
@@ -98,6 +110,12 @@ public sealed class GameDataCatalog
     public IReadOnlyDictionary<int, List<ShopItemDef>> ShopItemLists { get; }
     public IReadOnlyDictionary<int, QuestDef> Quests { get; }
     public IReadOnlyDictionary<string, NpcScriptDef> NpcScripts { get; }
+    public IReadOnlyDictionary<int, PassiveSkillDef> PassiveSkills { get; }
+    public IReadOnlyDictionary<int, MallItemBaseDef> MallShopItems { get; }
+    public IReadOnlyList<AssociationDiscountDef> AssociationDiscounts { get; }
+    public IReadOnlyDictionary<int, BijouForgeDef> BijouForges { get; }
+    public MallScriptConfig MallConfig { get; }
+    public IReadOnlyDictionary<uint, GoldBoxConfig> GoldBoxes { get; }
 
     private GameDataCatalog(
         Dictionary<int, ItemBaseDef> items,
@@ -108,7 +126,13 @@ public sealed class GameDataCatalog
         Dictionary<int, EquipForgeDef> equipForges,
         Dictionary<int, List<ShopItemDef>> shopItemLists,
         Dictionary<int, QuestDef> quests,
-        Dictionary<string, NpcScriptDef> npcScripts)
+        Dictionary<string, NpcScriptDef> npcScripts,
+        Dictionary<int, PassiveSkillDef> passiveSkills,
+        Dictionary<int, MallItemBaseDef> mallShopItems,
+        List<AssociationDiscountDef> associationDiscounts,
+        Dictionary<int, BijouForgeDef> bijouForges,
+        MallScriptConfig mallConfig,
+        Dictionary<uint, GoldBoxConfig> goldBoxes)
     {
         Items = items;
         Appends = appends;
@@ -119,6 +143,12 @@ public sealed class GameDataCatalog
         ShopItemLists = shopItemLists;
         Quests = quests;
         NpcScripts = npcScripts;
+        PassiveSkills = passiveSkills;
+        MallShopItems = mallShopItems;
+        AssociationDiscounts = associationDiscounts;
+        BijouForges = bijouForges;
+        MallConfig = mallConfig;
+        GoldBoxes = goldBoxes;
     }
 
     public static GameDataCatalog LoadFromSceneParent(string sceneDir)
@@ -129,12 +159,19 @@ public sealed class GameDataCatalog
         var appends = LoadAppends(Path.Combine(gameServerRoot, "Item", "ItemAppendAttribute.xml"));
         var magics = LoadMagics(Path.Combine(gameServerRoot, "Skill", "Magic.ini"));
         var statuses = LoadStatuses(Path.Combine(gameServerRoot, "Skill", "Status.ini"));
+        var passiveSkills = LoadPassiveSkills(Path.Combine(gameServerRoot, "Skill", "Skill.ini"));
         var drops = LoadDropTables(Path.Combine(gameServerRoot, "Drop"));
         var forges = ScriptDataLoader.LoadEquipForges(Path.Combine(gameServerRoot, "Item", "EquipForge.xml"));
+        var bijouForges = ScriptDataLoader.LoadBijouForges(Path.Combine(gameServerRoot, "Item", "BijouForge.xml"));
+        (var mallShopItems, var assocDiscounts) = ScriptDataLoader.LoadItemShop(Path.Combine(gameServerRoot, "Item", "ItemShop.xml"));
         var shops = ScriptDataLoader.LoadShopItemLists(Path.Combine(gameServerRoot, "Script", "Item.py"));
         var quests = ScriptDataLoader.LoadQuests(Path.Combine(gameServerRoot, "Script", "Quest.py"));
         var npcScripts = ScriptDataLoader.LoadNpcScripts(Path.Combine(gameServerRoot, "Script"));
-        return new GameDataCatalog(items, appends, magics, statuses, drops, forges, shops, quests, npcScripts);
+        var mallConfig = ScriptDataLoader.LoadMallScripts(Path.Combine(gameServerRoot, "Script"));
+        var goldBoxes = ScriptDataLoader.LoadGoldBoxes(Path.Combine(gameServerRoot, "Drop"));
+        return new GameDataCatalog(
+            items, appends, magics, statuses, drops, forges, shops, quests, npcScripts,
+            passiveSkills, mallShopItems, assocDiscounts, bijouForges, mallConfig, goldBoxes);
     }
 
     public ItemEquipSlot CreateDropItem(string tableKey, Random? rng = null)
@@ -212,6 +249,11 @@ public sealed class GameDataCatalog
             byte maxOverlap = (byte)Math.Clamp(ParseInt(el.Attribute("Overlap")?.Value, 1), 1, 99);
             int money = ParseInt(el.Attribute("Money")?.Value);
             int skillId = ParseInt(el.Attribute("Skill")?.Value, -1);
+            int prevSkillId = ParseInt(el.Attribute("PrevSkillID")?.Value, -1);
+            int skillLearnId = ParseInt(el.Attribute("SkillID")?.Value, -1);
+            bool isSkillBook = prevSkillId >= 0 || skillLearnId >= 0 || el.Name.LocalName.StartsWith("SkillBook", StringComparison.OrdinalIgnoreCase);
+            int goldBoxIdx = ParseInt(el.Attribute("GoldBoxIdx")?.Value, -1);
+            int keyIdx = ParseInt(el.Attribute("KEY")?.Value, -1);
 
             map[id] = new ItemBaseDef(
                 id,
@@ -231,7 +273,38 @@ public sealed class GameDataCatalog
                 ParseIntArray(el.Attribute("MagicAttack")?.Value),
                 ParseIntArray(el.Attribute("MagicDefend")?.Value),
                 ParseIntArray(el.Attribute("MaxHP")?.Value),
-                ParseIntArray(el.Attribute("MaxMP")?.Value));
+                ParseIntArray(el.Attribute("MaxMP")?.Value),
+                isSkillBook,
+                prevSkillId,
+                skillLearnId,
+                goldBoxIdx,
+                keyIdx);
+        }
+
+        return map;
+    }
+
+    private static Dictionary<int, PassiveSkillDef> LoadPassiveSkills(string path)
+    {
+        var map = new Dictionary<int, PassiveSkillDef>();
+        if (!File.Exists(path))
+        {
+            return map;
+        }
+
+        foreach ((string section, Dictionary<string, string> kv) in ReadIniSections(path))
+        {
+            if (!int.TryParse(section, out int skillId))
+            {
+                continue;
+            }
+
+            map[skillId] = new PassiveSkillDef(
+                skillId,
+                kv.GetValueOrDefault("Name", $"Skill_{skillId}"),
+                ParseInt(kv.GetValueOrDefault("PrefixID"), skillId),
+                ParseInt(kv.GetValueOrDefault("RrefixRank"), 0),
+                ParseInt(kv.GetValueOrDefault("TotalRank"), 0));
         }
 
         return map;

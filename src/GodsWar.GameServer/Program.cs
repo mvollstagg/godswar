@@ -30,6 +30,7 @@ builder.Services.AddSingleton<NpcShopAndForgeService>();
 builder.Services.AddSingleton<SocialService>();
 builder.Services.AddSingleton<ChatAndPortalService>();
 builder.Services.AddSingleton<GameplayHandlers>();
+builder.Services.AddSingleton<ClientFeaturesService>();
 builder.Services.AddSingleton<GameSessionHandler>();
 builder.Services.AddHostedService<LoginServerClient>();
 builder.Services.AddHostedService<GameServerListener>();

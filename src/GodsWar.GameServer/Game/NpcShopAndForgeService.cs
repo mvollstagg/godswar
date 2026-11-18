@@ -346,7 +346,12 @@ public sealed class NpcShopAndForgeService
         int successRate = 85;
         int nextBaseId = equip.Base;
 
-        if (_world.Catalog.EquipForges.TryGetValue(equip.Base, out EquipForgeDef? forgeDef))
+        if (req.Type == 1 && _world.Catalog.BijouForges.TryGetValue(equip.Base, out BijouForgeDef? bijouDef) && bijouDef.NextId > 0)
+        {
+            nextBaseId = bijouDef.NextId;
+            successRate = Math.Clamp(75 + bijouDef.MaterialProbAdd, 25, 100);
+        }
+        else if (_world.Catalog.EquipForges.TryGetValue(equip.Base, out EquipForgeDef? forgeDef))
         {
             cost = forgeDef.AMoney > 0 ? forgeDef.AMoney : 500;
             if (req.Type == 0 && forgeDef.NextId > 0)
@@ -358,6 +363,15 @@ public sealed class NpcShopAndForgeService
             {
                 int idx = Math.Clamp(equip.BaseLevel - 1, 0, forgeDef.BaseProbAdd.Length - 1);
                 successRate = Math.Clamp(60 + forgeDef.BaseProbAdd[idx], 20, 100);
+            }
+        }
+
+        if (player.ForgeMaterialSlot is (int mBagCheck, int mSlotCheck))
+        {
+            ItemEquipSlot matCheck = player.Kitbags[mBagCheck][mSlotCheck];
+            if (!matCheck.IsEmpty && _world.Catalog.BijouForges.TryGetValue(matCheck.Base, out BijouForgeDef? matBijou))
+            {
+                successRate = Math.Clamp(successRate + matBijou.MaterialProbAdd, 10, 100);
             }
         }
 
@@ -389,11 +403,11 @@ public sealed class NpcShopAndForgeService
         bool success = Random.Shared.Next(100) < successRate;
         if (success)
         {
-            byte newBaseLv = (byte)Math.Min(5, equip.BaseLevel + 1);
+            byte newBaseLv = req.Type == 1 ? equip.BaseLevel : (byte)Math.Min(5, equip.BaseLevel + 1);
             byte newAppLv = (byte)Math.Min(12, equip.AppendLevel + (req.Type == 2 ? 1 : 0));
             equip = equip with
             {
-                Base = req.Type == 0 ? nextBaseId : equip.Base,
+                Base = req.Type is 0 or 1 ? nextBaseId : equip.Base,
                 BaseLevel = newBaseLv,
                 AppendLevel = newAppLv,
             };

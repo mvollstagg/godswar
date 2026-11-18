@@ -18,6 +18,8 @@ public interface ICharacterRepository
     Task UpdateCharacterStateAsync(CharacterBase character, CancellationToken cancellationToken = default);
     Task UpdateKitbagAsync(int userId, string kitbag1, string? kitbag2, string? kitbag3, string? kitbag4, string equip, CancellationToken cancellationToken = default);
     Task UpdateStorageAsync(int userId, string storage, CancellationToken cancellationToken = default);
+    Task UpdateUserMagicAsync(int userId, string magicInfo, CancellationToken cancellationToken = default);
+    Task UpdateUserSkillAsync(int userId, string skillInfo, CancellationToken cancellationToken = default);
 }
 
 public sealed class CharacterRepository : ICharacterRepository
@@ -322,6 +324,36 @@ public sealed class CharacterRepository : ICharacterRepository
                 sql,
                 new { UserId = userId, Kitbag1 = kitbag1, Kitbag2 = kitbag2, Kitbag3 = kitbag3, Kitbag4 = kitbag4, Equip = equip },
                 cancellationToken: cancellationToken)
+        ).ConfigureAwait(false);
+    }
+
+    public async Task UpdateUserMagicAsync(int userId, string magicInfo, CancellationToken cancellationToken = default)
+    {
+        const string sql = """
+            INSERT INTO godswar.user_magic (user_id, magic_info)
+            VALUES (@UserId, @MagicInfo)
+            ON CONFLICT (user_id) DO UPDATE SET
+                magic_info = EXCLUDED.magic_info;
+            """;
+
+        await using DbConnection conn = await _connectionFactory.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
+        await conn.ExecuteAsync(
+            new CommandDefinition(sql, new { UserId = userId, MagicInfo = magicInfo }, cancellationToken: cancellationToken)
+        ).ConfigureAwait(false);
+    }
+
+    public async Task UpdateUserSkillAsync(int userId, string skillInfo, CancellationToken cancellationToken = default)
+    {
+        const string sql = """
+            INSERT INTO godswar.user_skill (user_id, skill_info)
+            VALUES (@UserId, @SkillInfo)
+            ON CONFLICT (user_id) DO UPDATE SET
+                skill_info = EXCLUDED.skill_info;
+            """;
+
+        await using DbConnection conn = await _connectionFactory.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
+        await conn.ExecuteAsync(
+            new CommandDefinition(sql, new { UserId = userId, SkillInfo = skillInfo }, cancellationToken: cancellationToken)
         ).ConfigureAwait(false);
     }
 }

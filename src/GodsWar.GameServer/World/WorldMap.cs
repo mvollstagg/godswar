@@ -502,6 +502,85 @@ public sealed class WorldMap
                         events.Add((player.CellX, player.CellZ, GameOpcode.MsgSynGameData, new MsgSynGameData(player.UiId, player.ToClientObjectData(), (uint)Math.Max(0, player.Character.SkillPoint)).ToPayload(), player.UiId));
                     }
                 }
+
+                if (player.IsAfk && (nowUtc - player.LastAfkHuntAtUtc).TotalSeconds >= 1.5)
+                {
+                    player.LastAfkHuntAtUtc = nowUtc;
+                    MonsterEntity? nearest = null;
+                    float nearestDistSq = 144f; // 12 units radius
+                    foreach ((int ax, int az) in GetAoiCells(player.CellX, player.CellZ))
+                    {
+                        foreach (MonsterEntity m in _cells[ax, az].Monsters.Values)
+                        {
+                            if (m.IsDead || !m.IsVisible || player.FactionEquals(m.Faction))
+                            {
+                                continue;
+                            }
+
+                            float dx = m.X - player.X;
+                            float dz = m.Z - player.Z;
+                            float d2 = dx * dx + dz * dz;
+                            if (d2 < nearestDistSq)
+                            {
+                                nearestDistSq = d2;
+                                nearest = m;
+                            }
+                        }
+                    }
+
+                    if (nearest is not null)
+                    {
+                        PlayerCombatStats pStats = player.ComputeCombatStats(catalog);
+                        int mLv = (int)nearest.Level;
+                        AttackResultType hitType = CombatCalculator.JudgeAttackStyle(
+                            pStats.Hit,
+                            GameTables.GetMonsterDodge(mLv),
+                            pStats.CritAppend,
+                            0);
+                        int dmg = hitType == AttackResultType.Miss
+                            ? -1
+                            : CombatCalculator.CalculatePhysicalDamage(
+                                pStats.Attack,
+                                GameTables.GetMonsterPhyDefend(mLv),
+                                isCrit: hitType == AttackResultType.Crit);
+
+                        if (dmg > 0)
+                        {
+                            nearest.Hp = nearest.Hp > (uint)dmg ? nearest.Hp - (uint)dmg : 0;
+                            nearest.AddEnmity(player.UiId, dmg);
+                        }
+
+                        player.InCombat = true;
+                        player.LastCombatAtUtc = nowUtc;
+                        events.Add((
+                            player.CellX,
+                            player.CellZ,
+                            GameOpcode.MsgAttack,
+                            new MsgAttack(player.UiId, nearest.X, 0f, nearest.Z, nearest.UiId, dmg, 0, (byte)hitType).ToPayload(),
+                            null));
+
+                        if (nearest.Hp == 0)
+                        {
+                            int baseExp = GameTables.GetMonsterExp(mLv);
+                            uint gainedExp = CombatCalculator.CalculateSoloExp(baseExp, player.EffectiveLevel, mLv);
+                            player.Character.Money += Math.Max(1, mLv * 3);
+                            player.AddExp(gainedExp, catalog, out _);
+                            nearest.Die(player.UiId, catalog);
+
+                            var deadMsg = new MsgDead(
+                                nearest.UiId,
+                                [player.Character.Id, -1, -1, -1, -1],
+                                [(uint)player.Character.Money, 0, 0, 0, 0],
+                                [(uint)player.Character.FighterJobExp, 0, 0, 0, 0],
+                                [(uint)player.Character.SkillExp, 0, 0, 0, 0],
+                                [(uint)player.Character.SkillPoint, 0, 0, 0, 0],
+                                player.UiId,
+                                0);
+                            events.Add((nearest.CellX, nearest.CellZ, GameOpcode.MsgDead, deadMsg.ToPayload(), null));
+                            events.Add((player.CellX, player.CellZ, GameOpcode.MsgSynGameData, new MsgSynGameData(player.UiId, player.ToClientObjectData(), (uint)Math.Max(0, player.Character.SkillPoint)).ToPayload(), player.UiId));
+                        }
+                    }
+                }
             }
 
             if (allPlayers.Count == 0 && _monstersById.Values.All(m => m.State is MonsterAiState.Idle or MonsterAiState.Walk))

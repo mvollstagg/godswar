@@ -1,0 +1,70 @@
+name: godswar-dotnet
+
+services:
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-godswar}
+      POSTGRES_USER: ${POSTGRES_USER:-godswar}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-godswar}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - gw-pg-data:/var/lib/postgresql/data
+      - ./docker/postgres/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-godswar} -d ${POSTGRES_DB:-godswar}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 10s
+    restart: unless-stopped
+
+  loginserver:
+    build:
+      context: .
+      dockerfile: src/GodsWar.LoginServer/Dockerfile
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      Database__ConnectionString: "Host=postgres;Port=5432;Database=${POSTGRES_DB:-godswar};Username=${POSTGRES_USER:-godswar};Password=${POSTGRES_PASSWORD:-godswar}"
+      LoginServer__BindAddress: "0.0.0.0"
+      LoginServer__Port: "5999"
+      LoginServer__AdvertiseIp: ${ADVERTISE_IP:-127.0.0.1}
+      LoginServer__GamePort: ${GAME_PORT:-6001}
+      LoginServer__ServerName: ${SERVER_NAME:-GodsWar}
+      LoginServer__ServerId: "1"
+      LoginServer__ExpectedVersion: ${EXPECTED_VERSION:-0}
+    ports:
+      - "${LOGIN_PORT:-5999}:5999"
+    restart: unless-stopped
+
+  gameserver:
+    build:
+      context: .
+      dockerfile: src/GodsWar.GameServer/Dockerfile
+    depends_on:
+      postgres:
+        condition: service_healthy
+      loginserver:
+        condition: service_started
+    environment:
+      Database__ConnectionString: "Host=postgres;Port=5432;Database=${POSTGRES_DB:-godswar};Username=${POSTGRES_USER:-godswar};Password=${POSTGRES_PASSWORD:-godswar}"
+      GameServer__BindAddress: "0.0.0.0"
+      GameServer__Port: "6001"
+      GameServer__ServerId: "1"
+      GameServer__ServerName: ${SERVER_NAME:-GodsWar}
+      GameServer__AdvertiseIp: ${ADVERTISE_IP:-127.0.0.1}
+      GameServer__MaxOnline: ${MAX_ONLINE:-200}
+      GameServer__LoginServerHost: "loginserver"
+      GameServer__LoginServerPort: "5999"
+      GameServer__SceneDataPath: "/app/gameserver/Scene"
+    ports:
+      - "${GAME_PORT:-6001}:6001"
+    volumes:
+      - "./GW 2.0/Server Files (Compiled)/gameserver:/app/gameserver:ro"
+    restart: unless-stopped
+
+volumes:
+  gw-pg-data:

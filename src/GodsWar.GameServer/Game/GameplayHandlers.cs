@@ -354,6 +354,59 @@ public sealed class GameplayHandlers
 
         _worldManager.Catalog.Items.TryGetValue(slot.Base, out ItemBaseDef? itemDef);
 
+        // Skillbook handling (learns active or passive skill on use)
+        if (itemDef is not null && (itemDef.IsSkillBook || itemDef.SkillLearnId >= 0))
+        {
+            int learnId = itemDef.SkillLearnId >= 0 ? itemDef.SkillLearnId : 0;
+            bool isPassive = _worldManager.Catalog.PassiveSkills.ContainsKey(learnId)
+                || (learnId < 1000 && !_worldManager.Catalog.Magics.ContainsKey(learnId));
+
+            if (isPassive)
+            {
+                int idx = player.PassiveSkillsList.FindIndex(s => s.SkillId == learnId);
+                if (idx >= 0)
+                {
+                    PassiveSkillEntry cur = player.PassiveSkillsList[idx];
+                    player.PassiveSkillsList[idx] = cur with { Rank = (ushort)(cur.Rank + 1) };
+                }
+                else
+                {
+                    player.PassiveSkillsList.Add(new PassiveSkillEntry(learnId, 1, 0, 0));
+                }
+                string skillDb = string.Join("", player.PassiveSkillsList.Select(s => $"[{s.SkillId},{s.Rank}]#"));
+                await _characterRepository.UpdateUserSkillAsync(player.Character.Id, skillDb, ct).ConfigureAwait(false);
+                await player.SendAsync(GameOpcode.MsgPassiveSkillInfo, new MsgPassiveSkillInfo(player.UiId, player.PassiveSkills).ToPayload(), ct).ConfigureAwait(false);
+            }
+            else
+            {
+                int idx = player.ActiveSkillsList.FindIndex(s => s.MagicId == learnId);
+                if (idx < 0)
+                {
+                    player.ActiveSkillsList.Add(new ActiveSkillEntry(learnId, 1));
+                }
+                string magicDb = string.Join("", player.ActiveSkillsList.Select(s => $"[{s.MagicId},{s.Rank}]#"));
+                await _characterRepository.UpdateUserMagicAsync(player.Character.Id, magicDb, ct).ConfigureAwait(false);
+                await player.SendAsync(GameOpcode.MsgActiveSkillInfo, new MsgActiveSkillInfo(player.UiId, player.ActiveSkills).ToPayload(), ct).ConfigureAwait(false);
+            }
+
+            byte newBookOverlap = slot.Overlap > 1 ? (byte)(slot.Overlap - 1) : (byte)0;
+            player.Kitbags[msg.Index][msg.Num] = newBookOverlap > 0
+                ? slot with { Overlap = newBookOverlap }
+                : ItemEquipSlot.Empty;
+
+            await player.SendAsync(
+                GameOpcode.MsgUseOrEquip,
+                new MsgUseOrEquip(player.UiId, msg.Index, msg.Num, msg.ChangeF, slot.Base, slot.Append0, slot.Append1, slot.Append2, slot.Append3, slot.Append4, slot.AppendLevel, slot.BaseLevel, false).ToPayload(),
+                ct).ConfigureAwait(false);
+            await player.SendAsync(
+                GameOpcode.MsgLearn,
+                new MsgLearn(player.UiId, (byte)Math.Clamp(learnId, 0, 255), isPassive ? (byte)0 : (byte)1, true).ToPayload(),
+                ct).ConfigureAwait(false);
+            await SendKitbagPageForSlotAsync(player, msg.Index, msg.Num, ct).ConfigureAwait(false);
+            await PersistKitbagAsync(player, ct).ConfigureAwait(false);
+            return;
+        }
+
         // Consumable / Potion handling
         if (itemDef is null || itemDef.IsConsumable || itemDef.SlotType == EquipmentSlotType.Consume)
         {
@@ -614,6 +667,11 @@ public sealed class GameplayHandlers
                 GameOpcode.MsgUpgrade,
                 upgrade.ToPayload(),
                 cancellationToken: ct).ConfigureAwait(false);
+
+            await killer.SendAsync(
+                GameOpcode.MsgSkillPointUpgrade,
+                new MsgSkillPointUpgrade(killer.UiId, (uint)Math.Max(0, killer.Character.SkillPoint)).ToPayload(),
+                ct).ConfigureAwait(false);
         }
 
         ClientObjectData objData = killer.ToClientObjectData();

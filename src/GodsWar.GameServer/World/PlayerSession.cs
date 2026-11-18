@@ -17,6 +17,18 @@ public readonly record struct PlayerCombatStats(
     int MaxHpBonus,
     int MaxMpBonus);
 
+public readonly record struct StallGoodsSlot(
+    long StallId,
+    int BagIndex,
+    int BagSlot,
+    int Money,
+    int Bijou,
+    ItemEquipSlot Item)
+{
+    public static readonly StallGoodsSlot Empty = new(0, -1, -1, 0, 0, ItemEquipSlot.Empty);
+    public bool IsEmpty => StallId <= 0 || Item.IsEmpty;
+}
+
 /// <summary>
 /// Live in-world player entity and its network session.
 /// </summary>
@@ -38,8 +50,8 @@ public sealed class PlayerSession
         Connection = connection;
         Equips = equips;
         Kitbags = kitbags;
-        ActiveSkills = activeSkills;
-        PassiveSkills = passiveSkills;
+        ActiveSkillsList = activeSkills.ToList();
+        PassiveSkillsList = passiveSkills.ToList();
 
         MapId = (ushort)Math.Max(0, (int)character.Map);
         X = character.PosX;
@@ -54,8 +66,10 @@ public sealed class PlayerSession
     public ItemEquipSlot[] Equips { get; }
     public ushort EquipMask => ComputeEquipMask();
     public ItemEquipSlot[][] Kitbags { get; }
-    public IReadOnlyList<ActiveSkillEntry> ActiveSkills { get; }
-    public IReadOnlyList<PassiveSkillEntry> PassiveSkills { get; }
+    public List<ActiveSkillEntry> ActiveSkillsList { get; }
+    public List<PassiveSkillEntry> PassiveSkillsList { get; }
+    public IReadOnlyList<ActiveSkillEntry> ActiveSkills => ActiveSkillsList;
+    public IReadOnlyList<PassiveSkillEntry> PassiveSkills => PassiveSkillsList;
 
     public ushort MapId { get; set; }
     public float X { get; set; }
@@ -86,6 +100,21 @@ public sealed class PlayerSession
     public byte ActiveChatChannel { get; set; } = (byte)ChatChannel.Local;
     public (int Bag, int Slot)? ForgeEquipSlot { get; set; }
     public (int Bag, int Slot)? ForgeMaterialSlot { get; set; }
+
+    // Phase 6 state (Stalls, GoldBox, SkillBackup, Pets, AFK)
+    public bool StallActive { get; set; }
+    public string StallText { get; set; } = string.Empty;
+    public StallGoodsSlot[,] StallGoods { get; } = new StallGoodsSlot[2, 5];
+    public uint PendingGoldBoxId { get; set; }
+    public byte PendingGoldBoxIter { get; set; }
+    public DialEntryDef[]? PendingGoldBoxDial { get; set; }
+    public int[] BackupSkillIds { get; set; } = Enumerable.Repeat(-1, 16).ToArray();
+    public int[] BackupItemIds { get; set; } = Enumerable.Repeat(-1, 16).ToArray();
+    public int BackupRSkillId { get; set; } = -1;
+    public int BackupRItemId { get; set; } = -1;
+    public List<UserPetRecord> Pets { get; } = [];
+    public bool IsAfk { get; set; }
+    public DateTime LastAfkHuntAtUtc { get; set; }
 
     public bool IsDead => Character.CurHp <= 0;
 
@@ -200,6 +229,15 @@ public sealed class PlayerSession
         def = Math.Max(0, (int)(def * (1f + defPct)));
         matk = Math.Max(1, (int)(matk * (1f + matkPct)));
         mdef = Math.Max(0, (int)(mdef * (1f + mdefPct)));
+
+        UserPetRecord? activePet = Pets.FirstOrDefault(p => p.State is 2 or 3);
+        if (activePet is not null)
+        {
+            atk += activePet.Attack / 2;
+            def += activePet.Defend / 2;
+            matk += activePet.MagicAttack / 2;
+            mdef += activePet.MagicDefend / 2;
+        }
 
         return new PlayerCombatStats(atk, def, matk, mdef, hit, dodge, critAdd, critDef, hpBonus, mpBonus);
     }
@@ -345,7 +383,7 @@ public sealed class PlayerSession
         (byte)Character.Profession,
         (byte)Character.HairStyle,
         (byte)(Character.FaceShap ?? 0),
-        0,
+        (byte)(StallActive ? 1 : 0),
         EquipMask,
         Equips);
 }
