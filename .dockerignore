@@ -8,3 +8,5 @@ GodsWar-Private-Server-master
 **/*.suo
 **/.vs
 **/.idea
+**/bin
+**/obj
