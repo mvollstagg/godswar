@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("GodsWar.Database")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a1f4643ed060ed18733c86209dcbda2e62105611")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9d3fdd0ae13068c3fd85ddafe2ff1c00d6c95511")]
 [assembly: System.Reflection.AssemblyProductAttribute("GodsWar.Database")]
 [assembly: System.Reflection.AssemblyTitleAttribute("GodsWar.Database")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
