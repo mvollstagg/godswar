@@ -26,6 +26,8 @@ public enum ManageReturnCode
     RoleLimitReached = 4,
     DuplicateRoleName = 5,
     GuildLeaderCannotDelete = 6,
+    DeleteFailed = 7,
+    DeleteSuccess = 8,
 }
 
 /// <summary>
@@ -681,12 +683,69 @@ public readonly record struct MsgSelfProperty(ClientObjectData ObjectData)
 }
 
 /// <summary>
+/// 76-byte (19 dwords) <c>sBaseData</c> block in <see cref="MsgSynGameData"/>.
+/// Ground truth: <c>GW 2.0/Server Files (Source)/GameServer/GameCore/Player.cpp:609-641</c>.
+/// </summary>
+public readonly record struct ClientBaseStats(
+    int MaxHp,
+    int MaxMp,
+    int ResumeHp,
+    int ResumeMp,
+    int Attack,
+    int Defend,
+    int MagicAttack,
+    int MagicDefend,
+    int Hit,
+    int Dodge,
+    int CritAppend,
+    int CritDefend,
+    float PhyDamageAppend,
+    float MagicDamageAppend,
+    int DamageSorb,
+    float BeCure,
+    float Cure,
+    int StatusHit,
+    int StatusDodge)
+{
+    public const int WireSize = 76;
+
+    public void WriteTo(Span<byte> dest)
+    {
+        if (dest.Length < WireSize)
+        {
+            throw new ArgumentException($"Destination must be at least {WireSize} bytes.", nameof(dest));
+        }
+
+        BinaryPrimitives.WriteInt32LittleEndian(dest.Slice(0, 4), MaxHp);
+        BinaryPrimitives.WriteInt32LittleEndian(dest.Slice(4, 4), MaxMp);
+        BinaryPrimitives.WriteInt32LittleEndian(dest.Slice(8, 4), ResumeHp);
+        BinaryPrimitives.WriteInt32LittleEndian(dest.Slice(12, 4), ResumeMp);
+        BinaryPrimitives.WriteInt32LittleEndian(dest.Slice(16, 4), Attack);
+        BinaryPrimitives.WriteInt32LittleEndian(dest.Slice(20, 4), Defend);
+        BinaryPrimitives.WriteInt32LittleEndian(dest.Slice(24, 4), MagicAttack);
+        BinaryPrimitives.WriteInt32LittleEndian(dest.Slice(28, 4), MagicDefend);
+        BinaryPrimitives.WriteInt32LittleEndian(dest.Slice(32, 4), Hit);
+        BinaryPrimitives.WriteInt32LittleEndian(dest.Slice(36, 4), Dodge);
+        BinaryPrimitives.WriteInt32LittleEndian(dest.Slice(40, 4), CritAppend);
+        BinaryPrimitives.WriteInt32LittleEndian(dest.Slice(44, 4), CritDefend);
+        BinaryPrimitives.WriteSingleLittleEndian(dest.Slice(48, 4), PhyDamageAppend);
+        BinaryPrimitives.WriteSingleLittleEndian(dest.Slice(52, 4), MagicDamageAppend);
+        BinaryPrimitives.WriteInt32LittleEndian(dest.Slice(56, 4), DamageSorb);
+        BinaryPrimitives.WriteSingleLittleEndian(dest.Slice(60, 4), BeCure);
+        BinaryPrimitives.WriteSingleLittleEndian(dest.Slice(64, 4), Cure);
+        BinaryPrimitives.WriteInt32LittleEndian(dest.Slice(68, 4), StatusHit);
+        BinaryPrimitives.WriteInt32LittleEndian(dest.Slice(72, 4), StatusDodge);
+    }
+}
+
+/// <summary>
 /// S2C <c>MSG_SYN_GAMEDATA</c> (opcode 10160, 236B framed / 232B payload).
 /// </summary>
 public sealed record MsgSynGameData(
     uint UserId,
     ClientObjectData ObjectData,
-    uint SkillPoint)
+    uint SkillPoint,
+    ClientBaseStats? BaseStats = null)
 {
     public const int PayloadLength = 232; // 236 - 4
 
@@ -697,7 +756,10 @@ public sealed record MsgSynGameData(
 
         BinaryPrimitives.WriteUInt32LittleEndian(span.Slice(0, 4), UserId);
         ObjectData.WriteTo(span.Slice(4, ClientObjectData.WireSize));
-        // span[136..212] = 76B StatusData (19 dwords)
+        if (BaseStats is { } stats)
+        {
+            stats.WriteTo(span.Slice(136, ClientBaseStats.WireSize));
+        }
         BinaryPrimitives.WriteUInt32LittleEndian(span.Slice(212, 4), ObjectData.StoreNum);
         BinaryPrimitives.WriteUInt32LittleEndian(span.Slice(216, 4), ObjectData.BagNum);
         BinaryPrimitives.WriteUInt32LittleEndian(span.Slice(220, 4), SkillPoint);
@@ -932,14 +994,16 @@ public readonly record struct MsgAltarInfo(int AltarCount = 0)
 
 /// <summary>
 /// S2C <c>MSG_SERVERTIME</c> (opcode 10303, 16B framed / 12B payload).
+/// Ground truth: <c>Client/GodsWar.exe</c> at <c>0x48be3e..0x48be60</c>
+/// (<c>int32 TimeZoneHours</c> at +0, <c>int64 __time64_t EpochSeconds</c> at +4).
 /// </summary>
-public readonly record struct MsgServerTime(uint EpochSeconds)
+public readonly record struct MsgServerTime(long EpochSeconds, int TimeZoneHours = 0)
 {
     public byte[] ToPayload()
     {
         byte[] payload = new byte[12];
-        BinaryPrimitives.WriteUInt32LittleEndian(payload.AsSpan(0, 4), EpochSeconds);
-        BinaryPrimitives.WriteUInt32LittleEndian(payload.AsSpan(4, 4), EpochSeconds);
+        BinaryPrimitives.WriteInt32LittleEndian(payload.AsSpan(0, 4), TimeZoneHours);
+        BinaryPrimitives.WriteInt64LittleEndian(payload.AsSpan(4, 8), EpochSeconds);
         return payload;
     }
 }

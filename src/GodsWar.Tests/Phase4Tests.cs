@@ -44,18 +44,18 @@ public sealed class Phase4Tests
         Assert.Equal(276, new MsgStatus(10, [(10u, (ushort)8)]).ToPayload().Length);
 
         var drops = new MsgDrops(10005, [new ItemEquipSlot(4000, -1, -1, -1, -1, -1, 1, 0, 0, 1)]);
-        Assert.Equal(40, drops.ToPayload().Length);
+        Assert.Equal(80, drops.ToPayload().Length);
 
         var pickup = new MsgPickupDrops(10, 10005, 0);
         Assert.Equal(12, pickup.ToPayload().Length);
         Assert.Equal(pickup, MsgPickupDrops.Parse(pickup.ToPayload()));
 
         var useEquip = new MsgUseOrEquip(10, 0, 2, 0, 4000, -1, -1, -1, -1, -1, 0, 1, false);
-        Assert.Equal(40, useEquip.ToPayload().Length);
+        Assert.Equal(80, useEquip.ToPayload().Length);
         Assert.Equal(useEquip, MsgUseOrEquip.Parse(useEquip.ToPayload()));
 
         var move = new MsgMoveItem(10, 0, 1, 0, 5, 1000, 1, -1, -1, -1, -1, 1, 1);
-        Assert.Equal(40, move.ToPayload().Length);
+        Assert.Equal(76, move.ToPayload().Length);
         Assert.Equal(move, MsgMoveItem.Parse(move.ToPayload()));
 
         var brk = new MsgBreakItem(2, 0, 0, 0, 1, 5);

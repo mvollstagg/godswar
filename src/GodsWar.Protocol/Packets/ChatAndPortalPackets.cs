@@ -57,8 +57,8 @@ public readonly record struct MsgTalk(
         int byteLen = raw.Length & ~1;
         string fullText = byteLen > 0 ? Encoding.Unicode.GetString(raw[..byteLen]).TrimEnd('\0') : string.Empty;
 
-        int senderChars = resSize / 2;
-        int aimChars = aimSize / 2;
+        int senderChars = resSize;
+        int aimChars = aimSize;
         string sender = senderChars > 0 && fullText.Length >= senderChars ? fullText[..senderChars].TrimEnd('\0') : string.Empty;
         string aim = aimChars > 0 && fullText.Length >= senderChars + aimChars
             ? fullText.Substring(senderChars, aimChars).TrimEnd('\0')
@@ -66,6 +66,11 @@ public readonly record struct MsgTalk(
         string body = fullText.Length >= senderChars + aimChars
             ? fullText[(senderChars + aimChars)..].TrimEnd('\0')
             : fullText;
+
+        if (body.StartsWith('：') || body.StartsWith(':'))
+        {
+            body = body[1..];
+        }
 
         return new MsgTalk(userId, channel, resSize, aimSize, bubble, body, sender, aim);
     }
@@ -75,17 +80,40 @@ public readonly record struct MsgTalk(
         string combined = string.Concat(SenderName, AimName, Content);
         byte[] textBytes = Encoding.Unicode.GetBytes(combined);
         int copyLen = Math.Min(textBytes.Length, MaxContentBytes - 2);
-        byte resBytes = (byte)Math.Min(byte.MaxValue, Encoding.Unicode.GetByteCount(SenderName));
-        byte aimBytes = (byte)Math.Min(byte.MaxValue, Encoding.Unicode.GetByteCount(AimName));
+        byte resChars = (byte)Math.Min(byte.MaxValue, SenderName.Length);
+        byte aimChars = (byte)Math.Min(byte.MaxValue, AimName.Length);
 
         byte[] buf = new byte[HeaderPayloadSize + MaxContentBytes];
         BinaryPrimitives.WriteUInt32LittleEndian(buf.AsSpan(0, 4), UserId);
         BinaryPrimitives.WriteInt32LittleEndian(buf.AsSpan(4, 4), copyLen + 2);
         buf[8] = (byte)Channel;
-        buf[9] = resBytes;
-        buf[10] = aimBytes;
+        buf[9] = resChars;
+        buf[10] = aimChars;
         buf[11] = ChatBubbleStyle;
         textBytes.AsSpan(0, copyLen).CopyTo(buf.AsSpan(HeaderPayloadSize));
+        return buf;
+    }
+
+    /// <summary>
+    /// Serializes the 1.0.282 S2C <c>MSG_TALK</c> layout (16B header: <c>Channel@12, ResChars@13, AimChars@14, Bubble@15, Content@16</c>).
+    /// Ground truth: <c>Client/GodsWar.exe</c> at <c>0x488001</c>.
+    /// </summary>
+    public byte[] ToClientPayload()
+    {
+        string combined = string.Concat(SenderName, AimName, Content);
+        byte[] textBytes = Encoding.Unicode.GetBytes(combined);
+        int copyLen = Math.Min(textBytes.Length, MaxContentBytes - 2);
+        byte resChars = (byte)Math.Min(byte.MaxValue, SenderName.Length);
+        byte aimChars = (byte)Math.Min(byte.MaxValue, AimName.Length);
+
+        byte[] buf = new byte[16 + MaxContentBytes];
+        BinaryPrimitives.WriteUInt32LittleEndian(buf.AsSpan(0, 4), UserId);
+        BinaryPrimitives.WriteInt32LittleEndian(buf.AsSpan(4, 4), copyLen + 2);
+        buf[12] = (byte)Channel;
+        buf[13] = resChars;
+        buf[14] = aimChars;
+        buf[15] = ChatBubbleStyle;
+        textBytes.AsSpan(0, copyLen).CopyTo(buf.AsSpan(16));
         return buf;
     }
 }

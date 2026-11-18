@@ -1,5 +1,6 @@
 ﻿using GodsWar.Database;
 using GodsWar.GameServer;
+using GodsWar.GameServer.Admin;
 using GodsWar.GameServer.Auth;
 using GodsWar.GameServer.Game;
 using GodsWar.GameServer.Network;
@@ -35,6 +36,7 @@ builder.Services.AddSingleton<GameSessionHandler>();
 builder.Services.AddHostedService<LoginServerClient>();
 builder.Services.AddHostedService<GameServerListener>();
 builder.Services.AddHostedService<WorldSimulationService>();
+builder.Services.AddHostedService<AdminWebService>();
 
 using IHost host = builder.Build();
 await host.RunAsync();

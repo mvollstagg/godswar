@@ -118,24 +118,29 @@ public readonly record struct NpcShopItemEntry(
     uint BuyConsume2,
     byte BuyTypeNum)
 {
-    public const int WireSize = 28;
+    public const int WireSize = 88; // 0x58 on 1.0.282 client (0x44cb55)
 
     public void WriteTo(Span<byte> dest)
     {
         dest[..WireSize].Clear();
         BinaryPrimitives.WriteInt32LittleEndian(dest.Slice(0, 4), Base);
-        dest[4] = AppendLevel;
-        dest[5] = BaseLevel;
-        dest[6] = Binding;
-        dest[7] = Overlap;
-        dest[8] = Sell;
-        dest[9] = BuyType0;
-        dest[10] = BuyType1;
-        dest[11] = BuyType2;
-        BinaryPrimitives.WriteUInt32LittleEndian(dest.Slice(12, 4), BuyConsume0);
-        BinaryPrimitives.WriteUInt32LittleEndian(dest.Slice(16, 4), BuyConsume1);
-        BinaryPrimitives.WriteUInt32LittleEndian(dest.Slice(20, 4), BuyConsume2);
-        dest[24] = BuyTypeNum;
+        BinaryPrimitives.WriteInt32LittleEndian(dest.Slice(4, 4), -1);
+        BinaryPrimitives.WriteInt32LittleEndian(dest.Slice(8, 4), -1);
+        BinaryPrimitives.WriteInt32LittleEndian(dest.Slice(12, 4), -1);
+        BinaryPrimitives.WriteInt32LittleEndian(dest.Slice(16, 4), -1);
+        BinaryPrimitives.WriteInt32LittleEndian(dest.Slice(20, 4), -1);
+        dest[24] = BaseLevel;
+        dest[25] = AppendLevel;
+        dest[26] = Binding;
+        dest[27] = Overlap;
+        dest[64] = Sell;
+        dest[65] = BuyType0;
+        dest[66] = BuyType1;
+        dest[67] = BuyType2;
+        BinaryPrimitives.WriteUInt32LittleEndian(dest.Slice(68, 4), BuyConsume0);
+        BinaryPrimitives.WriteUInt32LittleEndian(dest.Slice(72, 4), BuyConsume1);
+        BinaryPrimitives.WriteUInt32LittleEndian(dest.Slice(76, 4), BuyConsume2);
+        dest[80] = BuyTypeNum;
     }
 }
 
@@ -149,19 +154,19 @@ public readonly record struct MsgNpcItemData(
     IReadOnlyList<NpcShopItemEntry> Items)
 {
     public const int MaxItems = 32;
-    public const int PayloadSize = 8 + MaxItems * NpcShopItemEntry.WireSize;
+    public const int PayloadSize = 12 + MaxItems * NpcShopItemEntry.WireSize;
 
     public byte[] ToPayload()
     {
-        byte[] buf = new byte[PayloadSize];
+        int count = Math.Min(MaxItems, Items.Count);
+        byte[] buf = new byte[12 + count * NpcShopItemEntry.WireSize];
         BinaryPrimitives.WriteUInt32LittleEndian(buf.AsSpan(0, 4), NpcId);
         buf[4] = TabIndex;
-        buf[5] = MaxTabIndex;
-        int count = Math.Min(MaxItems, Items.Count);
         buf[6] = (byte)count;
+        buf[7] = MaxTabIndex;
         for (int i = 0; i < count; i++)
         {
-            Items[i].WriteTo(buf.AsSpan(8 + i * NpcShopItemEntry.WireSize, NpcShopItemEntry.WireSize));
+            Items[i].WriteTo(buf.AsSpan(12 + i * NpcShopItemEntry.WireSize, NpcShopItemEntry.WireSize));
         }
 
         return buf;

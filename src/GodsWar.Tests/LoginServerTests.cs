@@ -195,4 +195,15 @@ public sealed class LoginServerTests
             await runTask;
         }
     }
+
+    [Theory]
+    [InlineData("rcqr", "test")]
+    [InlineData("mxlm9", "test2")]
+    [InlineData("mxlm0", "test3")]
+    [InlineData("dgd", "ada")]
+    [InlineData("VGUV_789", "TEST_123")]
+    public void DecodeLoginAccount_MatchesClientBinaryTable(string obfuscated, string expected)
+    {
+        Assert.Equal(expected, LoginSessionHandler.DecodeLoginAccount(obfuscated));
+    }
 }

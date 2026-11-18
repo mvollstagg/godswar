@@ -65,6 +65,7 @@ services:
       Logging__LogLevel__Default: "Debug"
     ports:
       - "${GAME_PORT:-6001}:6001"
+      - "${ADMIN_PORT:-8080}:8080"
     volumes:
       - "./GW 2.0/Server Files (Compiled)/gameserver:/app/gameserver:ro"
     restart: unless-stopped

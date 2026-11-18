@@ -51,6 +51,8 @@ public sealed class NpcShopAndForgeService
         int sysFlag = script?.SysFlag ?? 0;
         string talkKey = script?.TalkKey ?? npc.Name;
 
+        Console.WriteLine($"[NPC] TalkNpc {player.Character.Name}: NpcId={req.NpcId} NpcName={npc.Name} Script={npc.Script} Flag={npcFlag} Sys={sysFlag} TalkKey={talkKey}");
+
         await player.SendAsync(
             GameOpcode.MsgTalkNpc,
             new MsgTalkNpc(req.NpcId, npcFlag, sysFlag, talkKey).ToPayload(),
@@ -68,7 +70,7 @@ public sealed class NpcShopAndForgeService
 
         if ((npcFlag & 4) != 0 && script.ItemListIds.Count > 0)
         {
-            byte maxTab = (byte)Math.Max(0, script.ItemListIds.Count - 1);
+            byte maxTab = (byte)script.ItemListIds.Count;
             for (int t = 0; t < script.ItemListIds.Count; t++)
             {
                 int listId = script.ItemListIds[t];
@@ -136,8 +138,8 @@ public sealed class NpcShopAndForgeService
                 WorldMap? dest = _world.GetMap(targetMap);
                 if (dest is not null)
                 {
-                    float tx = player.Character.Camp == 0 ? dest.Scene.AthensX : dest.Scene.SpartaX;
-                    float tz = player.Character.Camp == 0 ? dest.Scene.AthensZ : dest.Scene.SpartaZ;
+                    float tx = player.Character.Camp == 0 ? dest.Scene.SpartaX : dest.Scene.AthensX;
+                    float tz = player.Character.Camp == 0 ? dest.Scene.SpartaZ : dest.Scene.AthensZ;
                     await portalService.TransitionMapAsync(player, targetMap, tx, tz, ct).ConfigureAwait(false);
                 }
                 break;

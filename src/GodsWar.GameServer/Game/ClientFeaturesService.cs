@@ -60,8 +60,8 @@ public sealed class ClientFeaturesService
             var starterPet = new UserPetRecord
             {
                 UserId = player.Character.Id,
-                Name = player.Character.Camp == 0 ? "AthenaOwl" : "AresWolf",
-                TemplateId = (short)(player.Character.Camp == 0 ? 1 : 2),
+                Name = player.Character.Camp == 0 ? "AresWolf" : "AthenaOwl",
+                TemplateId = (short)(player.Character.Camp == 0 ? 2 : 1),
                 Level = 1,
                 Exp = 0,
                 Quality = 2,
@@ -93,6 +93,11 @@ public sealed class ClientFeaturesService
     public async Task SendFeaturesOnLoginAsync(PlayerSession player, CancellationToken ct)
     {
         await SendPetListAsync(player, ct).ConfigureAwait(false);
+        UserPetRecord? activePet = player.Pets.FirstOrDefault(p => p.State is 1 or 2);
+        if (activePet is not null)
+        {
+            await BroadcastPetViewAsync(player, activePet.Id, ct).ConfigureAwait(false);
+        }
     }
 
     // =========================================================================
@@ -102,11 +107,11 @@ public sealed class ClientFeaturesService
     public async Task HandleMallItemDataAsync(PlayerSession player, CancellationToken ct)
     {
         IReadOnlyList<int> tabListIds = player.Character.Camp == 0
-            ? _world.Catalog.MallConfig.AthensMallItemLists
-            : _world.Catalog.MallConfig.SpartaMallItemLists;
+            ? _world.Catalog.MallConfig.SpartaMallItemLists
+            : _world.Catalog.MallConfig.AthensMallItemLists;
         IReadOnlyList<byte> tabSells = player.Character.Camp == 0
-            ? _world.Catalog.MallConfig.AthensMallSellTypes
-            : _world.Catalog.MallConfig.SpartaMallSellTypes;
+            ? _world.Catalog.MallConfig.SpartaMallSellTypes
+            : _world.Catalog.MallConfig.AthensMallSellTypes;
 
         if (tabListIds.Count == 0)
         {
@@ -149,8 +154,8 @@ public sealed class ClientFeaturesService
             ct).ConfigureAwait(false);
 
         IReadOnlyList<int> listIds = player.Character.Camp == 0
-            ? _world.Catalog.MallConfig.AthensAssociationItemLists
-            : _world.Catalog.MallConfig.SpartaAssociationItemLists;
+            ? _world.Catalog.MallConfig.SpartaAssociationItemLists
+            : _world.Catalog.MallConfig.AthensAssociationItemLists;
         int listId = listIds.Count > 0 ? listIds[0] : 1000;
 
         List<MallItemEntry> allItems = BuildMallEntries(listId, 0, maxCount: 64);
@@ -169,8 +174,8 @@ public sealed class ClientFeaturesService
     {
         MsgMallSell req = MsgMallSell.Parse(payload.Span);
         IReadOnlyList<int> tabListIds = player.Character.Camp == 0
-            ? _world.Catalog.MallConfig.AthensMallItemLists
-            : _world.Catalog.MallConfig.SpartaMallItemLists;
+            ? _world.Catalog.MallConfig.SpartaMallItemLists
+            : _world.Catalog.MallConfig.AthensMallItemLists;
         if (tabListIds.Count == 0)
         {
             tabListIds = [1000, 1001, 1003, 1004];
@@ -212,7 +217,7 @@ public sealed class ClientFeaturesService
         await player.SendAsync(GameOpcode.MsgMallSell, new MsgMallSell(req.Index, req.Num, req.Count, shopItem.BaseId).ToPayload(), ct).ConfigureAwait(false);
         ClientObjectData objData = player.ToClientObjectData();
         await player.SendAsync(GameOpcode.MsgSelfProperty, new MsgSelfProperty(objData).ToPayload(), ct).ConfigureAwait(false);
-        await player.SendAsync(GameOpcode.MsgSynGameData, new MsgSynGameData(player.UiId, objData, (uint)Math.Max(0, player.Character.SkillPoint)).ToPayload(), ct).ConfigureAwait(false);
+        await player.SendAsync(GameOpcode.MsgSynGameData, player.ToSynGameData(_world.Catalog).ToPayload(), ct).ConfigureAwait(false);
 
         await _characters.UpdateCharacterStateAsync(player.Character, ct).ConfigureAwait(false);
         await _gameplay.PersistKitbagPublicAsync(player, ct).ConfigureAwait(false);
@@ -222,8 +227,8 @@ public sealed class ClientFeaturesService
     {
         MsgMallSell req = MsgMallSell.Parse(payload.Span);
         IReadOnlyList<int> listIds = player.Character.Camp == 0
-            ? _world.Catalog.MallConfig.AthensAssociationItemLists
-            : _world.Catalog.MallConfig.SpartaAssociationItemLists;
+            ? _world.Catalog.MallConfig.SpartaAssociationItemLists
+            : _world.Catalog.MallConfig.AthensAssociationItemLists;
         int listId = listIds.Count > 0 ? listIds[0] : 1000;
 
         if (!_world.Catalog.ShopItemLists.TryGetValue(listId, out List<ShopItemDef>? items))
@@ -265,7 +270,7 @@ public sealed class ClientFeaturesService
         await player.SendAsync(GameOpcode.MsgAssociationSell, new MsgMallSell(req.Index, req.Num, req.Count, shopItem.BaseId).ToPayload(), ct).ConfigureAwait(false);
         ClientObjectData objData = player.ToClientObjectData();
         await player.SendAsync(GameOpcode.MsgSelfProperty, new MsgSelfProperty(objData).ToPayload(), ct).ConfigureAwait(false);
-        await player.SendAsync(GameOpcode.MsgSynGameData, new MsgSynGameData(player.UiId, objData, (uint)Math.Max(0, player.Character.SkillPoint)).ToPayload(), ct).ConfigureAwait(false);
+        await player.SendAsync(GameOpcode.MsgSynGameData, player.ToSynGameData(_world.Catalog).ToPayload(), ct).ConfigureAwait(false);
 
         await _characters.UpdateCharacterStateAsync(player.Character, ct).ConfigureAwait(false);
         await _gameplay.PersistKitbagPublicAsync(player, ct).ConfigureAwait(false);
@@ -572,6 +577,7 @@ public sealed class ClientFeaturesService
     public async Task HandleSkillUpgradeAsync(PlayerSession player, ReadOnlyMemory<byte> payload, CancellationToken ct)
     {
         MsgSkillUpgrade req = MsgSkillUpgrade.Parse(payload.Span);
+        Console.WriteLine($"[SKILL] SkillUpgrade {player.Character.Name}: SkillId={req.SkillId} CurGrade={req.CurrentSkillGrade} NextPt={req.NextSkillGradePoint} Surplus={req.SurplusPoint} ServerPts={player.Character.SkillPoint}");
         int skillId = (int)req.SkillId;
         if (skillId < 0 || skillId > 60000)
         {
@@ -610,7 +616,7 @@ public sealed class ClientFeaturesService
 
         uint surplus = (uint)Math.Max(0, player.Character.SkillPoint);
         ClientObjectData objData = player.ToClientObjectData();
-        await player.SendAsync(GameOpcode.MsgSynGameData, new MsgSynGameData(player.UiId, objData, surplus).ToPayload(), ct).ConfigureAwait(false);
+        await player.SendAsync(GameOpcode.MsgSynGameData, player.ToSynGameData(_world.Catalog, surplus).ToPayload(), ct).ConfigureAwait(false);
         await player.SendAsync(
             GameOpcode.MsgSkillUpgrade,
             new MsgSkillUpgrade(player.UiId, (uint)skillId, newGrade, nextGradePoint, surplus).ToPayload(),
@@ -633,7 +639,7 @@ public sealed class ClientFeaturesService
             ct).ConfigureAwait(false);
         await player.SendAsync(
             GameOpcode.MsgSynGameData,
-            new MsgSynGameData(player.UiId, player.ToClientObjectData(), total).ToPayload(),
+            player.ToSynGameData(_world.Catalog, total).ToPayload(),
             ct).ConfigureAwait(false);
     }
 
@@ -887,7 +893,7 @@ public sealed class ClientFeaturesService
         }
 
         await player.SendAsync(GameOpcode.MsgPetAction, new MsgPetAction(pet.Id, 1).ToPayload(), ct).ConfigureAwait(false);
-        await BroadcastPetViewAsync(player, pet.TemplateId, ct).ConfigureAwait(false);
+        await BroadcastPetViewAsync(player, pet.Id, ct).ConfigureAwait(false);
         await SyncPlayerStatsAfterPetChangeAsync(player, ct).ConfigureAwait(false);
     }
 
@@ -982,6 +988,27 @@ public sealed class ClientFeaturesService
             ct).ConfigureAwait(false);
     }
 
+    public async Task HandlePetMergeAsync(PlayerSession player, ReadOnlyMemory<byte> payload, CancellationToken ct)
+    {
+        MsgPetCommand cmd = MsgPetCommand.Parse(payload.Span);
+        UserPetRecord? pet = FindPet(player, cmd.PetId);
+        if (pet is null)
+        {
+            return;
+        }
+
+        bool merging = pet.State != 3;
+        foreach (UserPetRecord p in player.Pets)
+        {
+            p.State = (short)(p.Id == pet.Id && merging ? 3 : 1);
+            await _socialRepo.UpdatePetAsync(p, ct).ConfigureAwait(false);
+        }
+
+        await SendPetListAsync(player, ct).ConfigureAwait(false);
+        await BroadcastPetViewAsync(player, -1, ct).ConfigureAwait(false);
+        await SyncPlayerStatsAfterPetChangeAsync(player, ct).ConfigureAwait(false);
+    }
+
     private static PetDataEntry ToPetDataEntry(UserPetRecord p) => new(
         p.Id,
         p.Name,
@@ -1032,7 +1059,7 @@ public sealed class ClientFeaturesService
         await player.SendAsync(GameOpcode.MsgSelfProperty, new MsgSelfProperty(objData).ToPayload(), ct).ConfigureAwait(false);
         await player.SendAsync(
             GameOpcode.MsgSynGameData,
-            new MsgSynGameData(player.UiId, objData, (uint)Math.Max(0, player.Character.SkillPoint)).ToPayload(),
+            player.ToSynGameData(_world.Catalog).ToPayload(),
             ct).ConfigureAwait(false);
     }
 

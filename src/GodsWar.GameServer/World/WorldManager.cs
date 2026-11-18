@@ -111,20 +111,26 @@ public sealed class WorldManager
     public ushort GetClientMapId(ushort serverMapId)
         => _maps.TryGetValue(serverMapId, out WorldMap? map) ? map.Scene.ClientMapId : serverMapId;
 
+    public int XpRatePercent { get; set; } = 10000;
+
+    public string WelcomeMessage { get; set; } = "Welcome to GodsWar Online! (100x XP Event Active)";
+
+    public IReadOnlyCollection<PlayerSession> OnlinePlayers => (IReadOnlyCollection<PlayerSession>)_playersByUiId.Values;
+
     public (ushort MapId, float X, float Z) GetStartingPosition(byte camp)
     {
-        // Camp 0 = Athens (Athens_Newbie = server MapId 1, ClientMapId 2),
-        // Camp 1 = Sparta (Sparta_Newbie = server MapId 51, ClientMapId 4).
-        string newbieName = camp == 0 ? "Athens_Newbie" : "Sparta_Newbie";
+        // Camp 0 = Sparta (Sparta_Newbie = server MapId 51, ClientMapId 4),
+        // Camp 1 = Athens (Athens_Newbie = server MapId 1, ClientMapId 2).
+        string newbieName = camp == 0 ? "Sparta_Newbie" : "Athens_Newbie";
         if (_mapsByName.TryGetValue(newbieName, out WorldMap? map))
         {
             return camp == 0
-                ? (map.Scene.MapId, map.Scene.AthensX, map.Scene.AthensZ)
-                : (map.Scene.MapId, map.Scene.SpartaX, map.Scene.SpartaZ);
+                ? (map.Scene.MapId, map.Scene.SpartaX, map.Scene.SpartaZ)
+                : (map.Scene.MapId, map.Scene.AthensX, map.Scene.AthensZ);
         }
 
         return camp == 0
-            ? ((ushort)1, 98f, -178f)
-            : ((ushort)51, -108f, -122f);
+            ? ((ushort)51, -108f, -122f)
+            : ((ushort)1, 98f, -178f);
     }
 }

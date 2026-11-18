@@ -122,7 +122,7 @@ public sealed class LoginSessionHandler
         if (caesarDecodeLogin)
         {
             msg = new MsgLogin(
-                DecodeCaesarPlus2(msg.Account),
+                DecodeLoginAccount(msg.Account),
                 msg.Password,
                 msg.Version);
         }
@@ -311,18 +311,42 @@ public sealed class LoginSessionHandler
     public static string GenerateValidateCode() =>
         RandomNumberGenerator.GetString(ValidateCodeAlphabet, ProtocolConstants.ValidateCodeLength - 1);
 
-    public static string DecodeCaesarPlus2(string value)
+    // Length-indexed shift key from Client/GodsWar.exe (0x43bb50 / 0x7ca9a8).
+    private const string AccountShiftKey = "435kfa3fjaf03fakf3fa3220fasjf3we322f2fjaf92f2fsf92fl1h1535rb7nw4";
+
+    public static string DecodeLoginAccount(string value)
     {
         if (string.IsNullOrEmpty(value))
         {
             return value;
         }
 
-        return string.Create(value.Length, value, static (span, src) =>
+        int key = AccountShiftKey[value.Length % AccountShiftKey.Length];
+        int alphaShift = key % 26;
+        int digitShift = key % 10;
+
+        return string.Create(value.Length, (value, alphaShift, digitShift), static (span, state) =>
         {
+            (string src, int aShift, int dShift) = state;
             for (int i = 0; i < src.Length; i++)
             {
-                span[i] = (char)(src[i] + 2);
+                char c = src[i];
+                if (c is >= 'A' and <= 'Z')
+                {
+                    span[i] = (char)('A' + ((c - 'A' - aShift + 26) % 26));
+                }
+                else if (c is >= 'a' and <= 'z')
+                {
+                    span[i] = (char)('a' + ((c - 'a' - aShift + 26) % 26));
+                }
+                else if (c is >= '0' and <= '9')
+                {
+                    span[i] = (char)('0' + ((c - '0' - dShift + 10) % 10));
+                }
+                else
+                {
+                    span[i] = c;
+                }
             }
         });
     }

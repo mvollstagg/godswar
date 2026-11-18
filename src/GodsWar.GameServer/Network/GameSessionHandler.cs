@@ -547,6 +547,13 @@ public sealed class GameSessionHandler
                         }
                         break;
 
+                    case GameOpcode.MsgPetMerge:
+                        if (player is not null && player.InWorld && _features is not null)
+                        {
+                            await _features.HandlePetMergeAsync(player, payload, cancellationToken).ConfigureAwait(false);
+                        }
+                        break;
+
                     case GameOpcode.MsgAfkRequest:
                         if (player is not null && player.InWorld && _features is not null)
                         {
@@ -580,7 +587,7 @@ public sealed class GameSessionHandler
                         break;
 
                     case GameOpcode.MsgServerTime:
-                        uint now = (uint)DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+                        long now = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
                         await connection.SendPacketAsync(
                             (ushort)GameOpcode.MsgServerTime,
                             new MsgServerTime(now).ToPayload(),
@@ -753,13 +760,12 @@ public sealed class GameSessionHandler
             (ushort)GameOpcode.MsgManageReturn,
             new MsgManageReturn(
                 (ushort)GameOpcode.MsgDeleteRole,
-                deleted ? ManageReturnCode.Success : ManageReturnCode.IllegalCharacters).ToPayload(),
+                deleted ? ManageReturnCode.DeleteSuccess : ManageReturnCode.DeleteFailed).ToPayload(),
             cancellationToken).ConfigureAwait(false);
 
         if (deleted)
         {
             _logger.LogInformation("Deleted character {Name} for Account={Account}", msg.Name, account);
-            await SendRoleListAsync(connection, account, cancellationToken).ConfigureAwait(false);
         }
     }
 
@@ -863,7 +869,7 @@ public sealed class GameSessionHandler
         await player.SendAsync(GameOpcode.MsgSelfProperty, new MsgSelfProperty(objData).ToPayload(), cancellationToken).ConfigureAwait(false);
         await player.SendAsync(
             GameOpcode.MsgSynGameData,
-            new MsgSynGameData(player.UiId, objData, (uint)Math.Max(0, player.Character.SkillPoint)).ToPayload(),
+            player.ToSynGameData(_worldManager.Catalog).ToPayload(),
             cancellationToken).ConfigureAwait(false);
 
         WorldMap? map = _worldManager.GetMap(player.MapId);
@@ -912,6 +918,15 @@ public sealed class GameSessionHandler
 
         await player.SendAsync(GameOpcode.MsgAltarInfo, new MsgAltarInfo(0).ToPayload(), cancellationToken).ConfigureAwait(false);
         await player.SendAsync(GameOpcode.MsgParamater, MsgParamater.CreateDefaultPayload(), cancellationToken).ConfigureAwait(false);
+        if (!string.IsNullOrWhiteSpace(_worldManager.WelcomeMessage))
+        {
+            await ChatAndPortalService.SendSystemMessageAsync(player, _worldManager.WelcomeMessage, cancellationToken).ConfigureAwait(false);
+        }
+
+        await player.SendAsync(
+            GameOpcode.MsgServerTime,
+            new MsgServerTime(DateTimeOffset.UtcNow.ToUnixTimeSeconds()).ToPayload(),
+            cancellationToken).ConfigureAwait(false);
 
         _logger.LogInformation("Player {Name} (UiId={UiId}) ready in Map={Map}", player.Character.Name, player.UiId, player.MapId);
     }

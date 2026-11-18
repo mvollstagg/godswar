@@ -499,7 +499,7 @@ public sealed class WorldMap
                     if (changed)
                     {
                         events.Add((player.CellX, player.CellZ, GameOpcode.MsgUpdateMp, new MsgUpdateMp(player.UiId, player.Character.CurMp).ToPayload(), player.UiId));
-                        events.Add((player.CellX, player.CellZ, GameOpcode.MsgSynGameData, new MsgSynGameData(player.UiId, player.ToClientObjectData(), (uint)Math.Max(0, player.Character.SkillPoint)).ToPayload(), player.UiId));
+                        events.Add((player.CellX, player.CellZ, GameOpcode.MsgSynGameData, player.ToSynGameData(catalog).ToPayload(), player.UiId));
                     }
                 }
 
@@ -577,7 +577,7 @@ public sealed class WorldMap
                                 player.UiId,
                                 0);
                             events.Add((nearest.CellX, nearest.CellZ, GameOpcode.MsgDead, deadMsg.ToPayload(), null));
-                            events.Add((player.CellX, player.CellZ, GameOpcode.MsgSynGameData, new MsgSynGameData(player.UiId, player.ToClientObjectData(), (uint)Math.Max(0, player.Character.SkillPoint)).ToPayload(), player.UiId));
+                            events.Add((player.CellX, player.CellZ, GameOpcode.MsgSynGameData, player.ToSynGameData(catalog).ToPayload(), player.UiId));
                         }
                     }
                 }
@@ -715,7 +715,7 @@ public sealed class WorldMap
                                     target.CellX,
                                     target.CellZ,
                                     GameOpcode.MsgSynGameData,
-                                    new MsgSynGameData(target.UiId, target.ToClientObjectData(), (uint)Math.Max(0, target.Character.SkillPoint)).ToPayload(),
+                                    target.ToSynGameData(catalog).ToPayload(),
                                     target.UiId));
 
                                 if (target.IsDead)

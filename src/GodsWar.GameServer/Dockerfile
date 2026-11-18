@@ -15,5 +15,5 @@ FROM mcr.microsoft.com/dotnet/runtime:11.0-preview AS runtime
 WORKDIR /app
 COPY --from=build /app/publish ./
 
-EXPOSE 6001
+EXPOSE 6001 8080
 ENTRYPOINT ["dotnet", "GodsWar.GameServer.dll"]

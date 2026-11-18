@@ -8,19 +8,19 @@ namespace GodsWar.GameServer.Game;
 public enum EquipmentSlotType
 {
     Unknown = -1,
-    Weapon = 0,
-    Head = 1,
-    Shield = 2,
-    Amulet = 3,
-    Glove = 4,
-    Armor = 5,
-    Cloth = 6,
-    Cuff = 7,
-    Girdle = 8,
-    Shoes = 9,
-    Leggins = 10,
-    Ring = 11,
+    Head = 0,
+    Amulet = 1,
+    Glove = 2,
+    Armor = 3,
+    Cuff = 4,
+    Girdle = 5,
+    Shoes = 6,
+    Leggins = 7,
+    Ring = 8,
+    Weapon = 10,
+    Shield = 11,
     Consume = 12,
+    Cloth = 13,
 }
 
 public sealed record ItemBaseDef(

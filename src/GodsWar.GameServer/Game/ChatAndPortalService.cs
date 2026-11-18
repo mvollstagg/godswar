@@ -25,6 +25,7 @@ public sealed class ChatAndPortalService
     public async Task HandleTalkAsync(PlayerSession player, ReadOnlyMemory<byte> payload, CancellationToken ct)
     {
         MsgTalk msg = MsgTalk.Parse(payload.Span);
+        Console.WriteLine($"[CHAT] From={player.Character.Name} Ch={msg.Channel} Sender={msg.SenderName} Aim={msg.AimName} Text={msg.Content}");
         string text = msg.Content.Trim();
         if (string.IsNullOrEmpty(text))
         {
@@ -46,7 +47,7 @@ public sealed class ChatAndPortalService
             text,
             player.Character.Name,
             msg.AimName);
-        byte[] outPayload = outgoing.ToPayload();
+        byte[] outPayload = outgoing.ToClientPayload();
 
         switch (msg.Channel)
         {
@@ -162,7 +163,7 @@ public sealed class ChatAndPortalService
         await _characters.UpdateCharacterPositionAsync(player.Character.Id, (short)targetMapId, targetX, targetZ, ct).ConfigureAwait(false);
     }
 
-    private async Task HandleCommandAsync(PlayerSession player, string commandText, CancellationToken ct)
+    public async Task HandleCommandAsync(PlayerSession player, string commandText, CancellationToken ct)
     {
         string[] parts = commandText.Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
         if (parts.Length == 0)
@@ -173,7 +174,7 @@ public sealed class ChatAndPortalService
         string cmd = parts[0].ToLowerInvariant();
         if (cmd == "/help")
         {
-            await SendSystemMessageAsync(player, "Commands: /tp <mapId|name> [x z], /item <id> [count], /money <amount>, /level <lv>, /exp <amount>, /heal, /guild create <name>", ct).ConfigureAwait(false);
+            await SendSystemMessageAsync(player, "Commands: /tp <mapId|name> [x z], /item <id> [count], /money <amount>, /level <lv>, /exp <amount>, /xprate <percent>, /heal, /guild create <name>", ct).ConfigureAwait(false);
             return;
         }
 
@@ -214,6 +215,11 @@ public sealed class ChatAndPortalService
                     await player.SendAsync(GameOpcode.MsgUpgrade, GameplayHandlers.BuildUpgradePacket(player).ToPayload(), ct).ConfigureAwait(false);
                 }
                 await _characters.UpdateCharacterStateAsync(player.Character, ct).ConfigureAwait(false);
+                break;
+
+            case "/xprate" when parts.Length >= 2 && int.TryParse(parts[1], NumberStyles.Integer, CultureInfo.InvariantCulture, out int xpRate):
+                _world.XpRatePercent = Math.Clamp(xpRate, 100, 100000);
+                await SendSystemMessageAsync(player, $"Server XP rate set to {_world.XpRatePercent}%.", ct).ConfigureAwait(false);
                 break;
 
             case "/level" when parts.Length >= 2 && int.TryParse(parts[1], NumberStyles.Integer, CultureInfo.InvariantCulture, out int lv):
@@ -262,10 +268,10 @@ public sealed class ChatAndPortalService
                 {
                     float tx = parts.Length >= 4 && float.TryParse(parts[2], NumberStyles.Float, CultureInfo.InvariantCulture, out float px)
                         ? px
-                        : (player.Character.Camp == 0 ? dest.Scene.AthensX : dest.Scene.SpartaX);
+                        : (player.Character.Camp == 0 ? dest.Scene.SpartaX : dest.Scene.AthensX);
                     float tz = parts.Length >= 4 && float.TryParse(parts[3], NumberStyles.Float, CultureInfo.InvariantCulture, out float pz)
                         ? pz
-                        : (player.Character.Camp == 0 ? dest.Scene.AthensZ : dest.Scene.SpartaZ);
+                        : (player.Character.Camp == 0 ? dest.Scene.SpartaZ : dest.Scene.AthensZ);
                     await TransitionMapAsync(player, dest.Scene.MapId, tx, tz, ct).ConfigureAwait(false);
                 }
                 break;
@@ -276,6 +282,6 @@ public sealed class ChatAndPortalService
     public static Task SendSystemMessageAsync(PlayerSession player, string message, CancellationToken ct)
         => player.SendAsync(
             GameOpcode.MsgTalk,
-            new MsgTalk(0, ChatChannel.System, 0, 0, 0, message, "[System]", string.Empty).ToPayload(),
+            new MsgTalk(0, ChatChannel.System, 0, 0, 0, message, "[System]", string.Empty).ToClientPayload(),
             ct).AsTask();
 }

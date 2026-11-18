@@ -137,6 +137,14 @@ public sealed class GameplayHandlers
         }
 
         MsgSkill msg = MsgSkill.Parse(payload);
+        _logger.LogInformation(
+            "MsgSkill from {Name}: MagicId={MagicId} Step={Step} ObjectId={ObjectId} Target=({TX:F1},{TZ:F1})",
+            player.Character.Name,
+            msg.MagicId,
+            msg.Step,
+            msg.ObjectId,
+            msg.TargetX,
+            msg.TargetZ);
         WorldMap? map = _worldManager.GetMap(player.MapId);
         if (map is null)
         {
@@ -159,6 +167,15 @@ public sealed class GameplayHandlers
 
         if (player.Character.CurMp < mpCost)
         {
+            return;
+        }
+
+        if (TryGetPortalSkillTarget(msg.MagicId, out ushort portalMapId, out float portalX, out float portalZ))
+        {
+            player.Character.CurMp = Math.Max(0, player.Character.CurMp - mpCost);
+            player.SkillCooldowns[msg.MagicId] = now.AddSeconds(cooldownSec);
+            await player.SendAsync(GameOpcode.MsgUpdateMp, new MsgUpdateMp(player.UiId, player.Character.CurMp).ToPayload(), ct).ConfigureAwait(false);
+            await TransitionPlayerToMapAsync(player, portalMapId, portalX, portalZ, ct).ConfigureAwait(false);
             return;
         }
 
@@ -269,7 +286,10 @@ public sealed class GameplayHandlers
     public async Task HandleBackHomeAsync(PlayerSession player, byte[] payload, CancellationToken ct)
     {
         MsgBackHome msg = MsgBackHome.Parse(payload);
-        (ushort revMap, float revX, float revZ) = _worldManager.GetStartingPosition((byte)player.Character.Camp);
+        bool inPlace = msg.ReviveType != 0;
+        (ushort targetMapId, float targetX, float targetZ) = inPlace
+            ? (player.MapId, player.X, player.Z)
+            : _worldManager.GetStartingPosition((byte)player.Character.Camp);
 
         player.Character.CurHp = (int)player.EffectiveMaxHp;
         player.Character.CurMp = (int)player.EffectiveMaxMp;
@@ -278,21 +298,36 @@ public sealed class GameplayHandlers
         player.ActiveStatuses.Clear();
 
         WorldMap? oldMap = _worldManager.GetMap(player.MapId);
+        WorldMap? destMap = _worldManager.GetMap(targetMapId) ?? oldMap;
+        ushort oldClientMapId = player.ClientMapId;
+        ushort newClientMapId = destMap?.Scene.ClientMapId ?? oldClientMapId;
+
         if (oldMap is not null)
         {
-            await oldMap.MoveAsync(player, revX, revZ, player.Atan2, 0, ct).ConfigureAwait(false);
-        }
-        else
-        {
-            player.MapId = revMap;
-            player.X = revX;
-            player.Z = revZ;
+            await oldMap.LeaveAsync(player, ct).ConfigureAwait(false);
         }
 
-        await player.SendAsync(GameOpcode.MsgBackHome, new MsgBackHome(player.UiId, msg.ReviveType).ToPayload(), ct).ConfigureAwait(false);
+        player.MapId = destMap?.Scene.MapId ?? targetMapId;
+        player.ClientMapId = newClientMapId;
+        player.X = targetX;
+        player.Z = targetZ;
+        player.Character.Map = (short)player.MapId;
+        player.Character.PosX = targetX;
+        player.Character.PosZ = targetZ;
+
+        await player.SendAsync(
+            GameOpcode.MsgSceneChange,
+            new MsgSceneChange(player.UiId, targetX, 0f, targetZ, oldClientMapId, newClientMapId).ToPayload(),
+            ct).ConfigureAwait(false);
+
+        if (destMap is not null)
+        {
+            await destMap.JoinAsync(player, ct).ConfigureAwait(false);
+        }
+
         ClientObjectData objData = player.ToClientObjectData();
         await player.SendAsync(GameOpcode.MsgSelfProperty, new MsgSelfProperty(objData).ToPayload(), ct).ConfigureAwait(false);
-        await player.SendAsync(GameOpcode.MsgSynGameData, new MsgSynGameData(player.UiId, objData, (uint)Math.Max(0, player.Character.SkillPoint)).ToPayload(), ct).ConfigureAwait(false);
+        await player.SendAsync(GameOpcode.MsgSynGameData, player.ToSynGameData(_worldManager.Catalog).ToPayload(), ct).ConfigureAwait(false);
         await _characterRepository.UpdateCharacterStateAsync(player.Character, ct).ConfigureAwait(false);
     }
 
@@ -304,8 +339,15 @@ public sealed class GameplayHandlers
         }
 
         MsgPickupDrops msg = MsgPickupDrops.Parse(payload);
+        _logger.LogInformation(
+            "MsgPickupDrops from {Name}: UiId={UiId} MonsterId={MonsterId} Index={Index}",
+            player.Character.Name,
+            msg.UiId,
+            msg.MonsterId,
+            msg.PickupIndex);
         WorldMap? map = _worldManager.GetMap(player.MapId);
-        MonsterEntity? monster = map?.GetMonster(msg.MonsterId);
+        uint monsterId = msg.MonsterId != 0 ? msg.MonsterId : msg.UiId;
+        MonsterEntity? monster = map?.GetMonster(monsterId);
         if (monster is null || monster.GroundDrops.Count == 0)
         {
             return;
@@ -341,6 +383,13 @@ public sealed class GameplayHandlers
         }
 
         MsgUseOrEquip msg = MsgUseOrEquip.Parse(payload);
+        _logger.LogInformation(
+            "MsgUseOrEquip raw from {Name}: Index={Index} Num={Num} ChangeF={ChangeF} Base={Base}",
+            player.Character.Name,
+            msg.Index,
+            msg.Num,
+            msg.ChangeF,
+            msg.Base);
         if (msg.Index >= 4 || msg.Num >= 24)
         {
             return;
@@ -353,6 +402,16 @@ public sealed class GameplayHandlers
         }
 
         _worldManager.Catalog.Items.TryGetValue(slot.Base, out ItemBaseDef? itemDef);
+        _logger.LogDebug(
+            "MsgUseOrEquip from {Name}: Index={Index} Num={Num} Base={Base} Overlap={Overlap} SlotType={SlotType} IsConsume={IsConsume} IsEquip={IsEquip}",
+            player.Character.Name,
+            msg.Index,
+            msg.Num,
+            slot.Base,
+            slot.Overlap,
+            itemDef?.SlotType,
+            itemDef?.IsConsumable,
+            itemDef?.IsEquip);
 
         // Skillbook handling (learns active or passive skill on use)
         if (itemDef is not null && (itemDef.IsSkillBook || itemDef.SkillLearnId >= 0))
@@ -396,7 +455,7 @@ public sealed class GameplayHandlers
 
             await player.SendAsync(
                 GameOpcode.MsgUseOrEquip,
-                new MsgUseOrEquip(player.UiId, msg.Index, msg.Num, msg.ChangeF, slot.Base, slot.Append0, slot.Append1, slot.Append2, slot.Append3, slot.Append4, slot.AppendLevel, slot.BaseLevel, false).ToPayload(),
+                new MsgUseOrEquip(player.UiId, msg.Index, msg.Num, 0, slot.Base, slot.Append0, slot.Append1, slot.Append2, slot.Append3, slot.Append4, slot.AppendLevel, slot.BaseLevel, false).ToPayload(),
                 ct).ConfigureAwait(false);
             await player.SendAsync(
                 GameOpcode.MsgLearn,
@@ -444,10 +503,10 @@ public sealed class GameplayHandlers
 
             await player.SendAsync(
                 GameOpcode.MsgUseOrEquip,
-                new MsgUseOrEquip(player.UiId, msg.Index, msg.Num, msg.ChangeF, slot.Base, slot.Append0, slot.Append1, slot.Append2, slot.Append3, slot.Append4, slot.AppendLevel, slot.BaseLevel, false).ToPayload(),
+                new MsgUseOrEquip(player.UiId, msg.Index, msg.Num, 0, slot.Base, slot.Append0, slot.Append1, slot.Append2, slot.Append3, slot.Append4, slot.AppendLevel, slot.BaseLevel, false).ToPayload(),
                 ct).ConfigureAwait(false);
             await player.SendAsync(GameOpcode.MsgUpdateMp, new MsgUpdateMp(player.UiId, player.Character.CurMp).ToPayload(), ct).ConfigureAwait(false);
-            await player.SendAsync(GameOpcode.MsgSynGameData, new MsgSynGameData(player.UiId, player.ToClientObjectData(), (uint)Math.Max(0, player.Character.SkillPoint)).ToPayload(), ct).ConfigureAwait(false);
+            await player.SendAsync(GameOpcode.MsgSynGameData, player.ToSynGameData(_worldManager.Catalog).ToPayload(), ct).ConfigureAwait(false);
             await SendKitbagPageForSlotAsync(player, msg.Index, msg.Num, ct).ConfigureAwait(false);
             await PersistKitbagAsync(player, ct).ConfigureAwait(false);
             await _characterRepository.UpdateCharacterStateAsync(player.Character, ct).ConfigureAwait(false);
@@ -455,7 +514,7 @@ public sealed class GameplayHandlers
         }
 
         // Equipment handling
-        if (!itemDef.IsEquip || itemDef.SlotType is < EquipmentSlotType.Weapon or > EquipmentSlotType.Ring)
+        if (!itemDef.IsEquip || itemDef.SlotType is < EquipmentSlotType.Head or > EquipmentSlotType.Cloth || itemDef.SlotType == EquipmentSlotType.Consume)
         {
             return;
         }
@@ -465,7 +524,12 @@ public sealed class GameplayHandlers
             return;
         }
 
-        int equipIdx = (int)itemDef.SlotType;
+        int equipIdx = itemDef.SlotType switch
+        {
+            EquipmentSlotType.Cloth => (int)EquipmentSlotType.Armor,
+            EquipmentSlotType.Ring => player.Equips[8].IsEmpty ? 8 : player.Equips[9].IsEmpty ? 9 : 8,
+            _ => (int)itemDef.SlotType,
+        };
         ItemEquipSlot previousEquip = player.Equips[equipIdx];
         player.Equips[equipIdx] = slot with { Binding = 1 };
         player.Kitbags[msg.Index][msg.Num] = previousEquip;
@@ -478,12 +542,12 @@ public sealed class GameplayHandlers
 
         await player.SendAsync(
             GameOpcode.MsgUseOrEquip,
-            new MsgUseOrEquip(player.UiId, msg.Index, msg.Num, msg.ChangeF, slot.Base, slot.Append0, slot.Append1, slot.Append2, slot.Append3, slot.Append4, slot.AppendLevel, slot.BaseLevel, false).ToPayload(),
+            new MsgUseOrEquip(player.UiId, msg.Index, msg.Num, 0, slot.Base, slot.Append0, slot.Append1, slot.Append2, slot.Append3, slot.Append4, slot.AppendLevel, slot.BaseLevel, false).ToPayload(),
             ct).ConfigureAwait(false);
 
         ClientObjectData objData = player.ToClientObjectData();
         await player.SendAsync(GameOpcode.MsgSelfProperty, new MsgSelfProperty(objData).ToPayload(), ct).ConfigureAwait(false);
-        await player.SendAsync(GameOpcode.MsgSynGameData, new MsgSynGameData(player.UiId, objData, (uint)Math.Max(0, player.Character.SkillPoint)).ToPayload(), ct).ConfigureAwait(false);
+        await player.SendAsync(GameOpcode.MsgSynGameData, player.ToSynGameData(_worldManager.Catalog).ToPayload(), ct).ConfigureAwait(false);
         await SendKitbagPageForSlotAsync(player, msg.Index, msg.Num, ct).ConfigureAwait(false);
 
         WorldMap? map = _worldManager.GetMap(player.MapId);
@@ -505,27 +569,71 @@ public sealed class GameplayHandlers
     public async Task HandleMoveItemAsync(PlayerSession player, byte[] payload, CancellationToken ct)
     {
         MsgMoveItem msg = MsgMoveItem.Parse(payload);
+        _logger.LogInformation(
+            "MsgMoveItem from {Name}: Index={Index} Num={Num} IndexAim={IndexAim} NumAim={NumAim} Base={Base}",
+            player.Character.Name,
+            msg.Index,
+            msg.Num,
+            msg.IndexAim,
+            msg.NumAim,
+            msg.Base);
 
         // Unequip from equipment slot (Num < 0) to bag
         if (msg.Num < 0)
         {
-            if (msg.Index < 0 || msg.Index >= 12 || msg.IndexAim < 0 || msg.IndexAim >= 4 || msg.NumAim < 0 || msg.NumAim >= 24)
+            if (msg.Index < 0 || msg.Index >= 12 || player.Equips[msg.Index].IsEmpty)
             {
                 return;
             }
 
-            if (player.Equips[msg.Index].IsEmpty || !player.Kitbags[msg.IndexAim][msg.NumAim].IsEmpty)
+            short targetPage = msg.IndexAim;
+            short targetSlot = msg.NumAim;
+            if (targetPage < 0 || targetPage >= 4 || targetSlot < 0 || targetSlot >= 24)
+            {
+                targetPage = -1;
+                targetSlot = -1;
+                for (int p = 0; p < 4 && targetPage < 0; p++)
+                {
+                    for (int s = 0; s < 24; s++)
+                    {
+                        if (player.Kitbags[p][s].IsEmpty)
+                        {
+                            targetPage = (short)p;
+                            targetSlot = (short)s;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if (targetPage < 0 || targetSlot < 0 || !player.Kitbags[targetPage][targetSlot].IsEmpty)
             {
                 return;
             }
 
-            player.Kitbags[msg.IndexAim][msg.NumAim] = player.Equips[msg.Index];
+            ItemEquipSlot unequipped = player.Equips[msg.Index];
+            player.Kitbags[targetPage][targetSlot] = unequipped;
             player.Equips[msg.Index] = ItemEquipSlot.Empty;
 
-            await player.SendAsync(GameOpcode.MsgMoveItem, msg with { UiId = player.UiId } is var outMsg ? outMsg.ToPayload() : payload, ct).ConfigureAwait(false);
+            var replyMove = new MsgMoveItem(
+                player.UiId,
+                msg.Index,
+                msg.Num,
+                targetPage,
+                targetSlot,
+                unequipped.Base,
+                unequipped.Append0,
+                unequipped.Append1,
+                unequipped.Append2,
+                unequipped.Append3,
+                unequipped.Append4,
+                unequipped.AppendLevel,
+                unequipped.BaseLevel);
+            await player.SendAsync(GameOpcode.MsgMoveItem, replyMove.ToClientPayload(), ct).ConfigureAwait(false);
             ClientObjectData objData = player.ToClientObjectData();
             await player.SendAsync(GameOpcode.MsgSelfProperty, new MsgSelfProperty(objData).ToPayload(), ct).ConfigureAwait(false);
-            await player.SendAsync(GameOpcode.MsgSynGameData, new MsgSynGameData(player.UiId, objData, (uint)Math.Max(0, player.Character.SkillPoint)).ToPayload(), ct).ConfigureAwait(false);
+            await player.SendAsync(GameOpcode.MsgSynGameData, player.ToSynGameData(_worldManager.Catalog).ToPayload(), ct).ConfigureAwait(false);
+            await SendKitbagPageForSlotAsync(player, targetPage, targetSlot, ct).ConfigureAwait(false);
             await PersistKitbagAsync(player, ct).ConfigureAwait(false);
             return;
         }
@@ -536,10 +644,44 @@ public sealed class GameplayHandlers
         }
 
         // Drop / delete item from bag
-        if (msg.IndexAim < 0 || msg.NumAim < 0)
+        if (msg.IndexAim < 0 && msg.NumAim < 0)
         {
             player.Kitbags[msg.Index][msg.Num] = ItemEquipSlot.Empty;
-            await player.SendAsync(GameOpcode.MsgMoveItem, (msg with { UiId = player.UiId }).ToPayload(), ct).ConfigureAwait(false);
+            await player.SendAsync(GameOpcode.MsgMoveItem, (msg with { UiId = player.UiId }).ToClientPayload(), ct).ConfigureAwait(false);
+            await PersistKitbagAsync(player, ct).ConfigureAwait(false);
+            return;
+        }
+
+        // Drag from bag to equipment slot (IndexAim = 0..11, NumAim < 0)
+        if (msg.IndexAim is >= 0 and < 12 && msg.NumAim < 0)
+        {
+            ItemEquipSlot bagItem = player.Kitbags[msg.Index][msg.Num];
+            if (bagItem.IsEmpty)
+            {
+                return;
+            }
+            ItemEquipSlot prevEq = player.Equips[msg.IndexAim];
+            player.Equips[msg.IndexAim] = bagItem with { Binding = 1 };
+            player.Kitbags[msg.Index][msg.Num] = prevEq;
+            var replyEquipMove = new MsgMoveItem(
+                player.UiId,
+                msg.Index,
+                msg.Num,
+                msg.IndexAim,
+                msg.NumAim,
+                bagItem.Base,
+                bagItem.Append0,
+                bagItem.Append1,
+                bagItem.Append2,
+                bagItem.Append3,
+                bagItem.Append4,
+                bagItem.AppendLevel,
+                bagItem.BaseLevel);
+            await player.SendAsync(GameOpcode.MsgMoveItem, replyEquipMove.ToClientPayload(), ct).ConfigureAwait(false);
+            ClientObjectData eqObj = player.ToClientObjectData();
+            await player.SendAsync(GameOpcode.MsgSelfProperty, new MsgSelfProperty(eqObj).ToPayload(), ct).ConfigureAwait(false);
+            await player.SendAsync(GameOpcode.MsgSynGameData, player.ToSynGameData(_worldManager.Catalog).ToPayload(), ct).ConfigureAwait(false);
+            await SendKitbagPageForSlotAsync(player, msg.Index, msg.Num, ct).ConfigureAwait(false);
             await PersistKitbagAsync(player, ct).ConfigureAwait(false);
             return;
         }
@@ -578,7 +720,7 @@ public sealed class GameplayHandlers
             player.Kitbags[msg.Index][msg.Num] = dst;
         }
 
-        await player.SendAsync(GameOpcode.MsgMoveItem, (msg with { UiId = player.UiId }).ToPayload(), ct).ConfigureAwait(false);
+        await player.SendAsync(GameOpcode.MsgMoveItem, (msg with { UiId = player.UiId }).ToClientPayload(), ct).ConfigureAwait(false);
         await PersistKitbagAsync(player, ct).ConfigureAwait(false);
     }
 
@@ -612,7 +754,8 @@ public sealed class GameplayHandlers
     private async Task HandleMonsterKilledAsync(PlayerSession killer, WorldMap map, MonsterEntity monster, CancellationToken ct)
     {
         int baseExp = GameTables.GetMonsterExp((int)monster.Level);
-        uint gainedExp = CombatCalculator.CalculateSoloExp(baseExp, killer.EffectiveLevel, (int)monster.Level);
+        uint soloExp = CombatCalculator.CalculateSoloExp(baseExp, killer.EffectiveLevel, (int)monster.Level);
+        uint gainedExp = (uint)Math.Max(1, (long)soloExp * Math.Max(1, _worldManager.XpRatePercent) / 100);
         int moneyGain = Math.Max(1, (int)monster.Level * 3);
         killer.Character.Money += moneyGain;
 
@@ -676,7 +819,7 @@ public sealed class GameplayHandlers
 
         ClientObjectData objData = killer.ToClientObjectData();
         await killer.SendAsync(GameOpcode.MsgSelfProperty, new MsgSelfProperty(objData).ToPayload(), ct).ConfigureAwait(false);
-        await killer.SendAsync(GameOpcode.MsgSynGameData, new MsgSynGameData(killer.UiId, objData, (uint)Math.Max(0, killer.Character.SkillPoint)).ToPayload(), ct).ConfigureAwait(false);
+        await killer.SendAsync(GameOpcode.MsgSynGameData, killer.ToSynGameData(_worldManager.Catalog).ToPayload(), ct).ConfigureAwait(false);
         await _characterRepository.UpdateCharacterStateAsync(killer.Character, ct).ConfigureAwait(false);
 
         _logger.LogDebug(
@@ -724,6 +867,76 @@ public sealed class GameplayHandlers
         player.EffectiveCurMp);
 
     public Task PersistKitbagPublicAsync(PlayerSession player, CancellationToken ct) => PersistKitbagAsync(player, ct);
+
+    private bool TryGetPortalSkillTarget(int magicId, out ushort mapId, out float x, out float z)
+    {
+        switch (magicId)
+        {
+            case 3061: // Portal:Newbie (Athens)
+                (mapId, x, z) = _worldManager.GetStartingPosition(1);
+                return true;
+            case 3063: // Portal:Newbie (Sparta)
+                (mapId, x, z) = _worldManager.GetStartingPosition(0);
+                return true;
+            case 3062: // Portal:Sparta
+            case 3064: // Portal:Athens
+            {
+                string targetName = magicId == 3062 ? "Sparta" : "Athens";
+                WorldMap? dest = _worldManager.GetMapByName(targetName);
+                if (dest is not null)
+                {
+                    mapId = dest.Scene.MapId;
+                    x = magicId == 3062 ? dest.Scene.SpartaX : dest.Scene.AthensX;
+                    z = magicId == 3062 ? dest.Scene.SpartaZ : dest.Scene.AthensZ;
+                    return true;
+                }
+                break;
+            }
+        }
+
+        mapId = 0;
+        x = 0f;
+        z = 0f;
+        return false;
+    }
+
+    private async Task TransitionPlayerToMapAsync(
+        PlayerSession player,
+        ushort targetMapId,
+        float targetX,
+        float targetZ,
+        CancellationToken ct)
+    {
+        WorldMap? oldMap = _worldManager.GetMap(player.MapId);
+        WorldMap? destMap = _worldManager.GetMap(targetMapId) ?? oldMap;
+        ushort oldClientMapId = player.ClientMapId;
+        ushort newClientMapId = destMap?.Scene.ClientMapId ?? oldClientMapId;
+
+        if (oldMap is not null)
+        {
+            await oldMap.LeaveAsync(player, ct).ConfigureAwait(false);
+        }
+
+        player.MapId = destMap?.Scene.MapId ?? targetMapId;
+        player.ClientMapId = newClientMapId;
+        player.X = targetX;
+        player.Z = targetZ;
+        player.Character.Map = (short)player.MapId;
+        player.Character.PosX = targetX;
+        player.Character.PosZ = targetZ;
+
+        await player.SendAsync(
+            GameOpcode.MsgSceneChange,
+            new MsgSceneChange(player.UiId, targetX, 0f, targetZ, oldClientMapId, newClientMapId).ToPayload(),
+            ct).ConfigureAwait(false);
+
+        if (destMap is not null)
+        {
+            await destMap.JoinAsync(player, ct).ConfigureAwait(false);
+        }
+
+        await _characterRepository.UpdateCharacterPositionAsync(player.Character.Id, (short)player.MapId, targetX, targetZ, ct).ConfigureAwait(false);
+    }
 
     private Task PersistKitbagAsync(PlayerSession player, CancellationToken ct)
     {

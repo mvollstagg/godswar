@@ -772,9 +772,9 @@ public readonly record struct PetDataEntry(
         dest[38] = Quality;
         dest[39] = Sex;
         dest[40] = Savvy;
-        dest[46] = State;
+        dest[46] = Satiety;
         dest[47] = Loyalty;
-        dest[48] = Satiety;
+        dest[48] = State;
         dest[49] = Rebirth;
         BinaryPrimitives.WriteUInt16LittleEndian(dest.Slice(62, 2), Stamina);
         BinaryPrimitives.WriteUInt16LittleEndian(dest.Slice(64, 2), MaxStamina);
@@ -803,9 +803,9 @@ public readonly record struct PetDataEntry(
             src[38],
             src[39],
             src[40],
-            src[46],
-            src[47],
             src[48],
+            src[47],
+            src[46],
             src[49],
             BinaryPrimitives.ReadUInt16LittleEndian(src.Slice(62, 2)),
             BinaryPrimitives.ReadUInt16LittleEndian(src.Slice(64, 2)),

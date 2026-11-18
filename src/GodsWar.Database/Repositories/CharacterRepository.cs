@@ -165,7 +165,7 @@ public sealed class CharacterRepository : ICharacterRepository
                 (@Account, @Name, @Gender, 0, @Camp, @Profession, 1, 1,
                  0, 0, @MaxHp, @MaxMp, 0, @Belief, 0, 0,
                  0, 0, 0, 10, 1, @HairStyle, @FaceShap,
-                 @Map, @PosX, @PosZ, 0, 0, 0, 0, @MaxHp, @MaxMp, NOW(), NOW())
+                 @Map, @PosX, @PosZ, 100, 0, 0, 0, @MaxHp, @MaxMp, NOW(), NOW())
             RETURNING *;
             """;
 
@@ -173,27 +173,55 @@ public sealed class CharacterRepository : ICharacterRepository
             new CommandDefinition(insertSql, request, tx, cancellationToken: cancellationToken)
         ).ConfigureAwait(false);
 
-        const string emptyBag = "[]#[]#[]#[]#[]#[]#[]#[]#[]#[]#[]#[]#[]#[]#[]#[]#[]#[]#[]#[]#[]#[]#[]#[]#";
-        const string emptyEquip = "[]#[]#[]#[]#[]#[]#[]#[]#[]#[]#[]#[]#";
+        const string starterBag = "[4000,,,,,,0,10,1,1,0]#[4030,,,,,,0,10,1,1,0]#[]#[]#[]#[]#[]#[]#[]#[]#[]#[]#[]#[]#[]#[]#[]#[]#[]#[]#[]#[]#[]#[]#";
+        (string starterEquip, string starterMagic, string starterSkill) = GetStarterEquipmentAndSkills(request.Profession, request.Camp);
 
         await conn.ExecuteAsync(
             new CommandDefinition(
                 """
                 INSERT INTO godswar.character_kitbag (user_id, kitbag_1, kitbag_2, kitbag_3, kitbag_4, storage, equip)
-                VALUES (@UserId, @EmptyBag, NULL, NULL, NULL, NULL, @EmptyEquip)
+                VALUES (@UserId, @StarterBag, NULL, NULL, NULL, NULL, @StarterEquip)
                 ON CONFLICT (user_id) DO NOTHING;
                 INSERT INTO godswar.user_altar (user_id) VALUES (@UserId) ON CONFLICT (user_id) DO NOTHING;
-                INSERT INTO godswar.user_magic (user_id, magic_info) VALUES (@UserId, '') ON CONFLICT (user_id) DO NOTHING;
-                INSERT INTO godswar.user_skill (user_id, skill_info) VALUES (@UserId, '') ON CONFLICT (user_id) DO NOTHING;
+                INSERT INTO godswar.user_magic (user_id, magic_info) VALUES (@UserId, @StarterMagic) ON CONFLICT (user_id) DO NOTHING;
+                INSERT INTO godswar.user_skill (user_id, skill_info) VALUES (@UserId, @StarterSkill) ON CONFLICT (user_id) DO NOTHING;
                 INSERT INTO godswar.user_quest (id, allqueststatus, activestatus, timequest) VALUES (@UserId, '', '', '') ON CONFLICT (id) DO NOTHING;
                 """,
-                new { UserId = created.Id, EmptyBag = emptyBag, EmptyEquip = emptyEquip },
+                new { UserId = created.Id, StarterBag = starterBag, StarterEquip = starterEquip, StarterMagic = starterMagic, StarterSkill = starterSkill },
                 tx,
                 cancellationToken: cancellationToken)
         ).ConfigureAwait(false);
 
         await tx.CommitAsync(cancellationToken).ConfigureAwait(false);
         return new CreateCharacterResult(CreateCharacterStatus.Success, created);
+    }
+
+    private static (string Equip, string Magic, string Skill) GetStarterEquipmentAndSkills(short profession, short camp)
+    {
+        int recallMagic = camp == 0 ? 3063 : 3061;
+        return profession switch
+        {
+            0 => (
+                "[]#[]#[]#[2100,,,,,,1,1,1,1,0]#[]#[]#[2900,,,,,,1,1,1,1,0]#[]#[]#[]#[1000,,,,,,1,1,1,1,0]#[2000,,,,,,1,1,1,1,0]#",
+                $"[0,0]#[{recallMagic},0]#",
+                "[0,0]#[1,0]#[2,0]#[3,0]#[4,0]#[5,0]#[6,0]#[7,0]#[8,0]#[9,0]#[10,0]#[11,0]#[12,0]#[13,0]#[14,0]#[15,0]#[16,0]#[17,0]#"
+            ),
+            1 => (
+                "[]#[]#[]#[2100,,,,,,1,1,1,1,0]#[]#[]#[2900,,,,,,1,1,1,1,0]#[]#[]#[]#[1400,,,,,,1,1,1,1,0]#[]#",
+                $"[250,0]#[{recallMagic},0]#",
+                "[50,0]#[51,0]#[52,0]#[53,0]#[54,0]#[55,0]#[56,0]#[57,0]#[58,0]#[59,0]#[60,0]#[61,0]#[62,0]#[63,0]#[64,0]#[65,0]#[66,0]#[67,0]#"
+            ),
+            2 => (
+                "[]#[]#[]#[2200,,,,,,1,1,1,1,0]#[]#[]#[2900,,,,,,1,1,1,1,0]#[]#[]#[]#[1700,,,,,,1,1,1,1,0]#[2000,,,,,,1,1,1,1,0]#",
+                $"[800,0]#[{recallMagic},0]#",
+                "[150,0]#[151,0]#[152,0]#[153,0]#[154,0]#[155,0]#[156,0]#[157,0]#[158,0]#[159,0]#[160,0]#[161,0]#[162,0]#[163,0]#[164,0]#[165,0]#[166,0]#[167,0]#"
+            ),
+            _ => (
+                "[]#[]#[]#[2200,,,,,,1,1,1,1,0]#[]#[]#[2900,,,,,,1,1,1,1,0]#[]#[]#[]#[1800,,,,,,1,1,1,1,0]#[]#",
+                $"[500,0]#[{recallMagic},0]#",
+                "[100,0]#[101,0]#[102,0]#[103,0]#[104,0]#[105,0]#[106,0]#[107,0]#[108,0]#[109,0]#[110,0]#[111,0]#[112,0]#[113,0]#[114,0]#[115,0]#[116,0]#[117,0]#"
+            ),
+        };
     }
 
     public async Task<bool> DeleteCharacterAsync(string account, string name, CancellationToken cancellationToken = default)

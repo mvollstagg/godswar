@@ -161,7 +161,7 @@ public class GameServerTests
             var pkt = await clientConn.ReadPacketAsync(ct);
             Assert.NotNull(pkt);
             receivedOpcodes.Add(pkt.Value.Opcode);
-            if (pkt.Value.Opcode == (ushort)GameOpcode.MsgParamater)
+            if (pkt.Value.Opcode == (ushort)GameOpcode.MsgServerTime)
             {
                 break;
             }
@@ -175,6 +175,7 @@ public class GameServerTests
         Assert.Contains((ushort)GameOpcode.MsgRelationAll, receivedOpcodes);
         Assert.Contains((ushort)GameOpcode.MsgAltarInfo, receivedOpcodes);
         Assert.Contains((ushort)GameOpcode.MsgParamater, receivedOpcodes);
+        Assert.Contains((ushort)GameOpcode.MsgServerTime, receivedOpcodes);
 
         // 5. Heartbeat ping (10015) and ServerTime (10303)
         await clientConn.SendPacketAsync((ushort)GameOpcode.MsgHeartbeatPing, new byte[] { 1, 2, 3, 4 }, ct);
@@ -192,6 +193,22 @@ public class GameServerTests
         await clientConn.SendPacketAsync((ushort)GameOpcode.MsgDelayExit, new byte[4], ct);
         await sessionTask.WaitAsync(TimeSpan.FromSeconds(3));
         Assert.Equal(1, repo.PositionSaveCount);
+    }
+
+    [Fact]
+    public void WorldManager_GetStartingPosition_MapsCamp0ToSpartaAndCamp1ToAthens()
+    {
+        var wm = new WorldManager(Options.Create(new GameServerOptions()), NullLogger<WorldManager>.Instance);
+        (ushort spartaMap, float sx, float sz) = wm.GetStartingPosition(0);
+        (ushort athensMap, float ax, float az) = wm.GetStartingPosition(1);
+
+        Assert.Equal((ushort)51, spartaMap);
+        Assert.Equal(-108f, sx);
+        Assert.Equal(-122f, sz);
+
+        Assert.Equal((ushort)1, athensMap);
+        Assert.Equal(98f, ax);
+        Assert.Equal(-178f, az);
     }
 
     private static PlayerSession CreatePlayerSession(

@@ -456,5 +456,5 @@ public static class GameTables
         => MonsterDodgeTable[Math.Clamp(level, 1, MonsterDodgeTable.Length) - 1];
 
     public static uint GetPlayerSkillGradePoint(int rank, int skillId)
-        => (uint)Math.Max(1, (Math.Clamp(rank, 0, 40) + 1) * 10);
+        => 1u;
 }

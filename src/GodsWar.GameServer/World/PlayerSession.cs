@@ -123,14 +123,13 @@ public sealed class PlayerSession
     public bool FactionEquals(byte monsterFaction)
     {
         // MonsterObject.ini: 0 = Sparta guard, 1 = Athens guard, 2 = Wild monster
-        // Character.Camp:    0 = Athens, 1 = Sparta
+        // Character.Camp:    0 = Sparta, 1 = Athens
         if (monsterFaction >= 2)
         {
             return false;
         }
 
-        byte playerMonsterFaction = Character.Camp == 0 ? (byte)1 : (byte)0;
-        return playerMonsterFaction == monsterFaction;
+        return (byte)Character.Camp == monsterFaction;
     }
 
     public byte GenderByte => string.Equals(Character.Gender, "male", StringComparison.OrdinalIgnoreCase)
@@ -365,6 +364,37 @@ public sealed class PlayerSession
         Belief: (ushort)Math.Max(0, (int)Character.Belief),
         Money: (uint)Math.Max(0, Character.Money),
         Stone: (uint)Math.Max(0, Character.Stone));
+
+    public ClientBaseStats ToClientBaseStats(GameDataCatalog catalog)
+    {
+        PlayerCombatStats stats = ComputeCombatStats(catalog);
+        return new ClientBaseStats(
+            MaxHp: (int)EffectiveMaxHp + stats.MaxHpBonus,
+            MaxMp: (int)EffectiveMaxMp + stats.MaxMpBonus,
+            ResumeHp: 2,
+            ResumeMp: 2,
+            Attack: stats.Attack,
+            Defend: stats.Defend,
+            MagicAttack: stats.MagicAttack,
+            MagicDefend: stats.MagicDefend,
+            Hit: stats.Hit,
+            Dodge: stats.Dodge,
+            CritAppend: stats.CritAppend,
+            CritDefend: stats.CritDefend,
+            PhyDamageAppend: 0f,
+            MagicDamageAppend: 0f,
+            DamageSorb: 0,
+            BeCure: 0f,
+            Cure: 0f,
+            StatusHit: 0,
+            StatusDodge: 0);
+    }
+
+    public MsgSynGameData ToSynGameData(GameDataCatalog catalog, uint? skillPointOverride = null) => new(
+        UiId,
+        ToClientObjectData(),
+        skillPointOverride ?? (uint)Math.Max(0, Character.SkillPoint),
+        ToClientBaseStats(catalog));
 
     public MsgObjectInfo ToObjectInfo() => new(
         WorldObjectType.Player,

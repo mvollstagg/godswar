@@ -210,7 +210,11 @@ public readonly record struct MsgRequestGameServer(string Account, byte ServerId
 
         var reader = new PacketReader(payload);
         string account = reader.ReadFixedString(ProtocolConstants.MaxNameLength);
-        byte serverId = payload.Length > ProtocolConstants.MaxNameLength ? reader.ReadByte() : (byte)0;
+        byte serverId = payload.Length >= 81
+            ? payload[80]
+            : payload.Length > ProtocolConstants.MaxNameLength
+                ? payload[ProtocolConstants.MaxNameLength]
+                : (byte)0;
         return new MsgRequestGameServer(account, serverId);
     }
 

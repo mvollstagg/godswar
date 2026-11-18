@@ -99,4 +99,22 @@ public sealed class LoginPacketsTests
         MsgResponseGameServer parsed = MsgResponseGameServer.Parse(framed.AsSpan(4));
         Assert.Equal(resp, parsed);
     }
+
+    [Fact]
+    public void MsgRequestGameServer_ParsesLegacy33ByteAndUs84BytePayloads()
+    {
+        byte[] legacyPayload = new MsgRequestGameServer("test", 1).ToPayload();
+        Assert.Equal(33, legacyPayload.Length);
+        MsgRequestGameServer parsedLegacy = MsgRequestGameServer.Parse(legacyPayload);
+        Assert.Equal("test", parsedLegacy.Account);
+        Assert.Equal((byte)1, parsedLegacy.ServerId);
+
+        byte[] usPayload = new byte[84];
+        System.Text.Encoding.ASCII.GetBytes("test3").CopyTo(usPayload, 0);
+        System.Text.Encoding.ASCII.GetBytes("00-11-22-33-44-55").CopyTo(usPayload, 32);
+        usPayload[80] = 1;
+        MsgRequestGameServer parsedUs = MsgRequestGameServer.Parse(usPayload);
+        Assert.Equal("test3", parsedUs.Account);
+        Assert.Equal((byte)1, parsedUs.ServerId);
+    }
 }
