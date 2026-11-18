@@ -1,3 +1,4 @@
+using GodsWar.Database.Models;
 using GodsWar.GameServer.Game;
 using GodsWar.Protocol;
 using GodsWar.Protocol.Packets;
@@ -578,6 +579,132 @@ public sealed class WorldMap
                                 0);
                             events.Add((nearest.CellX, nearest.CellZ, GameOpcode.MsgDead, deadMsg.ToPayload(), null));
                             events.Add((player.CellX, player.CellZ, GameOpcode.MsgSynGameData, player.ToSynGameData(catalog).ToPayload(), player.UiId));
+                        }
+                    }
+                }
+
+                UserPetRecord? activePet = player.Pets.FirstOrDefault(p => p.State is 1 or 2);
+                if (activePet is not null && (nowUtc - player.LastPetActionAtUtc).TotalSeconds >= 2.0)
+                {
+                    player.LastPetActionAtUtc = nowUtc;
+
+                    // Pet auto-loot nearby dead monsters' drops
+                    foreach ((int ax, int az) in GetAoiCells(player.CellX, player.CellZ))
+                    {
+                        foreach (MonsterEntity m in _cells[ax, az].Monsters.Values)
+                        {
+                            if (!m.IsDead || m.GroundDrops.Count == 0 || (m.DropOwnerUiId.HasValue && m.DropOwnerUiId.Value != player.UiId))
+                            {
+                                continue;
+                            }
+
+                            float dx = m.X - player.X;
+                            float dz = m.Z - player.Z;
+                            if (dx * dx + dz * dz > 144f)
+                            {
+                                continue;
+                            }
+
+                            var updatedHalves = new HashSet<(int Page, int Half)>();
+                            for (int di = m.GroundDrops.Count - 1; di >= 0; di--)
+                            {
+                                ItemEquipSlot drop = m.GroundDrops[di];
+                                if (player.TryAddItemToBag(drop, out int bagPage, out int bagSlot))
+                                {
+                                    m.GroundDrops.RemoveAt(di);
+                                    updatedHalves.Add((bagPage, bagSlot < 12 ? 0 : 12));
+                                    events.Add((player.CellX, player.CellZ, GameOpcode.MsgPickupDrops, new MsgPickupDrops(player.UiId, m.UiId, di).ToPayload(), player.UiId));
+                                }
+                            }
+
+                            if (updatedHalves.Count > 0)
+                            {
+                                int bagNum = Math.Clamp(player.Character.BagNum, 1, 4);
+                                foreach ((int page, int half) in updatedHalves)
+                                {
+                                    uint flag12 = 0;
+                                    for (int i = 0; i < 12; i++)
+                                    {
+                                        if (!player.Kitbags[page][half + i].IsEmpty)
+                                        {
+                                            flag12 |= 1u << i;
+                                        }
+                                    }
+
+                                    var kitbagPage = new MsgKitbagPage(
+                                        player.UiId,
+                                        (uint)bagNum,
+                                        (byte)page,
+                                        (byte)half,
+                                        flag12,
+                                        player.Kitbags[page][half..(half + 12)]);
+                                    events.Add((player.CellX, player.CellZ, GameOpcode.MsgKitbag, kitbagPage.ToPayload(), player.UiId));
+                                }
+
+                                events.Add((m.CellX, m.CellZ, GameOpcode.MsgDrops, new MsgDrops(m.UiId, m.GroundDrops).ToPayload(), null));
+                            }
+                        }
+                    }
+
+                    // Pet combat assist when player is in combat or AFK
+                    if (player.InCombat || player.IsAfk)
+                    {
+                        MonsterEntity? petTarget = null;
+                        float petTargetDistSq = 64f; // 8 units
+                        foreach ((int ax, int az) in GetAoiCells(player.CellX, player.CellZ))
+                        {
+                            foreach (MonsterEntity m in _cells[ax, az].Monsters.Values)
+                            {
+                                if (m.IsDead || !m.IsVisible || player.FactionEquals(m.Faction))
+                                {
+                                    continue;
+                                }
+
+                                float dx = m.X - player.X;
+                                float dz = m.Z - player.Z;
+                                float d2 = dx * dx + dz * dz;
+                                if (d2 < petTargetDistSq)
+                                {
+                                    petTargetDistSq = d2;
+                                    petTarget = m;
+                                }
+                            }
+                        }
+
+                        if (petTarget is not null)
+                        {
+                            int mLv = (int)petTarget.Level;
+                            int petAtk = Math.Max(10, Math.Max(activePet.Attack, activePet.MagicAttack) + activePet.Level * 3);
+                            int petDmg = CombatCalculator.CalculatePhysicalDamage(petAtk, GameTables.GetMonsterPhyDefend(mLv), isCrit: false);
+                            petTarget.Hp = petTarget.Hp > (uint)petDmg ? petTarget.Hp - (uint)petDmg : 0;
+                            petTarget.AddEnmity(player.UiId, petDmg);
+                            events.Add((
+                                player.CellX,
+                                player.CellZ,
+                                GameOpcode.MsgAttack,
+                                new MsgAttack(player.UiId, petTarget.X, 0f, petTarget.Z, petTarget.UiId, petDmg, 0, (byte)AttackResultType.Hit).ToPayload(),
+                                null));
+
+                            if (petTarget.Hp == 0)
+                            {
+                                int baseExp = GameTables.GetMonsterExp(mLv);
+                                uint gainedExp = CombatCalculator.CalculateSoloExp(baseExp, player.EffectiveLevel, mLv);
+                                player.Character.Money += Math.Max(1, mLv * 3);
+                                player.AddExp(gainedExp, catalog, out _);
+                                petTarget.Die(player.UiId, catalog);
+
+                                var deadMsg = new MsgDead(
+                                    petTarget.UiId,
+                                    [player.Character.Id, -1, -1, -1, -1],
+                                    [(uint)player.Character.Money, 0, 0, 0, 0],
+                                    [(uint)player.Character.FighterJobExp, 0, 0, 0, 0],
+                                    [(uint)player.Character.SkillExp, 0, 0, 0, 0],
+                                    [(uint)player.Character.SkillPoint, 0, 0, 0, 0],
+                                    player.UiId,
+                                    0);
+                                events.Add((petTarget.CellX, petTarget.CellZ, GameOpcode.MsgDead, deadMsg.ToPayload(), null));
+                                events.Add((player.CellX, player.CellZ, GameOpcode.MsgSynGameData, player.ToSynGameData(catalog).ToPayload(), player.UiId));
+                            }
                         }
                     }
                 }

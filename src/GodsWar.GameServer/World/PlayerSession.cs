@@ -117,6 +117,7 @@ public sealed class PlayerSession
     public List<UserPetRecord> Pets { get; } = [];
     public bool IsAfk { get; set; }
     public DateTime LastAfkHuntAtUtc { get; set; }
+    public DateTime LastPetActionAtUtc { get; set; }
 
     public bool IsDead => Character.CurHp <= 0;
 
