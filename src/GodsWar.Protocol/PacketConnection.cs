@@ -49,7 +49,8 @@ public sealed class PacketConnection : IAsyncDisposable
             {
                 if (buffer.Length > 0)
                 {
-                    throw new EndOfStreamException($"Stream closed with {buffer.Length} trailing incomplete packet bytes.");
+                    byte[] preview = buffer.Slice(0, Math.Min(16, buffer.Length)).ToArray();
+                    throw new EndOfStreamException($"Stream closed with {buffer.Length} trailing incomplete packet bytes (head={Convert.ToHexString(preview)}).");
                 }
 
                 return null;

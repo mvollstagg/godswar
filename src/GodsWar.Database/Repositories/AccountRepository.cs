@@ -9,6 +9,7 @@ public interface IAccountRepository
     Task<GameAreaInfo?> GetGameAreaAccountAsync(string passName, CancellationToken cancellationToken = default);
     Task<IReadOnlyList<GameAreaInfo>> ListGameAreaAccountsAsync(CancellationToken cancellationToken = default);
     Task<AccountAuthResult> ValidateAccountAsync(string passName, string password, string? clientIp = null, CancellationToken cancellationToken = default);
+    Task<bool> CreateAccountIfMissingAsync(string passName, string password, CancellationToken cancellationToken = default);
 }
 
 public sealed class AccountRepository : IAccountRepository
@@ -59,7 +60,9 @@ public sealed class AccountRepository : IAccountRepository
         const string accountSql = """
             SELECT gid, game_area, acc_id, pass_name, pass_pwd, balance, is_del, is_draw
             FROM accounts.gamearea_info
-            WHERE pass_name = @PassName AND pass_pwd = @Password AND is_del = 0
+            WHERE pass_name = @PassName
+              AND (pass_pwd = @Password OR MD5(pass_pwd) = LOWER(@Password))
+              AND is_del = 0
             LIMIT 1;
             """;
 
@@ -112,5 +115,28 @@ public sealed class AccountRepository : IAccountRepository
         }
 
         return new AccountAuthResult(AccountAuthStatus.Success, account);
+    }
+
+    public async Task<bool> CreateAccountIfMissingAsync(string passName, string password, CancellationToken cancellationToken = default)
+    {
+        const string checkSql = "SELECT 1 FROM accounts.gamearea_info WHERE pass_name = @PassName LIMIT 1;";
+        const string insertSql = """
+            INSERT INTO accounts.gamearea_info (game_area, acc_id, pass_name, pass_pwd, balance, is_del, is_draw)
+            VALUES (1, 0, @PassName, @Password, 0, 0, 0);
+            """;
+
+        await using DbConnection conn = await _connectionFactory.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
+        int? exists = await conn.ExecuteScalarAsync<int?>(
+            new CommandDefinition(checkSql, new { PassName = passName }, cancellationToken: cancellationToken)
+        ).ConfigureAwait(false);
+        if (exists.HasValue)
+        {
+            return false;
+        }
+
+        await conn.ExecuteAsync(
+            new CommandDefinition(insertSql, new { PassName = passName, Password = password }, cancellationToken: cancellationToken)
+        ).ConfigureAwait(false);
+        return true;
     }
 }

@@ -16,4 +16,10 @@ public sealed class LoginServerOptions
     /// replies with <c>LoginResultCode.VersionMismatch (0xFF)</c>.
     /// </summary>
     public int ExpectedVersion { get; set; } = 0;
+
+    /// <summary>
+    /// When true, logging in with an unknown account name automatically creates it in
+    /// <c>accounts.gamearea_info</c> (convenient for local dev and playtesting).
+    /// </summary>
+    public bool AutoCreateAccount { get; set; } = false;
 }

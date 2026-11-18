@@ -36,6 +36,8 @@ services:
       LoginServer__ServerName: ${SERVER_NAME:-GodsWar}
       LoginServer__ServerId: "1"
       LoginServer__ExpectedVersion: ${EXPECTED_VERSION:-0}
+      LoginServer__AutoCreateAccount: ${AUTO_CREATE_ACCOUNT:-true}
+      Logging__LogLevel__Default: "Debug"
     ports:
       - "${LOGIN_PORT:-5999}:5999"
     restart: unless-stopped
@@ -60,6 +62,7 @@ services:
       GameServer__LoginServerHost: "loginserver"
       GameServer__LoginServerPort: "5999"
       GameServer__SceneDataPath: "/app/gameserver/Scene"
+      Logging__LogLevel__Default: "Debug"
     ports:
       - "${GAME_PORT:-6001}:6001"
     volumes:

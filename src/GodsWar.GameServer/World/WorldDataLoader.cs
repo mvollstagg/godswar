@@ -11,7 +11,8 @@ public sealed record SceneDefinition(
     float AthensZ,
     ushort SpartaRevivalMap,
     float SpartaX,
-    float SpartaZ);
+    float SpartaZ,
+    ushort ClientMapId = 0);
 
 public sealed record MonsterTemplate(
     string Name,
@@ -188,7 +189,8 @@ public static class WorldDataLoader
                 ParseFloat(kv, "AthensZ", 0f),
                 ParseUShort(kv, "SpartaRevivalMap", mapId),
                 ParseFloat(kv, "SpartaX", 0f),
-                ParseFloat(kv, "SpartaZ", 0f)));
+                ParseFloat(kv, "SpartaZ", 0f),
+                (ushort)scenes.Count));
         }
 
         return scenes;

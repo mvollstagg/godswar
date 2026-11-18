@@ -32,7 +32,8 @@ public sealed class LoginSessionHandler
     public async Task HandleConnectionAsync(
         PacketConnection connection,
         string? remoteIp,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken,
+        bool caesarDecodeLogin = false)
     {
         string? authenticatedAccount = null;
         int clientVersion = 0;
@@ -56,7 +57,8 @@ public sealed class LoginSessionHandler
                             connection,
                             payload,
                             remoteIp,
-                            cancellationToken).ConfigureAwait(false);
+                            cancellationToken,
+                            caesarDecodeLogin).ConfigureAwait(false);
                         gameServerRequested = false;
                         break;
 
@@ -113,9 +115,17 @@ public sealed class LoginSessionHandler
         PacketConnection connection,
         byte[] payload,
         string? remoteIp,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken,
+        bool caesarDecodeLogin = false)
     {
         MsgLogin msg = MsgLogin.Parse(payload);
+        if (caesarDecodeLogin)
+        {
+            msg = new MsgLogin(
+                DecodeCaesarPlus2(msg.Account),
+                msg.Password,
+                msg.Version);
+        }
         ushort replyOpcode = MsgLoginReturnInfo.GetOpcode(msg.Version);
 
         if (_options.ExpectedVersion > 0 && msg.Version != _options.ExpectedVersion)
@@ -149,6 +159,23 @@ public sealed class LoginSessionHandler
             msg.Password,
             remoteIp,
             cancellationToken).ConfigureAwait(false);
+
+        if (auth.Status == AccountAuthStatus.InvalidCredentials && _options.AutoCreateAccount)
+        {
+            bool created = await _accountRepository.CreateAccountIfMissingAsync(
+                msg.Account,
+                msg.Password,
+                cancellationToken).ConfigureAwait(false);
+            if (created)
+            {
+                _logger.LogInformation("Auto-registered new Account={Account} from {RemoteIp}", msg.Account, remoteIp);
+                auth = await _accountRepository.ValidateAccountAsync(
+                    msg.Account,
+                    msg.Password,
+                    remoteIp,
+                    cancellationToken).ConfigureAwait(false);
+            }
+        }
 
         LoginResultCode resultCode = MapAuthStatus(auth.Status);
         await connection.SendPacketAsync(
@@ -194,6 +221,7 @@ public sealed class LoginSessionHandler
         CancellationToken cancellationToken)
     {
         MsgRequestGameServer request = MsgRequestGameServer.Parse(payload);
+        _logger.LogDebug("MSG_REQUEST_GAMESERVER ({Len}B): {Hex}", payload.Length, Convert.ToHexString(payload));
         if (!string.Equals(request.Account, authenticatedAccount, StringComparison.Ordinal))
         {
             _logger.LogWarning(
@@ -256,7 +284,7 @@ public sealed class LoginSessionHandler
             return false;
         }
 
-        if (password.Length >= ProtocolConstants.MaxNameLength)
+        if (password.Length > ProtocolConstants.MaxNameLength)
         {
             return false;
         }
@@ -282,4 +310,20 @@ public sealed class LoginSessionHandler
 
     public static string GenerateValidateCode() =>
         RandomNumberGenerator.GetString(ValidateCodeAlphabet, ProtocolConstants.ValidateCodeLength - 1);
+
+    public static string DecodeCaesarPlus2(string value)
+    {
+        if (string.IsNullOrEmpty(value))
+        {
+            return value;
+        }
+
+        return string.Create(value.Length, value, static (span, src) =>
+        {
+            for (int i = 0; i < src.Length; i++)
+            {
+                span[i] = (char)(src[i] + 2);
+            }
+        });
+    }
 }

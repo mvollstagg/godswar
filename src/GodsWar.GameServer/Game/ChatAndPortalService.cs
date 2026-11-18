@@ -143,7 +143,10 @@ public sealed class ChatAndPortalService
             await oldMap.LeaveAsync(player, ct).ConfigureAwait(false);
         }
 
+        ushort oldClientMapId = player.ClientMapId;
+        ushort newClientMapId = destMap.Scene.ClientMapId;
         player.MapId = targetMapId;
+        player.ClientMapId = newClientMapId;
         player.X = targetX;
         player.Z = targetZ;
         player.Character.Map = (short)targetMapId;
@@ -152,7 +155,7 @@ public sealed class ChatAndPortalService
 
         await player.SendAsync(
             GameOpcode.MsgSceneChange,
-            new MsgSceneChange(player.UiId, targetX, 0f, targetZ, oldMapId, targetMapId).ToPayload(),
+            new MsgSceneChange(player.UiId, targetX, 0f, targetZ, oldClientMapId, newClientMapId).ToPayload(),
             ct).ConfigureAwait(false);
 
         await destMap.JoinAsync(player, ct).ConfigureAwait(false);

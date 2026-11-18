@@ -54,6 +54,7 @@ public sealed class PlayerSession
         PassiveSkillsList = passiveSkills.ToList();
 
         MapId = (ushort)Math.Max(0, (int)character.Map);
+        ClientMapId = MapId;
         X = character.PosX;
         Y = 0f;
         Z = character.PosZ;
@@ -72,6 +73,7 @@ public sealed class PlayerSession
     public IReadOnlyList<PassiveSkillEntry> PassiveSkills => PassiveSkillsList;
 
     public ushort MapId { get; set; }
+    public ushort ClientMapId { get; set; }
     public float X { get; set; }
     public float Y { get; set; }
     public float Z { get; set; }
@@ -318,7 +320,7 @@ public sealed class PlayerSession
         (byte)Character.Profession,
         (byte)Character.HairStyle,
         (byte)(Character.FaceShap ?? 0),
-        MapId,
+        ClientMapId,
         EquipMask,
         UiId,
         X,
@@ -337,7 +339,7 @@ public sealed class PlayerSession
     public ClientObjectData ToClientObjectData() => new(
         Character.Name,
         GenderByte,
-        MapId,
+        ClientMapId,
         X,
         Y,
         Z,
@@ -367,7 +369,7 @@ public sealed class PlayerSession
     public MsgObjectInfo ToObjectInfo() => new(
         WorldObjectType.Player,
         (byte)Character.Camp,
-        MapId,
+        ClientMapId,
         UiId,
         EffectiveLevel,
         EffectiveCurHp,

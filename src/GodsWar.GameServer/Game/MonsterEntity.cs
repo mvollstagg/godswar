@@ -169,10 +169,10 @@ public sealed class MonsterEntity
         NextMoveAtUtc = DateTime.UtcNow.AddSeconds(Random.Shared.Next(3, 10));
     }
 
-    public MsgObjectInfo ToObjectInfo() => new(
+    public MsgObjectInfo ToObjectInfo(ushort? clientMapId = null) => new(
         WorldObjectType.Monster,
         Faction,
-        MapId,
+        clientMapId ?? MapId,
         UiId,
         (byte)Math.Clamp(Level, 1, 255),
         Hp,

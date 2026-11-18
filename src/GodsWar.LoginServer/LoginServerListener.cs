@@ -80,8 +80,67 @@ public sealed class LoginServerListener : BackgroundService
         {
             client.NoDelay = true;
             await using NetworkStream stream = client.GetStream();
-            await using var connection = new PacketConnection(stream, encrypted: true);
-            await _sessionHandler.HandleConnectionAsync(connection, remoteIp, stoppingToken).ConfigureAwait(false);
+
+            // Peek first 4 bytes to auto-detect plaintext 1.0.282 client (8C 00 01 00 / 48 00 01 00)
+            // vs XOR-encrypted client/GameServer IPC.
+            byte[] prefix = new byte[4];
+            int read = 0;
+            while (read < 4)
+            {
+                int n = await stream.ReadAsync(prefix.AsMemory(read, 4 - read), stoppingToken).ConfigureAwait(false);
+                if (n == 0)
+                {
+                    return;
+                }
+                read += n;
+            }
+
+            bool isPlaintextLogin = (prefix[0] == 0x8C || prefix[0] == 0x48)
+                && prefix[1] == 0x00
+                && prefix[2] == 0x01
+                && prefix[3] == 0x00;
+
+            await using var prefixedStream = new PrefixedReadStream(prefix, stream);
+            await using var connection = new PacketConnection(prefixedStream, encrypted: !isPlaintextLogin);
+            await _sessionHandler.HandleConnectionAsync(connection, remoteIp, stoppingToken, caesarDecodeLogin: isPlaintextLogin).ConfigureAwait(false);
         }
+    }
+
+    private sealed class PrefixedReadStream(byte[] prefix, Stream inner) : Stream
+    {
+        private int _pos;
+        public override bool CanRead => true;
+        public override bool CanSeek => false;
+        public override bool CanWrite => inner.CanWrite;
+        public override long Length => throw new NotSupportedException();
+        public override long Position { get => throw new NotSupportedException(); set => throw new NotSupportedException(); }
+        public override void Flush() => inner.Flush();
+        public override Task FlushAsync(CancellationToken ct) => inner.FlushAsync(ct);
+        public override int Read(byte[] buffer, int offset, int count)
+        {
+            if (_pos < prefix.Length)
+            {
+                int n = Math.Min(count, prefix.Length - _pos);
+                prefix.AsSpan(_pos, n).CopyTo(buffer.AsSpan(offset, n));
+                _pos += n;
+                return n;
+            }
+            return inner.Read(buffer, offset, count);
+        }
+        public override async ValueTask<int> ReadAsync(Memory<byte> buffer, CancellationToken ct = default)
+        {
+            if (_pos < prefix.Length)
+            {
+                int n = Math.Min(buffer.Length, prefix.Length - _pos);
+                prefix.AsSpan(_pos, n).CopyTo(buffer.Span[..n]);
+                _pos += n;
+                return n;
+            }
+            return await inner.ReadAsync(buffer, ct).ConfigureAwait(false);
+        }
+        public override void Write(byte[] buffer, int offset, int count) => inner.Write(buffer, offset, count);
+        public override ValueTask WriteAsync(ReadOnlyMemory<byte> buffer, CancellationToken ct = default) => inner.WriteAsync(buffer, ct);
+        public override long Seek(long offset, SeekOrigin origin) => throw new NotSupportedException();
+        public override void SetLength(long value) => throw new NotSupportedException();
     }
 }

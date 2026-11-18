@@ -798,9 +798,17 @@ public sealed class GameSessionHandler
         {
             ch.CurHp = Math.Max(1, ch.MaxHp);
         }
+        if (_worldManager.GetMap((ushort)Math.Max(0, (int)ch.Map)) is null)
+        {
+            (ushort fallbackMap, float fallbackX, float fallbackZ) = _worldManager.GetStartingPosition((byte)ch.Camp);
+            ch.Map = (short)fallbackMap;
+            ch.PosX = fallbackX;
+            ch.PosZ = fallbackZ;
+        }
         var session = new PlayerSession(uiId, account, ch, connection, equips, kitbags, activeSkills, passiveSkills)
         {
             Storage = ItemEquipSlot.ParseDbKitbagString(kitbag?.Storage, 24),
+            ClientMapId = _worldManager.GetClientMapId((ushort)Math.Max(0, (int)ch.Map)),
         };
         if (_quests is not null) await _quests.LoadPlayerQuestsAsync(session, cancellationToken).ConfigureAwait(false);
         if (_social is not null) await _social.LoadRelationsAsync(session, cancellationToken).ConfigureAwait(false);
@@ -858,7 +866,15 @@ public sealed class GameSessionHandler
             new MsgSynGameData(player.UiId, objData, (uint)Math.Max(0, player.Character.SkillPoint)).ToPayload(),
             cancellationToken).ConfigureAwait(false);
 
-        WorldMap? map = _worldManager.GetMap(player.MapId) ?? _worldManager.GetMap(1);
+        WorldMap? map = _worldManager.GetMap(player.MapId);
+        if (map is null)
+        {
+            (ushort startMap, float startX, float startZ) = _worldManager.GetStartingPosition((byte)player.Character.Camp);
+            player.MapId = startMap;
+            player.X = startX;
+            player.Z = startZ;
+            map = _worldManager.GetMap(startMap);
+        }
         if (map is not null)
         {
             player.MapId = map.Scene.MapId;

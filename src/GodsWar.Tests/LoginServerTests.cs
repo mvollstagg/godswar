@@ -37,6 +37,9 @@ public sealed class LoginServerTests
 
             return Task.FromResult(new AccountAuthResult(AccountAuthStatus.InvalidCredentials, null));
         }
+
+        public Task<bool> CreateAccountIfMissingAsync(string passName, string password, CancellationToken cancellationToken = default)
+            => Task.FromResult(false);
     }
 
     private static async Task<(LoginServerListener Listener, CancellationTokenSource Cts, Task RunTask)> StartTestServerAsync(

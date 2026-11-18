@@ -137,7 +137,7 @@ public sealed class WorldMap
                 {
                     if (monster.IsVisible)
                     {
-                        toJoiningPlayer.Add(monster.ToObjectInfo().ToPayload());
+                        toJoiningPlayer.Add(monster.ToObjectInfo(Scene.ClientMapId).ToPayload());
                     }
                 }
             }
@@ -229,7 +229,7 @@ public sealed class WorldMap
                     {
                         if (monster.IsVisible)
                         {
-                            enterObjectsForSelf.Add(monster.ToObjectInfo().ToPayload());
+                            enterObjectsForSelf.Add(monster.ToObjectInfo(Scene.ClientMapId).ToPayload());
                         }
                     }
                 }
@@ -610,7 +610,7 @@ public sealed class WorldMap
                             int oldZ = monster.CellZ;
                             monster.Respawn();
                             MoveMonsterCell(monster, oldX, oldZ);
-                            events.Add((monster.CellX, monster.CellZ, GameOpcode.MsgObjectInfo, monster.ToObjectInfo().ToPayload(), null));
+                            events.Add((monster.CellX, monster.CellZ, GameOpcode.MsgObjectInfo, monster.ToObjectInfo(Scene.ClientMapId).ToPayload(), null));
                         }
                         break;
 
@@ -843,10 +843,10 @@ public sealed class WorldMap
         }
     }
 
-    private static MsgObjectInfo ToNpcObjectInfo(NpcSpawnData npc) => new(
+    private MsgObjectInfo ToNpcObjectInfo(NpcSpawnData npc) => new(
         WorldObjectType.Npc,
         npc.Faction,
-        npc.MapId,
+        Scene.ClientMapId,
         npc.UiId,
         Level: 1,
         Hp: 1000,

@@ -108,15 +108,19 @@ public sealed class WorldManager
     public PlayerSession? GetPlayerByAccount(string account)
         => _playersByAccount.GetValueOrDefault(account);
 
+    public ushort GetClientMapId(ushort serverMapId)
+        => _maps.TryGetValue(serverMapId, out WorldMap? map) ? map.Scene.ClientMapId : serverMapId;
+
     public (ushort MapId, float X, float Z) GetStartingPosition(byte camp)
     {
-        // Camp 0 = Athens (Athens_Newbie = 1), Camp 1 = Sparta (Sparta_Newbie = 51)
-        ushort preferredMap = camp == 0 ? (ushort)1 : (ushort)51;
-        if (_maps.TryGetValue(preferredMap, out WorldMap? map))
+        // Camp 0 = Athens (Athens_Newbie = server MapId 1, ClientMapId 2),
+        // Camp 1 = Sparta (Sparta_Newbie = server MapId 51, ClientMapId 4).
+        string newbieName = camp == 0 ? "Athens_Newbie" : "Sparta_Newbie";
+        if (_mapsByName.TryGetValue(newbieName, out WorldMap? map))
         {
             return camp == 0
-                ? (map.Scene.AthensRevivalMap, map.Scene.AthensX, map.Scene.AthensZ)
-                : (map.Scene.SpartaRevivalMap, map.Scene.SpartaX, map.Scene.SpartaZ);
+                ? (map.Scene.MapId, map.Scene.AthensX, map.Scene.AthensZ)
+                : (map.Scene.MapId, map.Scene.SpartaX, map.Scene.SpartaZ);
         }
 
         return camp == 0

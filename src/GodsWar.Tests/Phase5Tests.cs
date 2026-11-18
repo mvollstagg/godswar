@@ -245,7 +245,7 @@ public sealed class Phase5Tests
         Assert.Equal((ushort)GameOpcode.MsgSceneChange, op);
         MsgSceneChange sc = MsgSceneChange.Parse(data);
         Assert.Equal((ushort)1, sc.CurrentMapId);
-        Assert.Equal((ushort)2, sc.NextMapId);
+        Assert.Equal((ushort)11, sc.NextMapId);
         Assert.Equal((ushort)2, player.MapId);
     }
 

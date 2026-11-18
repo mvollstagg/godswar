@@ -119,9 +119,11 @@ public sealed class GameServerRegistry
             {
                 target = _servers.Values.OrderBy(s => s.Info.ServerId).FirstOrDefault();
             }
-            else
+            else if (!_servers.TryGetValue(requestedServerId, out target) && _servers.Count == 1)
             {
-                _servers.TryGetValue(requestedServerId, out target);
+                // 1.0.282 client may send a non-matching cServerId (e.g. 51/'3') when selecting
+                // the sole server from MSG_GAMESERVER_INFO; route to the only online GameServer.
+                target = _servers.Values.FirstOrDefault();
             }
         }
 
