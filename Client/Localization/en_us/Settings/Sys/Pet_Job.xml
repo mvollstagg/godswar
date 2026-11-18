@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="GB2312"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <!--this is Pet Job config-->
 <PetJob>
     <Config>
@@ -125,5 +125,15 @@
         <PlayerLv118 Lv="118" Money="9492" MoneyGain="31431,3" Bijou="93" BijouGain="78462,5"/>
         <PlayerLv119 Lv="119" Money="9744" MoneyGain="32385,3" Bijou="95" BijouGain="80588,5"/>
         <PlayerLv120 Lv="120" Money="10001" MoneyGain="33360,3" Bijou="96" BijouGain="82754,5"/>
+        <PlayerLv121 Lv="121" Money="10180" MoneyGain="34335,3" Bijou="97" BijouGain="84920,5"/>
+        <PlayerLv122 Lv="122" Money="10411" MoneyGain="35310,3" Bijou="99" BijouGain="87086,5"/>
+        <PlayerLv123 Lv="123" Money="10642" MoneyGain="36285,3" Bijou="100" BijouGain="89252,5"/>
+        <PlayerLv124 Lv="124" Money="10873" MoneyGain="37260,3" Bijou="101" BijouGain="91418,5"/>
+        <PlayerLv125 Lv="125" Money="11104" MoneyGain="38235,3" Bijou="103" BijouGain="93584,5"/>
+        <PlayerLv126 Lv="126" Money="11335" MoneyGain="39210,3" Bijou="104" BijouGain="95750,6"/>
+        <PlayerLv127 Lv="127" Money="11566" MoneyGain="40185,4" Bijou="105" BijouGain="97916,6"/>
+        <PlayerLv128 Lv="128" Money="11797" MoneyGain="41160,4" Bijou="107" BijouGain="100082,6"/>
+        <PlayerLv129 Lv="129" Money="12028" MoneyGain="42135,4" Bijou="108" BijouGain="102248,6"/>
+        <PlayerLv130 Lv="130" Money="12259" MoneyGain="43110,4" Bijou="109" BijouGain="104414,6"/>
     </Job>
 </PetJob>

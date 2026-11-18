@@ -16,17 +16,17 @@ function NpcFunHallo_SetText(Type,Index,BtnID,SubID)
 	      FirstWin_Text1:Visible(true);
 	   elseif SubID == 2 then
 	      local Button = win:GetChild("FirstWin_Button" .. BtnID);
-              Button:SetPosition(50,280);
+              Button:SetPosition(25,135);
 	      Button:SetText(NF_L0_Hallo2);
 	      Button:Visible(true);
 	   elseif SubID == 3 then
 	      local Button = win:GetChild("FirstWin_Button" .. BtnID);
-              Button:SetPosition(50,300);
+              Button:SetPosition(25,155);
 	      Button:SetText(NF_L0_Hallo3);
 	      Button:Visible(true);
 	   elseif SubID == 4 then
 	      local Button = win:GetChild("FirstWin_Button" .. BtnID);
-              Button:SetPosition(50,305);
+              Button:SetPosition(25,175);
 	      Button:SetText(NF_L0_Hallo4);
 	      Button:Visible(true);
            elseif SubID == 105 then
@@ -38,22 +38,22 @@ function NpcFunHallo_SetText(Type,Index,BtnID,SubID)
 	elseif Index == 2 then
            if SubID == 5 then
 	      local Button = win:GetChild("FirstWin_Button" .. BtnID);
-              Button:SetPosition(50,150);
+              Button:SetPosition(25,135);
 	      Button:SetText(NF_L0_Hallo5);
 	      Button:Visible(true);
            elseif SubID == 6 then
 	      local Button = win:GetChild("FirstWin_Button" .. BtnID);
-              Button:SetPosition(50,170);
+              Button:SetPosition(25,155);
 	      Button:SetText(NF_L0_Hallo6);
 	      Button:Visible(true);
            elseif SubID == 7 then
 	      local Button = win:GetChild("FirstWin_Button" .. BtnID);
-              Button:SetPosition(50,190);
+              Button:SetPosition(25,175);
 	      Button:SetText(NF_L0_Hallo7);
 	      Button:Visible(true);
            elseif SubID == 8 then
 	      local Button = win:GetChild("FirstWin_Button" .. BtnID);
-              Button:SetPosition(50,210);
+              Button:SetPosition(25,195);
 	      Button:SetText(NF_L0_Hallo8);
 	      Button:Visible(true);
 	   elseif SubID == 100 then
@@ -87,6 +87,14 @@ function NpcFunHallo_SetText(Type,Index,BtnID,SubID)
 	      FirstWin_Text1:Visible(true);
 	      NPCFUN:EndMessage(true);
 	      NPCFUN:NeedMessage(False);
+	   elseif SubID == 201 then
+	      FirstWin_Text1:SetText(NF_L0_Hallo201);
+	      FirstWin_Text1:Visible(true);
+	      NPCFUN:EndMessage(true);
+	      NPCFUN:NeedMessage(False);
+           elseif math.mod(SubID ,1000) == 1 then
+	      FirstWin_Text1:SetText("|cffF14187" .. NF_L0_Hallo202 .. ((SubID-1)/1000) .. NF_L0_Hallo203 .. "|cFFFFFFFF");
+	      FirstWin_Text1:Visible(true);
 	   end;
 	elseif Index == 3 then
 	   if SubID == 106 then

@@ -117,4 +117,20 @@ public sealed class XorCipherTests
         b.Decrypt(copy);
         Assert.Equal(data, copy);
     }
+
+    [Fact]
+    public void CreateV227_MatchesNetDllHeaderKeystreamAndRoundTrips()
+    {
+        XorCipher client = XorCipher.CreateV227();
+        XorCipher server = XorCipher.CreateV227();
+
+        byte[] header = [0x8C, 0x00, 0x01, 0x00]; // 140-byte MSG_LOGIN
+        byte[] wire = [.. header];
+        client.Encrypt(wire);
+
+        Assert.Equal([0xAC, 0x9A, 0xBD, 0x26], wire);
+
+        server.Decrypt(wire);
+        Assert.Equal(header, wire);
+    }
 }

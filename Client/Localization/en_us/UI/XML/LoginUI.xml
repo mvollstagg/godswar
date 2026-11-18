@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <!--
     Copyright (c) 2008,欢乐连线工作室
 		All rights reserved
@@ -17,14 +17,16 @@
 	<LoginWin Template="T_EmptyBgWin" ID="189999" Rectangle="0,0,1024,768">
     <Facebook_Login Template="T_LoginButton" ID="-1" Rectangle="457,479,568,513" FontColor="BillBoard_TEXTCOLOR" SText="L_X0_45" TextWeight="1"/>
     <Facebook_Info Type="Text" ID="-1" Rectangle="325,320,780,596" TexturePos="0,0" Texture="" SText="L_X0_46" Font="MessageFont24" FontColor="GREEN_TEXTCOLOR" TextFormat="16"/>
-    
 		<OKBtn Template="T_LoginButton" ID="190003" Rectangle="457,479,568,513" FontColor="BillBoard_TEXTCOLOR" SText="UITEXT_LOGIN" TextWeight="1"/>
 		<OKBtnLeft Template="T_TitleText" ID="-1" Rectangle="423,482,457,508" TexturePos="161,99" Text=""/>
 		<OKBtnRight Template="T_TitleText" ID="-1" Rectangle="568,482,602,508" TexturePos="161,126" Text=""/>
+		<EnrollmentBtn Template="T_LoginButton" ID="-1" Rectangle="867,664,978,698" FontColor="BillBoard_TEXTCOLOR" Text="Register" OnClick="EnrollmentOnClick()" TextWeight="1"/>
 		<EscapeBtn Template="T_LoginButton" ID="190011" Rectangle="867,714,978,748" FontColor="BillBoard_TEXTCOLOR" SText="L_X0_1" TextWeight="1"/>
 		<InterfaceBtn Template="T_LoginButton" Rectangle="867,674,978,708" FontColor="BillBoard_TEXTCOLOR" SText="L_X0_2" TextWeight="1" OnClick="InterfaceBtn_OnClick();" Visible="0"/>
 		<EscapeBtnLeft Template="T_TitleText" ID="-1" Rectangle="833,717,867,743" TexturePos="161,99" Text=""/>
 		<EscapeBtnRight Template="T_TitleText" ID="-1" Rectangle="978,717,1013,743" TexturePos="161,126" Text=""/>
+		<EnrollmentBtnBtnLeft Template="T_TitleText" ID="-1" Rectangle="833,667,867,693" TexturePos="161,99" Text=""/>
+		<EnrollmentBtnBtnRight Template="T_TitleText" ID="-1" Rectangle="978,667,1013,693" TexturePos="161,126" Text=""/>
 		<Title_Name Template="T_NoBackgroundText" ID="190006" Rectangle="450,282,525,316" TexturePos="347,414" Font="MessageFont24" FontColor="BillBoard_TEXTCOLOR" SText="L_X0_3" TextWeight="1" TextOffset="0,-15,0,0"/>
 		<Title_Password Template="T_NoBackgroundText" ID="190007" Rectangle="445,360,520,394" TexturePos="419,414" Font="MessageFont24" FontColor="BillBoard_TEXTCOLOR" SText="L_X0_4" TextWeight="1" TextOffset="0,-15,0,0"/>
 		<Edit_NameText Template="T_TitleText" ID="-1" Rectangle="425,317,426,346" TexturePos="139,173" Text=""/>
@@ -65,33 +67,57 @@
 	<!--选择服务器界面-->
 	<SelectServerBackground Template="T_EmptyBgWin" ID="190016" Rectangle="0,0,1024,768">
 		<ReturnBtn Template="T_Button9" ID="190023" Rectangle="558,274,710,301" FontColor="BillBoard_TEXTCOLOR" SText="L_X0_34"  Visible="0"/>
+		
+	
+		<GreenWin Type="Text" Rectangle="422,25,500,45" TextFormat="4" SText="" Font="MainMap"/>
+		
+		
+				
+    <ChooseServerWin Template="T_SimpleWindow"   Rectangle="82,143,262,692"  Enable="0"  >
+    
+	   <LogoText Type="Text" Rectangle="5,15,175,35" TextFormat="5" SText="L_X0_43" Font="MainMap" FontColor="YELLOW_TEXTCOLOR"  />
+	
+    <ListBox1Top Template="T_TitleText" ID="-1" Rectangle="149,10,172,34" TexturePos="720,0" Text=""/>
+	<ListBox1Btm Template="T_TitleText" ID="-1" Rectangle="149,493,172,517" TexturePos="720,30" Text=""/>
+	<ListBoxScrollMid Template="T_TitleText" ID="-1" Rectangle="149,34,172,35" TexturePos="720,26" Text="" OnScaleY="500"/>
+	<UpButton Template="T_UpButton" ID="-1" Rectangle="146,10,174,32" OnClick="UpContainerBtn()"/>
+	<DownButton Template="T_DownButton" ID="-1" Rectangle="146,517,174,539" OnClick="DownContainerBtn()"/>
+	 
+	<ListBox Type="ListBox" ID="-1" TexturePos="0,0" Rectangle="4,44,154,510" ScrollTexture="./Localization/en_us/UI/Texture/main.gwo" ScrollPos="1024,1024" ScrollRect="148,-15,165,475" BtnPos="133,122" BtnRect="0,0,17,27" Height="25">
+    </ListBox>
+	
+	</ChooseServerWin>	
 	</SelectServerBackground>
 	
-	<SelectServerWin Template="T_SimpleWindow" ID="190017" Modal="0" Rectangle="222,143,801,625">
+	<SelectServerWin Template="T_SimpleWindow" ID="190017" Modal="0" Rectangle="262,143,981,692">
 	  <LastServerWin Template="T_BgWindow" Rectangle="50,25,280,105">
-	     <LastServerText  Type="Text" Font="MainFonts" Rectangle="10,-5,220,45" FontColor="YELLOW_TEXTCOLOR" TextFormat="5" SText="L_X0_35"/>
-	     <LastServerState  Type="Text" Font="MainFonts2" Rectangle="166,40,206,67" FontColor="YELLOW_TEXTCOLOR" TextFormat="5" Text=""/>
-	     <PlayerNum  Type="Text" TexturePos="1024,1024" Texture="./Localization/en_us/UI/Texture/main.gwo" Rectangle="197,40,225,68" TextFormat="5" Font="Mainlogin"	FontColor="YELLOW_TEXTCOLOR"	Text="★"/>
+	     <LastServerText  Type="Text" Font="MainMap" Rectangle="10,-5,220,45" FontColor="YELLOW_TEXTCOLOR" TextFormat="5" SText="L_X0_35"/>
+	     <LastServerState  Type="Text" Font="MainMap" Rectangle="166,40,206,67" FontColor="YELLOW_TEXTCOLOR" TextFormat="5" Text=""/>
+	     <PlayerNum  Type="Text" TexturePos="1024,1024" Texture="./Localization/en_us/UI/Texture/main.gwo" Rectangle="197,40,225,68" TextFormat="5" Font="MainMap"	FontColor="YELLOW_TEXTCOLOR"	Text="★" Visible=""/>
 	  </LastServerWin>
 	  <LastServerBtn Template="T_ServerListBtn_Left"  Rectangle="55,65,251,90" Font="MainFonts" TextFormat="5" Text=""/>
-	  <GreenWin Type="Text" Rectangle="322,25,400,45" TextFormat="4" SText="L_X0_36" Font="MainMap"/>
-	  <YellowWin Type="Text" Rectangle="342,45,400,65" TextFormat="4" SText="L_X0_37" Font="MainMap"/>
-	  <RedWin Type="Text" Rectangle="362,65,400,85" TextFormat="4" SText="L_X0_38" Font="MainMap"/>
-	  <RedWin Type="Text" Rectangle="382,85,450,105" TextFormat="4" SText="L_X0_39" Font="MainMap"/>
+	  <GreenWin Type="Text" Rectangle="422,25,500,45" TextFormat="4" SText="L_X0_36" Font="MainMap"/>
+	  <YellowWin Type="Text" Rectangle="442,45,500,65" TextFormat="4" SText="L_X0_37" Font="MainMap"/>
+	  <RedWin Type="Text" Rectangle="462,65,500,85" TextFormat="4" SText="L_X0_38" Font="MainMap"/>
+	  <RedWin Type="Text" Rectangle="482,85,550,105" TextFormat="4" SText="L_X0_39" Font="MainMap"/>
 	  
-	  <ServerListText  Type="Text" Font="MainFonts" Rectangle="50,115,220,135" FontColor="YELLOW_TEXTCOLOR" TextFormat="0" SText="L_X0_40"/>
-	  <SvrWin Template="T_BgWindow" Rectangle="30,145,550,428"/>
+	  <ServerListText  Type="Text" Font="MainMap" Rectangle="50,115,220,135" FontColor="YELLOW_TEXTCOLOR" TextFormat="0" SText="L_X0_40"/>
+	  <SvrWin Template="T_BgWindow" Rectangle="30,140,690,228"/>
 	  
-      <SScrollTop Template="T_TitleText" ID="-1" Rectangle="523,147,546,171" TexturePos="720,0" Text=""/>
-      <SScrollBottom Template="T_TitleText" ID="-1" Rectangle="523,382,546,406" TexturePos="720,30" Text=""/>
-      <SScrollMid Template="T_TitleText" ID="-1" Rectangle="523,171,546,172" TexturePos="720,26" Text="" />
-      <topbutton Template="T_UpButton" ID="190021" TexturePos="0,228" Rectangle="520,147,548,169" Text=""/>
-      <downbutton Template="T_DownButton" ID="190020" TexturePos="29,228" Rectangle="520,407,548,429" Text=""/>
-      <SvrContent Type="ListBox" ID="190019" Texture="./Localization/en_us/UI/Texture/main.gwo" TexturePos="0,0" Rectangle="39,158,470,428" Text="" ScrollTexture="./Localization/en_us/UI/Texture/main.gwo" ScrollPos="0,0" ScrollRect="487,11,504,245" BtnPos="133,122" BtnRect="0,0,17,27" Font="Mainlogin2" FontColor="DEFAULT_TEXTCOLOR" Height="32" Visible="0"/>
-      <RecmdSvrContent Type="ListBox"  Texture="./Localization/en_us/UI/Texture/main.gwo" TexturePos="1024,1024" Rectangle="39,158,470,428" Text="" Font="Mainlogin2" FontColor="DEFAULT_TEXTCOLOR" Visible="1" Height="32"/>
-	  <ConfirmBtn Template="T_Button9" ID="190022" Rectangle="390,438,542,465" SText="L_X0_41" FontColor="BillBoard_TEXTCOLOR"/>
-	  <ReturnBtn Template="T_Button9" ID="190031" Rectangle="65,438,217,465" FontColor="BillBoard_TEXTCOLOR" Text="Previous"/>
-	  <MoreServerBtn Template="T_Button9"  ID="190033" Rectangle="390,115,542,142" SText="L_X0_42" FontColor="BillBoard_TEXTCOLOR" OnClick="MoreServerBtn_OnClick();"/>
+	  <SvrWin1 Template="T_BgWindow" Rectangle="30,270,690,458"/>
+	  <SScrollTop Template="T_TitleText" ID="-1" Rectangle="663,312,686,336" TexturePos="720,0" Text=""/>
+      <SScrollBottom Template="T_TitleText" ID="-1" Rectangle="663,432,686,456" TexturePos="720,30" Text=""/>
+      <SScrollMid Template="T_TitleText" ID="-1" Rectangle="663,282,686,283" TexturePos="720,26"  Text="" />
+      <topbutton Template="T_UpButton" ID="190021" TexturePos="0,228" Rectangle="660,272,688,294" Text=""/>
+      <downbutton Template="T_DownButton" ID="190020" TexturePos="29,228" Rectangle="660,437,688,459" Text=""/>
+      <SvrContent Type="ListBox" ID="190019" Texture="./Localization/en_us/UI/Texture/main.gwo" TexturePos="0,0" Rectangle="30,275,680,458" Text="" ScrollTexture="./Localization/en_us/UI/Texture/main.gwo" ScrollPos="0,0" ScrollRect="636,19,653,162" BtnPos="133,122" BtnRect="0,0,17,27"  Font="MainMap" FontColor="DEFAULT_TEXTCOLOR" Height="32" Visible="1"/>
+      <RecmdSvrContent Type="ListBox"  Texture="./Localization/en_us/UI/Texture/main.gwo" TexturePos="1024,1024" Rectangle="30,145,690,228" Text="" Font="MainMap" FontColor="DEFAULT_TEXTCOLOR" Visible="1" Height="32"/>       
+	  <EnterGame Template="T_Button9" ID="190036" Rectangle="470,488,622,515" SText="L_X0_45" Font="MainMap"  FontColor="BillBoard_TEXTCOLOR"/>
+	  <ReturnBtn Template="T_Button9" ID="190031" Rectangle="65,488,217,515" FontColor="BillBoard_TEXTCOLOR" Font="MainMap"  SText="L_X0_34"/>
+	  <MoreServerBtn Template="T_Button9"  ID="190033" Rectangle="390,115,542,142" SText="L_X0_42" Font="MainMap"  FontColor="BillBoard_TEXTCOLOR" /> 
+	  <ServerText ID="191107"  Type="Text" Font="MainMap" Rectangle="40,240,192,265" FontColor="YELLOW_TEXTCOLOR" TextFormat="5" Text=""/>
+	   <SelectLineBtn Template="T_Button9" ID="190035" Rectangle="470,488,622,515" SText="L_X0_45" Font="MainMap"  FontColor="BillBoard_TEXTCOLOR" Visible="0"/>
+	   <ConfirmBtn Template="T_Button9" ID="190022" Rectangle="470,488,622,515" SText="L_X0_7" Font="MainMap"  FontColor="BillBoard_TEXTCOLOR" Visible="0"/>
 	</SelectServerWin>
 	
 	<!--选择角色进入游戏界面-->
@@ -116,12 +142,12 @@
 	</SelectRoleWin>
 	<!--创建角色界面-->
 	<RoleCreateBackground Template="T_EmptyBgWin" ID="-1" Visible="0" Rectangle="0,0,1024,768">
-		<CompleteBtn Template="T_LoginButton" ID="190044" Rectangle="457,579,568,612" SText="L_X0_10" TextWeight="1"/>
-		<CompleteBtnBtnLeft Template="T_TitleText" ID="-1" Rectangle="423,582,457,608" TexturePos="161,99" Text=""/>
-		<CompleteBtnBtnRight Template="T_TitleText" ID="-1" Rectangle="568,582,602,608" TexturePos="161,126" Text=""/>
-		<ReturnBtn Template="T_LoginButton" ID="190043" Rectangle="867,714,978,747" SText="L_X0_5" TextWeight="1"/>
-		<ReturnBtnLeft Template="T_TitleText" ID="-1" Rectangle="833,717,867,743" TexturePos="161,99" Text=""/>
-		<ReturnBtnRight Template="T_TitleText" ID="-1" Rectangle="978,717,1013,743" TexturePos="161,126" Text=""/>
+		<CompleteBtn Template="T_LoginButton" ID="190044" Rectangle="547,579,658,612" SText="L_X0_10" TextWeight="1"/>
+		<CompleteBtnBtnLeft Template="T_TitleText" ID="-1" Rectangle="513,582,547,608" TexturePos="161,99" Text=""/>
+		<CompleteBtnBtnRight Template="T_TitleText" ID="-1" Rectangle="658,582,692,608" TexturePos="161,126" Text=""/>
+		<ReturnBtn Template="T_LoginButton" ID="190043" Rectangle="067,714,178,747" SText="L_X0_5" TextWeight="1"/>
+		<ReturnBtnLeft Template="T_TitleText" ID="-1" Rectangle="033,717,067,743" TexturePos="161,99" Text=""/>
+		<ReturnBtnRight Template="T_TitleText" ID="-1" Rectangle="178,717,213,743" TexturePos="161,126" Text=""/>
 	</RoleCreateBackground>
 	
 	<RoleCreateShowWin Template="T_NormalWindow" ID="-1" Rectangle="0,96,263,762" Visible="0">
@@ -181,8 +207,8 @@
 		<Metier2check Template="T_NormalCheckBox" ID="190061" Rectangle="25,237,67,279" TexturePos="730,705" Text=""/>
 		<Metier3check Template="T_NormalCheckBox" ID="190062" Rectangle="117,237,159,279" TexturePos="772,705" Enable="1" Text=""/>
 		<Metier4check Template="T_NormalCheckBox" ID="190063" Rectangle="163,237,205,279" TexturePos="814,705" Enable="1" Text=""/>
-		<malecheck Template="T_NormalCheckBox" ID="190048" Rectangle="145,313,187,355" TexturePos="940,705" Text=""/>
-		<femalecheck Template="T_NormalCheckBox" ID="190049" Rectangle="191,313,233,355" TexturePos="982,705" Text=""/>
+		<malecheck Template="T_NormalCheckBox" ID="190048" Rectangle="145,313,187,355" TexturePos="940,705" Text=""  OnHovered="SexManFunc()" OnLeft="SexManLeftFunc()" />
+		<femalecheck Template="T_NormalCheckBox" ID="190049" Rectangle="191,313,233,355" TexturePos="982,705" Text="" OnHovered="SexWomanFunc()" OnLeft="SexWomanLeftFunc()"  />
 		<HairShape Template="T_TitleText" ID="-1" Rectangle="31,387,182,413" TexturePos="0,432" SText="L_X0_16" Font="Mainlogin2" FontColor="DEFAULT_TEXTCOLOR" TextFormat="5"/>
 		<HairColor Template="T_TitleText" ID="-1" Rectangle="31,417,182,443" TexturePos="0,432" SText="L_X0_17" Font="Mainlogin2" FontColor="DEFAULT_TEXTCOLOR" TextFormat="5"/>
 		<FaceShape Template="T_TitleText" ID="-1" Rectangle="31,447,182,473" TexturePos="0,432" SText="L_X0_18" Font="Mainlogin2" FontColor="DEFAULT_TEXTCOLOR" TextFormat="5"/>
@@ -202,12 +228,12 @@
         <ConstellationBtndown Type="Button" Rectangle="113,320,140,347" TexturePos="221,261" Texture="./Localization/en_us/UI/Texture/main.gwo" Text="" OnClick="ConstellationBtndown_OnClick();"/>
         <ConstellationEditText  Template="T_TitleText" ID="-1" Rectangle="30,319,108,348" TexturePos="1024,1024" SText="L_X0_20" TextFormat="5" Font="MainMap" FontColor="DEFAULT_TEXTCOLOR"/>
         
-    <HitText       Type="Text"  ID="191000" Rectangle="40,473,220,491" TexturePos="1024,1024" Texture="./Localization/en_us/UI/Texture/main.gwo" SText="L_X0_33" Font="MainFonts" TextFormat="16"/>
+    <HitText       Type="Text"  ID="191000" Rectangle="40,473,220,491" TexturePos="1024,1024" Texture="./Localization/en_us/UI/Texture/main.gwo" SText="L_X0_33" Font="MainFonts" TextFormat="16" Visible="0" />
 <!--邀请人输入框-->
-    <InviterEditText  Type="Text"  ID="-1"    Texture="./Localization/en_us/UI/Texture/main.gwo" Rectangle="58,523,59,552" TexturePos="139,173"  Text=""/>
-    <InviterEdit      Type="EditBox" ID="191001"  Texture="" TexturePos="0,0" Rectangle="58,523,203,552"  Font="Mainlogin2" FontColor="DEFAULT_TEXTCOLOR" MaxText="32" ResponseMouse="1" TextFormat="4" Text="" Number="1"/>
-    <InviterEditLeft  Type="Text"  ID="-1"      Texture="./Localization/en_us/UI/Texture/main.gwo" Rectangle="51,523,58,552" TexturePos="131,173"  Text=""/>
-    <InviterEditRight Type="Text"  ID="-1"      Texture="./Localization/en_us/UI/Texture/main.gwo" Rectangle="202,523,209,552" TexturePos="138,173"  Text=""/>
+    <InviterEditText  Type="Text"  ID="-1"    Texture="./Localization/en_us/UI/Texture/main.gwo" Rectangle="58,523,59,552" TexturePos="139,173"  Text="" Visible="0" />
+    <InviterEdit      Type="EditBox" ID="191001"  Texture="" TexturePos="0,0" Rectangle="58,523,203,552"  Font="Mainlogin2" FontColor="DEFAULT_TEXTCOLOR" MaxText="32" ResponseMouse="1" TextFormat="4" Text="" Number="1" Visible="0" />
+    <InviterEditLeft  Type="Text"  ID="-1"      Texture="./Localization/en_us/UI/Texture/main.gwo" Rectangle="51,523,58,552" TexturePos="131,173"  Text="" Visible="0" />
+    <InviterEditRight Type="Text"  ID="-1"      Texture="./Localization/en_us/UI/Texture/main.gwo" Rectangle="202,523,209,552" TexturePos="138,173"  Text="" Visible="0" />
     
      <!--星座选择界面-->
     <ConstellationChooseWin Template="T_SimpleWindow" Rectangle="-127,150,5,515"  Visible ="0" Enable="0">	

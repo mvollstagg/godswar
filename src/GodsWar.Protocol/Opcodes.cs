@@ -86,6 +86,7 @@ public enum GameOpcode : ushort
 
     // NPC & Quests
     MsgTalkNpc = 10064,
+    MsgTalkNpcV227 = 10065,
     MsgNpcData = 10065,
     MsgSysNpcData = 10066,
     MsgSysFunNote = 10067,
@@ -165,6 +166,7 @@ public enum GameOpcode : ushort
     MsgAltarInfo = 10156,
     MsgError = 10157,
     MsgManageReturn = 10158,
+    MsgManageReturnV227 = 10162,
     MsgSkillPointUpgrade = 10159,
     MsgSynGameData = 10160,
     MsgStatus = 10161,
@@ -184,6 +186,7 @@ public enum GameOpcode : ushort
     MsgTargetInfo = 10184,
     MsgDelayExit = 10185,
     MsgWalk = 10187,
+    MsgWalkV227 = 10192,
     MsgMentorListQuery = 10227,
     MsgPrentice = 10227,
     MsgPrenticeList = 10228,
@@ -214,4 +217,97 @@ public enum GameOpcode : ushort
 
     MsgServerTime = 10303,
     MsgKeepalivePing = 10304,
+}
+
+/// <summary>
+/// Bidirectional opcode mapping between canonical <see cref="GameOpcode"/> (1.0.282)
+/// and the v2.26.002 (<c>v2.27</c>) client's shifted opcode table.
+/// </summary>
+public static class V227OpcodeMap
+{
+    private static readonly Dictionary<GameOpcode, ushort> CanonicalToWire = new()
+    {
+        [GameOpcode.MsgTalkNpc] = 10065,
+        [GameOpcode.MsgNpcData] = 10066,
+        [GameOpcode.MsgSysNpcData] = 10067,
+        [GameOpcode.MsgSysFunNote] = 10068,
+        [GameOpcode.MsgNpcItemData] = 10069,
+        [GameOpcode.MsgNpcStorageData] = 10070,
+        [GameOpcode.MsgNpcSell] = 10071,
+        [GameOpcode.MsgLearnSucceed] = 10072,
+        [GameOpcode.MsgNpcQuest] = 10073,
+        [GameOpcode.MsgNpcNextQuest] = 10074,
+        [GameOpcode.MsgNpcQuests] = 10075,
+        [GameOpcode.MsgNpcQuestsAvailable] = 10076,
+        [GameOpcode.MsgNpcQuestsUnavailable] = 10077,
+        [GameOpcode.MsgNpcQuestReward] = 10078,
+        [GameOpcode.MsgNpcQuestView] = 10079,
+        [GameOpcode.MsgNpcAcceptQuest] = 10080,
+        [GameOpcode.MsgNpcCancelQuest] = 10081,
+        [GameOpcode.MsgNpcCompleteQuest] = 10082,
+        [GameOpcode.MsgNpcQuestFailed] = 10083,
+        [GameOpcode.MsgNpcRewardQuest] = 10084,
+        [GameOpcode.MsgNpcQuestKillOrCast] = 10085,
+        [GameOpcode.MsgPlayerAcceptQuests] = 10088,
+        [GameOpcode.MsgFindQuest] = 10090,
+        [GameOpcode.MsgAltarInfo] = 10160,
+        [GameOpcode.MsgManageReturn] = 10162,
+        [GameOpcode.MsgWalk] = 10192,
+        [GameOpcode.MsgPetList] = 10235,
+        [GameOpcode.MsgPetSummon] = 10236,
+        [GameOpcode.MsgPetRecall] = 10237,
+        [GameOpcode.MsgPetRelease] = 10238,
+        [GameOpcode.MsgPetFeed] = 10239,
+        [GameOpcode.MsgPetRename] = 10240,
+        [GameOpcode.MsgPetMerge] = 10241,
+        [GameOpcode.MsgPetAction] = 10242,
+        [GameOpcode.MsgPetState] = 10243,
+        [GameOpcode.MsgPetEquip] = 10244,
+        [GameOpcode.MsgPetUpdate] = 10245,
+        [GameOpcode.MsgPetView] = 10246,
+        [GameOpcode.MsgPetTip] = 10247,
+        [GameOpcode.MsgPetAdd] = 10248,
+        [GameOpcode.MsgServerTime] = 10309,
+    };
+
+    private static readonly Dictionary<ushort, GameOpcode> WireToCanonical = new()
+    {
+        [10065] = GameOpcode.MsgTalkNpc,
+        [10066] = GameOpcode.MsgNpcData,
+        [10067] = GameOpcode.MsgSysNpcData,
+        [10071] = GameOpcode.MsgNpcSell,
+        [10073] = GameOpcode.MsgNpcQuest,
+        [10074] = GameOpcode.MsgNpcNextQuest,
+        [10075] = GameOpcode.MsgNpcQuests,
+        [10079] = GameOpcode.MsgNpcQuestView,
+        [10080] = GameOpcode.MsgNpcAcceptQuest,
+        [10081] = GameOpcode.MsgNpcCancelQuest,
+        [10082] = GameOpcode.MsgNpcCompleteQuest,
+        [10084] = GameOpcode.MsgNpcRewardQuest,
+        [10088] = GameOpcode.MsgPlayerAcceptQuests,
+        [10089] = GameOpcode.MsgFindQuest,
+        [10190] = GameOpcode.MsgDelayExit,
+        [10192] = GameOpcode.MsgWalk,
+        [10235] = GameOpcode.MsgPetList,
+        [10236] = GameOpcode.MsgPetSummon,
+        [10237] = GameOpcode.MsgPetRecall,
+        [10238] = GameOpcode.MsgPetRelease,
+        [10239] = GameOpcode.MsgPetFeed,
+        [10240] = GameOpcode.MsgPetRename,
+        [10241] = GameOpcode.MsgPetMerge,
+        [10242] = GameOpcode.MsgPetAction,
+        [10243] = GameOpcode.MsgPetState,
+        [10244] = GameOpcode.MsgPetEquip,
+        [10245] = GameOpcode.MsgPetUpdate,
+        [10246] = GameOpcode.MsgPetView,
+        [10247] = GameOpcode.MsgPetTip,
+        [10248] = GameOpcode.MsgPetAdd,
+        [10309] = GameOpcode.MsgServerTime,
+    };
+
+    public static ushort ToWire(GameOpcode opcode) =>
+        CanonicalToWire.TryGetValue(opcode, out ushort wire) ? wire : (ushort)opcode;
+
+    public static GameOpcode FromWire(ushort wireOpcode) =>
+        WireToCanonical.TryGetValue(wireOpcode, out GameOpcode canonical) ? canonical : (GameOpcode)wireOpcode;
 }

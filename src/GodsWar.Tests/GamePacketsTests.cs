@@ -183,4 +183,24 @@ public class GamePacketsTests
         Assert.Equal(1, slots[2].Binding);
         Assert.True(slots[3].IsEmpty);
     }
+
+    [Fact]
+    public void MsgRoleInfo_ToV227Payload_Has496ByteLayout()
+    {
+        var roles = new List<RoleSummary>
+        {
+            new("Hero", 0, 1, 5, 1, 2, 3, [1001, -1]),
+            new("Mage", 1, 3, 10, 0, 4, 1, [-1, -1]),
+        };
+
+        var msg = new MsgRoleInfo(roles);
+        byte[] payload = msg.ToV227Payload();
+
+        Assert.Equal(MsgRoleInfo.V227PayloadLength, payload.Length);
+        Assert.Equal((byte)2, payload[0]);
+        Assert.Equal("Hero", System.Text.Encoding.ASCII.GetString(payload, 1, 4));
+        Assert.Equal(1001, BinaryPrimitives.ReadInt32LittleEndian(payload.AsSpan(40, 4)));
+        Assert.Equal("Mage", System.Text.Encoding.ASCII.GetString(payload, 124, 4));
+        Assert.Equal((byte)10, payload[124 + 34]);
+    }
 }

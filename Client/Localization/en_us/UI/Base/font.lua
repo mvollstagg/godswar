@@ -41,7 +41,8 @@ font = {}
   --战斗字体
 	FightFont24	= {name="宋体12号",  path="./Fonts/MainFont.ttf",	size=18 , flag=14024}
 
-
+  --表情字体
+	EmotionFont	= {name="宋体12号",  path="./Fonts/MainFont.ttf",	size=18 , flag=15024}
 --Container
 
 	con_MainFont12	= {name="容器名12号", path="./Fonts/MainFont.ttf", 	size=12 , flag=21014}
@@ -68,6 +69,7 @@ font = {}
 	CONTAIN_GMEvent_TEXTFONT = {name="宋体" , path="./Fonts/MainFont.ttf",	size=10 , flag = 21019 }
 	CONT_DynamicText_TXF = {name="宋体" , path="./Fonts/MainFont.ttf",	size=12 , flag = 21020 }
 CONTAIN12_TEXTFONT = {name="宋体" , path="./Fonts/MainFont.ttf",		size=12 , flag = 21021 }
+	CONTAIN_MLS_TEXTFONT = {name="宋体" , path="./Fonts/MainFont.ttf",		size=10 , flag = 21022 }
 
 --color
 DEFAULT_TEXTCOLOR       = {r=255 , g=255 , b=255 , a=255}
@@ -89,5 +91,7 @@ MONSTER_TEXTCOLOR = {r=246, g=181, b=150, a=255}
 BLUE_TEXTCOLOR = {r=0, g=0, b=255, a=255}
 PetMasterName_TEXTCOLOR = {r=0, g=255, b=180, a=255}
 NPC_TEXTCOLOR = {r=200 , g=200 , b=0 , a=255}
-
+Classical_color = {r=240,g=200,b=0,a=255}
+Legend_color = {r=255,g=69,b=0,a=255}
+Chat_color = {r=241,g=65,b=135,a=255}
 

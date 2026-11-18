@@ -26,3 +26,6 @@ client-commit.log
 src/**/bin/
 src/**/obj/
 src/**/TestResults/
+
+# DB backups
+backups/

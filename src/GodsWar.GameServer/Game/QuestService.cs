@@ -198,6 +198,42 @@ public sealed class QuestService
         }
     }
 
+    public async Task HandleQuestViewAsync(PlayerSession player, ReadOnlyMemory<byte> payload, CancellationToken ct)
+    {
+        if (payload.Length < 8)
+        {
+            return;
+        }
+
+        ReadOnlySpan<byte> span = payload.Span;
+        int npcId = System.Buffers.Binary.BinaryPrimitives.ReadInt32LittleEndian(span.Slice(0, 4));
+        int questId = System.Buffers.Binary.BinaryPrimitives.ReadInt32LittleEndian(span.Slice(4, 4));
+        if (!_world.Catalog.Quests.TryGetValue(questId, out QuestDef? def))
+        {
+            return;
+        }
+
+        int effectiveNpcId = npcId > 0 ? npcId : (int)player.TalkingNpcId;
+        var reply = new MsgNpcAcceptQuest(
+            effectiveNpcId,
+            effectiveNpcId,
+            def.QuestId,
+            def.QuestSort,
+            def.SpecialFlags,
+            def.Items,
+            def.Creatures,
+            def.ItemCounts,
+            def.CreatureCounts,
+            def.Money,
+            def.Bijou,
+            def.RewardMoney,
+            def.RewardBijou,
+            def.RewardItems);
+
+        byte[] outPayload = player.Connection.Cipher is not null ? reply.ToV227Payload() : reply.ToPayload();
+        await player.SendAsync(GameOpcode.MsgNpcQuestView, outPayload, ct).ConfigureAwait(false);
+    }
+
     public async Task HandleAcceptQuestAsync(PlayerSession player, ReadOnlyMemory<byte> payload, CancellationToken ct)
     {
         MsgNpcAcceptQuest req = MsgNpcAcceptQuest.Parse(payload.Span);
@@ -238,7 +274,8 @@ public sealed class QuestService
             def.RewardBijou,
             def.RewardItems);
 
-        await player.SendAsync(GameOpcode.MsgNpcAcceptQuest, reply.ToPayload(), ct).ConfigureAwait(false);
+        byte[] acceptPayload = player.Connection.Cipher is not null ? reply.ToV227Payload() : reply.ToPayload();
+        await player.SendAsync(GameOpcode.MsgNpcAcceptQuest, acceptPayload, ct).ConfigureAwait(false);
         await SavePlayerQuestsAsync(player, ct).ConfigureAwait(false);
     }
 

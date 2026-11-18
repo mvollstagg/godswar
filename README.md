@@ -1,13 +1,13 @@
-# GodsWar Online — .NET 11 + PostgreSQL Server
+# GodsWar Online — .NET 11 + PostgreSQL Server (`v2.26.002` / `v2.27`)
 
-A clean-room **C# (.NET 11) + PostgreSQL 17** server implementation for **GodsWar Online** (`LoginServer` + `GameServer` + built-in Web Admin UI), wire-compatible with the **1.0.282 US client**.
+A clean-room **C# (.NET 11) + PostgreSQL 17** server implementation for **GodsWar Online** (`LoginServer` + `GameServer` + built-in Web Admin UI), supporting the **v2.26.002 (`v2.27`) client** (while preserving `1.0.282` protocol compatibility).
 
 ## Repository Structure
 
 ```text
 src/
   GodsWar.Database/                 Npgsql + PostgreSQL repositories & schema models
-  GodsWar.Protocol/                 1.0.282 wire framing, XOR cipher & binary packet structs
+  GodsWar.Protocol/                 1.0.282 & v2.27 wire framing, XOR ciphers, opcode map & binary packets
   GodsWar.LoginServer/              LoginServer (5999), account auth, server list & GameServer IPC
   GodsWar.GameServer/               GameServer (6001), world AOI, combat, quests, social, mall, pets, stalls
     Admin/AdminWebService.cs        Built-in Web Admin UI & JSON API (port 8080)
@@ -15,8 +15,9 @@ src/
 docker/postgres/init/               PostgreSQL 17 schemas & seed SQL (01-03)
 GW 2.0/Server Files (Compiled)/gameserver/
                                     Game data files (Drop/, Item/, Obstacle/, Scene/, Script/, Skill/)
-Client/                             1.0.282 US game client (Windows, run Client/play.cmd)
-compose.dotnet.yaml                 PostgreSQL 17 + LoginServer + GameServer Docker stack
+Client/                             v2.26.002 (v2.27) game client (Windows, run Client/GodsWar.exe)
+compose.v227.yaml                   Isolated godswar-v227 Docker stack (uses gw-pg-data-v227)
+compose.dotnet.yaml                 Legacy 1.0.282 Docker stack (uses gw-pg-data)
 compose.postgres.yaml               Standalone PostgreSQL 17 container for local IDE debugging
 ```
 
@@ -26,33 +27,33 @@ compose.postgres.yaml               Standalone PostgreSQL 17 container for local
 
 ### Requirements
 - [Docker Desktop](https://www.docker.com/products/docker-desktop/) (Linux containers)
-- A **1.0.282 US GodsWar Online client** (Windows)
+- The included **v2.26.002 (`v2.27`) GodsWar Online client** in `Client/` (Windows)
 
-### 1. Start PostgreSQL, LoginServer & GameServer
+### 1. Start PostgreSQL, LoginServer & GameServer (`godswar-v227`)
 ```bash
-docker compose -f compose.dotnet.yaml up -d --build
-docker compose -f compose.dotnet.yaml logs -f loginserver gameserver
+docker compose -f compose.v227.yaml up -d --build
+docker compose -f compose.v227.yaml logs -f loginserver gameserver
 ```
 
 Services started:
-- **`postgres`** (`postgres:17-alpine`, port `5432`) — auto-initializes `accounts` and `godswar` schemas from `docker/postgres/init/`
-- **`loginserver`** (`GodsWar.LoginServer`, port `5999`)
+- **`postgres`** (`postgres:17-alpine`, port `5432`) — uses isolated `gw-pg-data-v227` volume and auto-initializes `accounts` and `godswar` schemas from `docker/postgres/init/`
+- **`loginserver`** (`GodsWar.LoginServer`, port `5999`) — auto-detects `v2.27` `Net.dll` XOR cipher (`TEncryptClient<0x20, 0xFD, 0x07, 0x1F, 0x7A, 0xCF, 0xE5, 0x3F>`) + Caesar-encoded login accounts
 - **`gameserver`** (`GodsWar.GameServer`, port `6001` game TCP, port `8080` Web Admin UI; mounts `./GW 2.0/Server Files (Compiled)/gameserver` read-only)
 
 Verify containers:
 ```bash
-docker compose -f compose.dotnet.yaml ps
-docker compose -f compose.dotnet.yaml exec postgres psql -U godswar -d godswar -c "SELECT COUNT(*) FROM godswar.character_base;"
+docker compose -f compose.v227.yaml ps
+docker compose -f compose.v227.yaml exec postgres psql -U godswar -d godswar -c "SELECT COUNT(*) FROM godswar.character_base;"
 ```
 
-### 2. Connect with the Included 1.0.282 Client
-Run `Client/play.cmd` (it launches `Client/GodsWar.exe` directly — **do not** run `Launch.exe` or `Patcher.exe`, which overwrite `Client/config.ini` with defunct retail/Facebook settings).
-- Default test account: **`test` / `test`** (auto-creation of new accounts is enabled by default via `LoginServer__AutoCreateAccount=true`).
+### 2. Connect with the Included v2.27 Client
+Run `Client/GodsWar.exe` directly (**do not** run `Launch.exe` or `Patcher.exe`, which overwrite `Client/config.ini` with defunct retail settings).
+- Auto-creation of new accounts is enabled by default via `LoginServer__AutoCreateAccount=true`.
 - Preconfigured `Client/config.ini`: `IP=127.0.0.1`, `PORT=5999`, `Region=11`, `ISFB=0`.
 
 For **LAN play**, set `ADVERTISE_IP=<your-lan-ip>` when starting Compose and point `config.ini` on other PCs to that IP:
 ```bash
-ADVERTISE_IP=192.168.1.50 docker compose -f compose.dotnet.yaml up -d
+ADVERTISE_IP=192.168.1.50 docker compose -f compose.v227.yaml up -d
 ```
 
 ---
@@ -108,10 +109,10 @@ dotnet run --project src/GodsWar.GameServer -- --GameServer:SceneDataPath="GW 2.
 ## Implementation Status
 
 ### Working
-- **Auth & Character Flow:** 1.0.282 login cipher, server list, character creation/deletion, Sparta (`Camp 0`) & Athens (`Camp 1`) spawns, starter gear/skills, server time sync.
-- **World & Combat:** AOI player/monster/NPC visibility, movement, physical/magic combat, skill/talent upgrades, XP & level-ups (100x default), monster loot drops & pickup, death/revive.
-- **Economy & Features:** NPC shops, potions/consumables, right-click equip, bag management, GM commands, and the Web Admin UI (`:8080`).
+- **Auth & Character Flow (`v2.27` & `1.0.282`):** `v2.27` `Net.dll` XOR cipher + Caesar-decoded `MSG_LOGIN`, `44`-byte `MSG_GAMESERVER_INFO`, `496`-byte `MSG_ROLE_INFO`, character creation/deletion, Sparta (`Camp 0`) & Athens (`Camp 1`) spawns, starter gear/skills, server time sync.
+- **World, Portals & Combat:** `V227OpcodeMap` for shifted movement (`10192`), NPC talk (`10065`), quest view (`648`-byte `10079`), `v2.27` monster/NPC fallback tables across all 24 maps, `v2.27` portal overrides (`Athens` ↔ `Athens_Newbie`, `Sparta` ↔ `Sparta_Newbie`, `Marathon_All` ↔ `Parnitha_1`), AOI visibility, physical/magic combat, skill/talent upgrades, XP & level-ups, loot drops.
+- **Economy & Features:** NPC shops, potions/consumables, bag management, GM commands (including `/level` talent points), and the Web Admin UI (`:8080`).
 
 ### Known Work-in-Progress
-- **Equipment UI:** Right-click unequip and drag-to-equip UI sync still have client/server state edge cases.
-- **Pet System:** Pet list & HUD display work, but pet world spawning (`MsgPetView`) and pet action button states (`Summon` / `Recall` / `Abandon`) need further packet alignment.
+- **Equipment UI & Pets:** Right-click unequip/drag-to-equip UI sync and pet world actions (`Summon` / `Recall` / `Abandon` / attack / collect) still need further `v2.27` packet alignment.
+- **Chat & Quest Flow:** Local chat channel (`Ch=16`) and quest acceptance/completion dialogs need additional `v2.27` payload inspection.

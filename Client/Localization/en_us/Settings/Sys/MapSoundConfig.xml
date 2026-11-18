@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!--this is MapSound config-->
+<!-- ID对应地图的id，Name对应音乐的名字 -->
+<MapSound>
+	<Config ID="0" Name="Sparta"/>
+	<Config ID="1" Name="Athens"/>
+	<Config ID="2" Name="Athens_Newbie"/>
+	<Config ID="3" Name="Parnitha_1"/>
+	<Config ID="4" Name="Sparta_Newbie"/>
+	<Config ID="5" Name="Nemea_1"/>
+	<Config ID="8" Name="Isthmus_of_Corinth_3"/>
+	<Config ID="11" Name="Marathon_All"/>
+	<Config ID="12" Name="Isthmus_of_Corinth_2"/>
+	<Config ID="13" Name="Peloponnese_All"/>
+	<Config ID="14" Name="Parnitha_2"/>
+	<Config ID="16" Name="Argolis_All"/>
+	<Config ID="18" Name="Megara_All"/>
+	<Config ID="207" Name="Marathon_All"/>
+	<Config ID="208" Name="Sparta_Newbie"/>
+	<Config ID="209" Name="Parnitha_2"/>
+	<Config ID="231" Name="Sparta_Newbie"/>
+</MapSound>

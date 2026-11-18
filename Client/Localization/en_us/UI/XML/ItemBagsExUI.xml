@@ -21,7 +21,7 @@
     <EquipBags Type="TabBar" ID="110060" Rectangle="0,4,148,180" Texture="./Localization/en_us/UI/Texture/main.gwo" TexturePos="1024,1024">
       <EquipBag0 Type="Tab" Rectangle="41,44,101,67" Texture="./Localization/en_us/UI/Texture/main.gwo" TexturePos="244,450"  Font="MainMap" FontColor="DEFAULT_TEXTCOLOR" TextFormat="5" SText="I_X0_1" >
         <!--换装设定-->
-        <QeButton Template="T_Button2" ID="110037" Rectangle="25,75,85,102"  SText="IB_X0_11" Font="MainMap" OnHovered="Switch1HelperFunc()" OnLeft="HelperLeftFunc()"/>
+        <QeButton Template="T_Button2" ID="110037" Rectangle="25,75,85,102"  SText="IB_X0_11" Font="MainMap" OnHovered="Switch1HelperFunc()" OnLeft="HelperLeftFunc()" Visible="0"/>
         <SuButton Template="T_Button2" ID="110038" Rectangle="90,75,132,117"  Texture="./Localization/en_us/UI/Texture/main.gwo" TexturePos="1024,1024" BtnTopTexture="./Localization/en_us/UI/Texture/main.gwo" BtnTopPos="864,165" BtnTopRect="0,0,30,30"/>
         <!--各个部分装备-->
         <!--头盔-->
@@ -141,6 +141,17 @@
         <!--一键换装：保存-->
         <QuickBn3 Template="T_Button2" ID="110041" Rectangle="200,478,260,505"  SText="IB_X0_4" Font="MainMap"/>
       </EquipBag2>
+      
+      <EquipBag3 Type="Tab" Rectangle="165,44,225,67" Texture="./Localization/en_us/UI/Texture/main.gwo" TexturePos="244,450"   Font="MainMap" FontColor="DEFAULT_TEXTCOLOR" TextFormat="5"  Text="Mount" >
+        
+        <!--座骑-->
+        <Create Type="Button"  ID="110021" Rectangle="123,115,165,157" Texture="./Localization/en_us/UI/Texture/main.gwo" TexturePos="0,540" BtnTopTexture="./Localization/en_us/UI/Texture/icon.gwo" BtnTopPos="0,504" BtnTopRect="3,3,39,39"  OnHovered="MountFunc()" OnLeft="MountLeftFunc()"   />
+        <Euiup1 Type="Button"  ID="110016" Rectangle="19,215,61,257" Texture="./Localization/en_us/UI/Texture/main.gwo" TexturePos="0,540" BtnTopTexture="./Localization/en_us/UI/Texture/icon.gwo" BtnTopPos="0,504" BtnTopRect="3,3,39,39" OnHovered="MountheadFunc()" OnLeft="MountheadLeftFunc()"   />
+        <Euiup2 Type="Button"  ID="110017" Rectangle="71,215,113,257" Texture="./Localization/en_us/UI/Texture/main.gwo" TexturePos="0,540" BtnTopTexture="./Localization/en_us/UI/Texture/icon.gwo" BtnTopPos="0,504" BtnTopRect="3,3,39,39" OnHovered="MountarmorFunc()" OnLeft="MountarmorLeftFunc()"  />
+        <Euiup3 Type="Button"  ID="110018" Rectangle="123,215,165,257" Texture="./Localization/en_us/UI/Texture/main.gwo" TexturePos="0,540" BtnTopTexture="./Localization/en_us/UI/Texture/icon.gwo" BtnTopPos="0,504" BtnTopRect="3,3,39,39" OnHovered="MountsoulFunc()" OnLeft="MountsoulLeftFunc()" />
+        <Euiup4 Type="Button"  ID="110019" Rectangle="175,215,217,257" Texture="./Localization/en_us/UI/Texture/main.gwo" TexturePos="0,540" BtnTopTexture="./Localization/en_us/UI/Texture/icon.gwo" BtnTopPos="0,504" BtnTopRect="3,3,39,39" OnHovered="MountornamentFunc()" OnLeft="MountornamentLeftFunc()" />
+        <Euiup5 Type="Button"  ID="110020" Rectangle="227,215,269,257" Texture="./Localization/en_us/UI/Texture/main.gwo" TexturePos="0,540" BtnTopTexture="./Localization/en_us/UI/Texture/icon.gwo" BtnTopPos="0,504" BtnTopRect="3,3,39,39" OnHovered="MountamuletFunc()" OnLeft="MountamuletLeftFunc()"  />
+      </EquipBag3>
     </EquipBags>
 
     <!--中间分隔条左手方-->
@@ -328,7 +339,7 @@
 
   <!--图标说明浮动窗口-->
   <ItemView Template="T_BgWindow" ID="112000" Rectangle="0,0,290,350" Visible="0" Layer="3">
-    <Name Type="Text" ID="112001" Rectangle="0,5,240,25" Texture="./Localization/en_us/UI/Texture/main.gwo" TexturePos="270,630" Font="MainMap" FontColor="DEFAULT_TEXTCOLOR"/>
+    <Name Type="Text" ID="112001" Rectangle="0,5,290,25" Texture="./Localization/en_us/UI/Texture/main.gwo" TexturePos="270,630" Font="MainMap" FontColor="DEFAULT_TEXTCOLOR"/>
     <Description Type="Text" ID="112002" Rectangle="5,27,235,100" Texture="./Localization/en_us/UI/Texture/main.gwo" TexturePos="270,630" Font="MainMap" FontColor="DEFAULT_TEXTCOLOR"/>
     <Part Type="Text" ID="112003" Rectangle="5,57,120,75" Texture="./Localization/en_us/UI/Texture/main.gwo" TexturePos="270,630" Font="MainMap" FontColor="DEFAULT_TEXTCOLOR"/>
     <WeaponType Type="Text" ID="112004" Rectangle="121,57,235,75" Texture="./Localization/en_us/UI/Texture/main.gwo" TexturePos="270,630" Font="MainMap" FontColor="DEFAULT_TEXTCOLOR"/>

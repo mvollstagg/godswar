@@ -1,4 +1,6 @@
 ﻿local win = UIAPI:GetElement("FirstWin");
+local tex={};
+local BtnNum =nil;
 --节日礼物
 function NpcFunGift_SetUI(Type,Index)
 	FirstWin_ButtonA1:SetPosition(145,500);
@@ -17,6 +19,8 @@ function NpcFunGift_SetText(Type,Index,BtnID,SubID)
                       NPCFUN:EndMessage(true);
                       NPCFUN:NeedMessage(False);
                    elseif SubID == 2 then
+                      FirstWin_Text1:SetText(NF_L0_GIFT1);
+                      FirstWin_Text1:Visible(true);
                       local Button = win:GetChild("FirstWin_Button" .. BtnID);
                       Button:SetText(NF_L0_GIFT2);
                       Button:Visible(true);
@@ -39,6 +43,11 @@ function NpcFunGift_SetText(Type,Index,BtnID,SubID)
                       FirstWin_Text1:Visible(true);
                       NPCFUN:EndMessage(true);
                       NPCFUN:NeedMessage(False);
+                   elseif SubID == 500 then
+                      FirstWin_Text1:SetText(NF_L0_MRI3200);
+                      FirstWin_Text1:Visible(true);
+                      NPCFUN:EndMessage(true);
+                      NPCFUN:NeedMessage(False);
                    elseif SubID % 1000 ==1 then
                       local Button = win:GetChild("FirstWin_Button" .. BtnID);
                       Button:SetText(NF_L0_GIFT107 .. ((SubID-1)/1000));
@@ -55,15 +64,79 @@ function NpcFunGift_SetText(Type,Index,BtnID,SubID)
 		      UIAPI:SetChecked(false,Button);
                       NPCFUN:EndMessage(true);
                       NPCFUN:NeedMessage(False);
+	   	   elseif math.mod(SubID ,1000) ==3 then
+                      if (SubID-3)/1000 >=51 then 
+                         tex = {NF_L0_YD100,NF_L0_YD101,NF_L0_YD102,NF_L0_YD103,NF_L0_YD104,NF_L0_YD105,NF_L0_YD106,NF_L0_YD107,NF_L0_YD107};             
+	  	         if (SubID-3)/1000 >=51 and  (SubID-3)/1000 <=105 then		           
+                           BtnNum = tex[math.floor((SubID-3)/10000)-4];
+                           if math.mod(((SubID-3)/1000),10) == 0 then 
+				BtnNum = tex[math.floor((SubID-3)/10000)-5]
+                           end;
+                         elseif  (SubID-3)/1000 >=106 and  (SubID-3)/1000 <=110 then 
+                           BtnNum = tex[7]
+                         elseif  (SubID-3)/1000 >=111 and  (SubID-3)/1000 <=130 then 
+                           BtnNum = tex[8]
+	                 end;
+                         local Button = win:GetChild("FirstWin_Button" .. BtnID);
+                         Button:SetText(BtnNum);
+		         Button:Visible(true);
+		         Button:Enable(false);
+		         UIAPI:SetChecked(false,Button);
+                         NPCFUN:EndMessage(true);
+                         NPCFUN:NeedMessage(False);
+                      end;
+	   	   elseif math.mod(SubID ,1000) ==4 then
+	  	      if (SubID-4)/1000 >=51 then
+		           tex = {NF_L0_SP100,NF_L0_SP101,NF_L0_SP102,NF_L0_SP103,NF_L0_SP104,NF_L0_SP105,NF_L0_SP106,NF_L0_SP107,NF_L0_SP107};
+	  	         if (SubID-4)/1000 >=51 and  (SubID-4)/1000 <=105 then		           
+                           BtnNum = tex[math.floor((SubID-4)/10000)-4];
+                           if math.mod(((SubID-4)/1000),10) == 0 then 
+				BtnNum = tex[math.floor((SubID-4)/10000)-5]
+                           end;
+                         elseif  (SubID-4)/1000 >=106 and  (SubID-4)/1000 <=110 then 
+                           BtnNum = tex[7]
+                         elseif  (SubID-4)/1000 >=111 and  (SubID-4)/1000 <=130 then 
+                           BtnNum = tex[8]
+	                 end;
+                         local Button = win:GetChild("FirstWin_Button" .. BtnID);
+                         Button:SetText(BtnNum);
+		         Button:Visible(true);
+		         Button:Enable(false);
+		         UIAPI:SetChecked(false,Button);
+                         NPCFUN:EndMessage(true);
+                         NPCFUN:NeedMessage(False);
+                      end;
                    elseif SubID == 101 then
-                      FirstWin_Text1:SetText(NF_L0_GIFT101);
-	              FirstWin_Text1:SetPosition(105,140);
+                      local Button = win:GetChild("FirstWin_Button" .. BtnID);
+                      Button:SetText(NF_L0_GIFT101);
+		      Button:Visible(true);
+		      Button:Enable(false);
+		      UIAPI:SetChecked(false,Button);
+                      NPCFUN:EndMessage(true);
+                      NPCFUN:NeedMessage(False);
+                   elseif SubID == 1101 then
+                      FirstWin_Text2:SetText(NF_L0_GIFT312);
+	              FirstWin_Text2:SetPosition(105,160);
+                      FirstWin_Text2:Visible(true);
+                      NPCFUN:EndMessage(true);
+                      NPCFUN:NeedMessage(False);
+                   elseif SubID >= 200 and SubID <= 212 then
+                      tex = {NF_L0_GIFT200,NF_L0_GIFT201,NF_L0_GIFT202,NF_L0_GIFT203,NF_L0_GIFT204,NF_L0_GIFT205,NF_L0_GIFT206,NF_L0_GIFT207,NF_L0_GIFT208,NF_L0_GIFT209,NF_L0_GIFT210,NF_L0_GIFT211,NF_L0_GIFT212};
+                      BtnNum = tex[SubID-199];
+                      FirstWin_Text1:SetText(BtnNum);
+                      FirstWin_Text1:Visible(true);
+                      NPCFUN:EndMessage(true);
+                      NPCFUN:NeedMessage(False);
+                   elseif SubID >= 300 and SubID <= 313 then
+                      tex = {NF_L0_GIFT300,NF_L0_GIFT301,NF_L0_GIFT302,NF_L0_GIFT303,NF_L0_GIFT304,NF_L0_GIFT305,NF_L0_GIFT306,NF_L0_GIFT307,NF_L0_GIFT308,NF_L0_GIFT309,NF_L0_GIFT310,NF_L0_GIFT311,NF_L0_GIFT312,NF_L0_GIFT300};
+                      BtnNum = tex[SubID-299];
+                      FirstWin_Text1:SetText(BtnNum);
                       FirstWin_Text1:Visible(true);
                       NPCFUN:EndMessage(true);
                       NPCFUN:NeedMessage(False);
                    elseif SubID == 111 then
                       FirstWin_Text1:SetText(NF_L0_GIFT111);
-	              FirstWin_Text1:SetPosition(45,140);
+	              FirstWin_Text1:SetPosition(40,140);
                       FirstWin_Text1:Visible(true);
                       NPCFUN:EndMessage(true);
                       NPCFUN:NeedMessage(False);
@@ -92,126 +165,11 @@ function NpcFunGift_SetText(Type,Index,BtnID,SubID)
                       FirstWin_Text1:Visible(true);
                       NPCFUN:EndMessage(true);
                       NPCFUN:NeedMessage(False);
-                   elseif SubID == 200 then
-                      FirstWin_Text1:SetText(NF_L0_GIFT200);
-                      FirstWin_Text1:Visible(true);
-                      NPCFUN:EndMessage(true);
-                      NPCFUN:NeedMessage(False);
-                   elseif SubID == 201 then
-                      FirstWin_Text1:SetText(NF_L0_GIFT201);
-                      FirstWin_Text1:Visible(true);
-                      NPCFUN:EndMessage(true);
-                      NPCFUN:NeedMessage(False);
-                   elseif SubID == 202 then
-                      FirstWin_Text1:SetText(NF_L0_GIFT202);
-                      FirstWin_Text1:Visible(true);
-                      NPCFUN:EndMessage(true);
-                      NPCFUN:NeedMessage(False);
-                   elseif SubID == 203 then
-                      FirstWin_Text1:SetText(NF_L0_GIFT203);
-                      FirstWin_Text1:Visible(true);
-                      NPCFUN:EndMessage(true);
-                      NPCFUN:NeedMessage(False);
-                   elseif SubID == 204 then
-                      FirstWin_Text1:SetText(NF_L0_GIFT204);
-                      FirstWin_Text1:Visible(true);
-                      NPCFUN:EndMessage(true);
-                      NPCFUN:NeedMessage(False);
-                   elseif SubID == 205 then
-                      FirstWin_Text1:SetText(NF_L0_GIFT205);
-                      FirstWin_Text1:Visible(true);
-                      NPCFUN:EndMessage(true);
-                      NPCFUN:NeedMessage(False);
-                   elseif SubID == 206 then
-                      FirstWin_Text1:SetText(NF_L0_GIFT206);
-                      FirstWin_Text1:Visible(true);
-                      NPCFUN:EndMessage(true);
-                      NPCFUN:NeedMessage(False);
-                   elseif SubID == 207 then
-                      FirstWin_Text1:SetText(NF_L0_GIFT207);
-                      FirstWin_Text1:Visible(true);
-                      NPCFUN:EndMessage(true);
-                      NPCFUN:NeedMessage(False);
-                   elseif SubID == 208 then
-                      FirstWin_Text1:SetText(NF_L0_GIFT208);
-                      FirstWin_Text1:Visible(true);
-                      NPCFUN:EndMessage(true);
-                      NPCFUN:NeedMessage(False);
-                   elseif SubID == 209 then
-                      FirstWin_Text1:SetText(NF_L0_GIFT209);
-                      FirstWin_Text1:Visible(true);
-                      NPCFUN:EndMessage(true);
-                      NPCFUN:NeedMessage(False);
-                   elseif SubID == 210 then
-                      FirstWin_Text1:SetText(NF_L0_GIFT210);
-                      FirstWin_Text1:Visible(true);
-                      NPCFUN:EndMessage(true);
-                      NPCFUN:NeedMessage(False);
-                   elseif SubID == 300 then
-                      FirstWin_Text1:SetText(NF_L0_GIFT300);
-                      FirstWin_Text1:Visible(true);
-                      NPCFUN:EndMessage(true);
-                      NPCFUN:NeedMessage(False);
-                   elseif SubID == 301 then
-                      FirstWin_Text1:SetText(NF_L0_GIFT301);
-                      FirstWin_Text1:Visible(true);
-                      NPCFUN:EndMessage(true);
-                      NPCFUN:NeedMessage(False);
-                   elseif SubID == 302 then
-                      FirstWin_Text1:SetText(NF_L0_GIFT302);
-                      FirstWin_Text1:Visible(true);
-                      NPCFUN:EndMessage(true);
-                      NPCFUN:NeedMessage(False);
-                   elseif SubID == 303 then
-                      FirstWin_Text1:SetText(NF_L0_GIFT303);
-                      FirstWin_Text1:Visible(true);
-                      NPCFUN:EndMessage(true);
-                      NPCFUN:NeedMessage(False);
-                   elseif SubID == 304 then
-                      FirstWin_Text1:SetText(NF_L0_GIFT304);
-                      FirstWin_Text1:Visible(true);
-                      NPCFUN:EndMessage(true);
-                      NPCFUN:NeedMessage(False);
-                   elseif SubID == 305 then
-                      FirstWin_Text1:SetText(NF_L0_GIFT305);
-                      FirstWin_Text1:Visible(true);
-                      NPCFUN:EndMessage(true);
-                      NPCFUN:NeedMessage(False);
-                   elseif SubID == 306 then
-                      FirstWin_Text1:SetText(NF_L0_GIFT306);
-                      FirstWin_Text1:Visible(true);
-                      NPCFUN:EndMessage(true);
-                      NPCFUN:NeedMessage(False);
-                   elseif SubID == 307 then
-                      FirstWin_Text1:SetText(NF_L0_GIFT307);
-                      FirstWin_Text1:Visible(true);
-                      NPCFUN:EndMessage(true);
-                      NPCFUN:NeedMessage(False);
-                   elseif SubID == 308 then
-                      FirstWin_Text1:SetText(NF_L0_GIFT308);
-                      FirstWin_Text1:Visible(true);
-                      NPCFUN:EndMessage(true);
-                      NPCFUN:NeedMessage(False);
-                   elseif SubID == 309 then
-                      FirstWin_Text1:SetText(NF_L0_GIFT309);
-                      FirstWin_Text1:Visible(true);
-                      NPCFUN:EndMessage(true);
-                      NPCFUN:NeedMessage(False);
-                   elseif SubID == 310 then
-                      FirstWin_Text1:SetText(NF_L0_GIFT310);
-                      FirstWin_Text1:Visible(true);
-                      NPCFUN:EndMessage(true);
-                      NPCFUN:NeedMessage(False);
-                   elseif SubID == 311 then
-                      FirstWin_Text1:SetText(NF_L0_GIFT311);
-                      FirstWin_Text1:Visible(true);
-                      NPCFUN:EndMessage(true);
-                      NPCFUN:NeedMessage(False);
 	   	   elseif SubID == 501 then
 	     	      local Button = win:GetChild("FirstWin_Button" .. BtnID);
 	              Button:SetText(NF_L0_GIFT501);
 	              Button:Visible(true);
-                      Button:SetPosition(45,300);
+                      Button:SetPosition(25,125);
 	           elseif SubID == 502 then
 	              FirstWin_Text1:SetText(NF_L0_GIFT502);
 	              FirstWin_Text1:Visible(true);

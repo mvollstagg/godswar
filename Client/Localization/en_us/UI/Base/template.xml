@@ -29,6 +29,7 @@
   <!--全屏背景图-->
   <T_EmptyBgWin Type="Window" Texture="" Rectangle="0,0,1024,768" Modal="0" Font="Mainlogin2" FontColor="DEFAULT_TEXTCOLOR" Enable="0" Layer="1"/>
   <T_ChatWindow Type="Window" Texture="./Localization/en_us/UI/Texture/main.gwo" WinRect="60" WinPixel="60" WinBody="46,894" WinTop="46,865" WinBottom="46,922" WinLeft="0,887" WinRight="85,887" WinTopLeft="0,865" WinTopRight="85,865" WinBottomLeft="0,922" WinBottomRight="85,922" Enable="0" Layer="1"/>
+  <T_ChatWindow1 Type="Window" Texture="./Localization/en_us/UI/Texture/main.gwo" WinRect="20" WinPixel="20" WinBody="46,894" WinTop="46,865" WinBottom="46,922" WinLeft="0,887" WinRight="127,887" WinTopLeft="0,865" WinTopRight="127,865" WinBottomLeft="0,922" WinBottomRight="127,922" Enable="0" Layer="1"/>
   <!---->
 
   <!--按钮模板-->
@@ -36,6 +37,8 @@
   <T_LoginButton Type="Button" Texture="./Localization/en_us/UI/Texture/main.gwo" TexturePos="58,231" Rectangle="0,0,20,1" Font="Mainlogin" FontColor="DEFAULT_TEXTCOLOR" TextFormat="5"/>
   <!--关闭-->
   <T_CloseButton Type="Button" Texture="./Localization/en_us/UI/Texture/main.gwo" TexturePos="0,80" Rectangle="0,0,38,37" Font="MainFonts" FontColor="DEFAULT_TEXTCOLOR" TextFormat="5"/>
+  <!--关闭小按钮-->
+  <T_SmallCloseButton Type="Button" Texture="./Localization/en_us/UI/Texture/main.gwo" TexturePos="124,540" Rectangle="0,0,21,21" Font="MainFonts" FontColor="DEFAULT_TEXTCOLOR" TextFormat="5"/>
   <!--二字-->
   <T_Button2 Type="Button" Texture="./Localization/en_us/UI/Texture/main.gwo" TexturePos="38,80" Rectangle="0,0,61,27" Font="MainFonts" FontColor="DEFAULT_TEXTCOLOR" TextFormat="5"/>
   <!--二字小号-->
@@ -70,6 +73,8 @@
   <T_CityBottonS Type="Button" Texture="./Localization/en_us/UI/Texture/main.gwo" TexturePos="294,80" Rectangle="0,0,20,20" Font="Mainlogin2" FontColor="DEFAULT_TEXTCOLOR" TextFormat="5"/>
   <T_NewBotton Type="Button" Texture="./Localization/en_us/UI/Texture/main.gwo" TexturePos="309,328" Rectangle="0,0,56,24" Font="MainMap" FontColor="DEFAULT_TEXTCOLOR" TextFormat="5" OnScaleX="1.2"   TextOffset="8,0,0,0"/>
   
+  <T_ZoomUpBotton Type="Button" Texture="./Localization/en_us/UI/Texture/main.gwo" TexturePos="278,375" Rectangle="0,0,14,14" Font="Mainlogin2" FontColor="DEFAULT_TEXTCOLOR" TextFormat="5"/>
+  <T_ZoomDownBotton Type="Button" Texture="./Localization/en_us/UI/Texture/main.gwo" TexturePos="293,375" Rectangle="0,0,14,14" Font="Mainlogin2" FontColor="DEFAULT_TEXTCOLOR" TextFormat="5"/>
   <!--ListBox向上，加了点击事件-->
   <T_UpListBoxBtn Type="Button" Texture="./Localization/en_us/UI/Texture/main.gwo" TexturePos="0,228" Rectangle="0,0,28,22" Font="Mainlogin2" FontColor="DEFAULT_TEXTCOLOR" TextFormat="5" OnClick="UpListBoxBtn()"/>
   <!--ListBox向下，加了点击事件-->
@@ -129,17 +134,42 @@
   <!--EditBoxEx模板-->
   <T_ChatEditEx Type="ChatEditBoxEx" MaxText="32" Texture="./Localization/en_us/UI/Texture/main.gwo" TexturePos="0,0" Font="MainFonts" FontColor="DEFAULT_TEXTCOLOR" TextFormat="4" ResponseMouse="1"/>
   <!---->
+  <!-- ListBox 模版 -->
+  <T_ListBox Type="ListBox" Texture="" ScrollRect="0,0,0,0" Height="16" Font="MainFonts" FontColor="DEFAULT_TEXTCOLOR" TextFormat="16"/>
+  <!---->
   
   <!--Container模板-->
   <T_Container  Type="Container"  Texture="" ScrollTexture="./Localization/en_us/UI/Texture/main.gwo"
                     ScrollPos="0,0"  BtnPos="133,122" BtnRect="0,0,17,27"/>
-  <T_ServerListBtn_Left		Type="CheckBox" 	Texture="./Localization/en_us/UI/Texture/main.gwo" Rectangle="0,0,196,25"	TexturePos="852,617"	Font="MainFonts"	FontColor="DEFAULT_TEXTCOLOR"	TextFormat="5"/>
-  <T_ServerStateText_Left	Type="Text" 		Texture="./Localization/en_us/UI/Texture/main.gwo" Rectangle="165,-5,205,25"	Font="MainFonts2"	FontColor="DEFAULT_TEXTCOLOR"	TextFormat="5"/>
-  <T_ServerPlayerText_Left	Type="Text" 		TexturePos="435,106" Texture="./Localization/en_us/UI/Texture/main.gwo" Rectangle="200,-5,228,23"	Font="Mainlogin"	FontColor="YELLOW_TEXTCOLOR"	TextFormat="5"	Text="★"/>
+  <T_ServerListBtn_Left		Type="CheckBox" 	Texture="./Localization/en_us/UI/Texture/main.gwo" Rectangle="0,0,146,25"	TexturePos="852,617"	Font="MainFonts"	FontColor="DEFAULT_TEXTCOLOR"	TextFormat="5"/>
+  <T_ServerStateText_Left	Type="Text" 		Texture="./Localization/en_us/UI/Texture/main.gwo" Rectangle="115,-5,155,25"	Font="MainFonts2"	FontColor="DEFAULT_TEXTCOLOR"	TextFormat="5"/>
+  <T_ServerPlayerText_Left	Type="Text" 		TexturePos="435,106" Texture="./Localization/en_us/UI/Texture/main.gwo" Rectangle="7,-5,35,23"	Font="Mainlogin"	FontColor="Legend_color"	TextFormat="5"	Text="★" Visible="1"/>
+  
+  <T_ServerListBtn_Mid1		Type="CheckBox" 	Texture="./Localization/en_us/UI/Texture/main.gwo" Rectangle="151,0,297,25"	TexturePos="852,617"	Font="MainFonts"	FontColor="DEFAULT_TEXTCOLOR"	TextFormat="5"/>
+  <T_ServerStateText_Mid1	Type="Text" 		Texture="./Localization/en_us/UI/Texture/main.gwo" Rectangle="311,-5,351,25"	Font="MainFonts2"	FontColor="DEFAULT_TEXTCOLOR"	TextFormat="5"/>
+  <T_ServerPlayerText_Mid1		Type="Text" 		TexturePos="435,106" Texture="./Localization/en_us/UI/Texture/main.gwo" Rectangle="158,-5,186,23"	Font="Mainlogin"	FontColor="Legend_color"	TextFormat="5"	Text="★"/>
+  
+  <T_ServerListBtn_Mid2		Type="CheckBox" 	Texture="./Localization/en_us/UI/Texture/main.gwo" Rectangle="302,0,448,25"	TexturePos="852,617"	Font="MainFonts"	FontColor="DEFAULT_TEXTCOLOR"	TextFormat="5"/>
+  <T_ServerStateText_Mid2	Type="Text" 		Texture="./Localization/en_us/UI/Texture/main.gwo" Rectangle="517,-5,557,25"	Font="MainFonts2"	FontColor="DEFAULT_TEXTCOLOR"	TextFormat="5"/>
+  <T_ServerPlayerText_Mid2	Type="Text" 		TexturePos="435,106" Texture="./Localization/en_us/UI/Texture/main.gwo" Rectangle="309,-5,337,23"	Font="Mainlogin"	FontColor="Legend_color"	TextFormat="5"	Text="★"/>
 
-  <T_ServerListBtn_Right	Type="CheckBox" 	Texture="./Localization/en_us/UI/Texture/main.gwo" Rectangle="240,0,436,25"	TexturePos="852,617"	Font="MainFonts"	FontColor="DEFAULT_TEXTCOLOR"	TextFormat="5"/>
-  <T_ServerStateText_Right	Type="Text" 		Texture="./Localization/en_us/UI/Texture/main.gwo" Rectangle="405,-5,445,25"	Font="MainFonts2"	FontColor="DEFAULT_TEXTCOLOR"	TextFormat="5"/>
-  <T_ServerPlayerText_Right	Type="Text" 		TexturePos="435,106" Texture="./Localization/en_us/UI/Texture/main.gwo" Rectangle="440,-5,468,23"	Font="Mainlogin"	FontColor="YELLOW_TEXTCOLOR"	TextFormat="5"	Text="★"/>
+  <T_ServerListBtn_Right	Type="CheckBox" 	Texture="./Localization/en_us/UI/Texture/main.gwo" Rectangle="453,0,599,25"	TexturePos="852,617"	Font="MainFonts"	FontColor="DEFAULT_TEXTCOLOR"	TextFormat="5"/>
+  <T_ServerStateText_Right	Type="Text" 		Texture="./Localization/en_us/UI/Texture/main.gwo" Rectangle="718,-5,758,25"	Font="MainFonts2"	FontColor="DEFAULT_TEXTCOLOR"	TextFormat="5"/>
+  <T_ServerPlayerText_Right	Type="Text" 		TexturePos="435,106" Texture="./Localization/en_us/UI/Texture/main.gwo" Rectangle="460,-5,488,23"	Font="Mainlogin"	FontColor="Legend_color"	TextFormat="5"	Text="★"/>
+  <!-- 切换线路模版begin -->
+   <T_LineListBtn_Left		Type="CheckBox" 	Texture="./Localization/en_us/UI/Texture/main.gwo" Rectangle="0,0,96,25"	TexturePos="852,617"	Font="MainFonts"	FontColor="DEFAULT_TEXTCOLOR"	TextFormat="5"/>
+  <T_LineStateText_Left	Type="Text" 		Texture="./Localization/en_us/UI/Texture/main.gwo" Rectangle="65,-5,105,25"	Font="MainFonts"	FontColor="DEFAULT_TEXTCOLOR"	TextFormat="5"/>
+  <T_LinePlayerText_Left	Type="Text" 		TexturePos="435,106" Texture="./Localization/en_us/UI/Texture/main.gwo" Rectangle="7,-5,35,23"	Font="Mainlogin"	FontColor="Legend_color"	TextFormat="5"	Text="★" Visible="1"/>
+  
+  <T_LineListBtn_Mid1		Type="CheckBox" 	Texture="./Localization/en_us/UI/Texture/main.gwo" Rectangle="91,0,187,25"	TexturePos="852,617"	Font="MainFonts"	FontColor="DEFAULT_TEXTCOLOR"	TextFormat="5"/>
+  <T_LineStateText_Mid1	Type="Text" 		Texture="./Localization/en_us/UI/Texture/main.gwo" Rectangle="156,-5,196,25"	Font="MainFonts"	FontColor="DEFAULT_TEXTCOLOR"	TextFormat="5"/>
+  <T_LinePlayerText_Mid1		Type="Text" 		TexturePos="435,106" Texture="./Localization/en_us/UI/Texture/main.gwo" Rectangle="98,-5,126,23"	Font="Mainlogin"	FontColor="Legend_color"	TextFormat="5"	Text="★"/>
+  
+  <T_LineListBtn_Right	Type="CheckBox" 	Texture="./Localization/en_us/UI/Texture/main.gwo" Rectangle="191,0,287,25"	TexturePos="852,617"	Font="MainFonts"	FontColor="DEFAULT_TEXTCOLOR"	TextFormat="5"/>
+  <T_LineStateText_Right	Type="Text" 		Texture="./Localization/en_us/UI/Texture/main.gwo" Rectangle="256,-5,296,25"	Font="MainFonts"	FontColor="DEFAULT_TEXTCOLOR"	TextFormat="5"/>
+  <T_LinePlayerText_Right	Type="Text" 		TexturePos="435,106" Texture="./Localization/en_us/UI/Texture/main.gwo" Rectangle="198,-5,226,23"	Font="Mainlogin"	FontColor="Legend_color"	TextFormat="5"	Text="★"/>
+
+  <!-- 切换线路模版end -->
   <T_ServerNormal	FontColor="GREEN_TEXTCOLOR" />
   <T_ServerBusy		FontColor="YELLOW_TEXTCOLOR"/>
   <T_ServerFull		FontColor="GWORed"/>
@@ -165,6 +195,8 @@
   <!--聊天气泡字体-->
   <T_ChatBubbleFont         Font="ChatFont14"      FontColor="DEFAULT_TEXTCOLOR"/>
 
+  <!--特效字体-->
+  <T_CGFont					Font="EmotionFont"  FontColor="DEFAULT_TEXTCOLOR"/>
   <!--聊天上层历史记录框字体-->
   <T_ChatHistoryFont        Font="ChatFont14"/>
   <!--聊天下层当前记录框字体-->
@@ -192,6 +224,14 @@
   <T_MonsterColor     FontColor="MONSTER_TEXTCOLOR"/>
   <!--道具-->
   <T_ItemsColor       FontColor="DEFAULT_TEXTCOLOR"/>
+  <!--怪物系统-->
+  <T_MSColor          FontColor="YELLOW_TEXTCOLOR"/>
+  <!--活动-->
+  <T_ActiveColor      FontColor="TEAM_COLOR"/>
+  <!--提示-->
+  <T_TipsColor        FontColor="Classical_color"/>
+  <!--节日-->
+  <T_FestivalsColor   FontColor="Itemper_color"/>
 
   <!--战斗信息字体-->
   <T_normalattackfont         Font="MainFonts"      FontColor="GWORed"/>
@@ -226,7 +266,11 @@
   <T_friendlysellfont         Font="MainFonts"      FontColor="YELLOW_TEXTCOLOR"/>
   <T_enemysellfont            Font="MainFonts"      FontColor="GWORed"/>
 
-
+  <!-- 道具掉落归属怪物头顶名称 -->
+  <T_ItemOwner                Font="MainFonts"      FontColor="DEFAULT_TEXTCOLOR" TextFormat="5"/>
+  <!-- 道具掉落归属目标信息面板 -->
+  <T_ItemOwnerTarget          Font="MainFonts"      FontColor="DEFAULT_TEXTCOLOR"/>
+  
 
 
 

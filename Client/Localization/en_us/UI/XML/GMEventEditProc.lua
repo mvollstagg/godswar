@@ -24,6 +24,7 @@ local ex_time = nil
 local ex_link = nil
 local ex_npcAddr = {}
 local ex_npcName= {}
+local ex_dayTime= {}
 
 --加载控件
 function GMEventEdit_OnLoad()
@@ -58,6 +59,7 @@ function GMEventEditEx_OnLoad()
 	for i =1,4,1 do
 		ex_npcAddr[i] = uiapi:GetElement(480810+i);
 		ex_npcName[i] = uiapi:GetElement(480820+i);
+		ex_dayTime[i] = uiapi:GetElement(480830+i);
 	end
 
 	win_ex:UpdateRenderBuffer();
@@ -118,7 +120,7 @@ end
 --读取今日活动的列表相关内容
 function GMSend_Event(id)
 	--Flags:1:表示开始，2表示结束，3,表示既是开始又是结束，其它的为0
-
+	print("type= ",id)
 	for i = 0, list_count[id] -1 ,1 do
 		local strName = editBox[id][i]:GetText();
 		local strNext = ""
@@ -187,7 +189,7 @@ function GMMultiEdit_OnLeft()
 end
 --动态更新活动信息
 function GMEventInfo_Load()
-	local Flags,Type,Time,Name,Link,Content,AutoName1,AutoAddr1,AutoName2,AutoAddr2,AutoName3,AutoAddr3,AutoName4,AutoAddr4 = GameAPI:GetEventInfo();
+	local Flags,Type,Time,Name,Link,Content,AutoName1,AutoAddr1,AutoName2,AutoAddr2,AutoName3,AutoAddr3,AutoName4,AutoAddr4,DayTimeID,DayTime1,DayTime2,DayTime3 = GameAPI:GetEventInfo();
 
 	if Flags == 1 or Flags == 3 then
 		GMEventEdit_Clear(Type);
@@ -215,6 +217,10 @@ function GMEventInfo_Load()
 		listItem_info[Type][cur_index].AutoAddr3 = AutoAddr3
 		listItem_info[Type][cur_index].AutoName4 = AutoName4
 		listItem_info[Type][cur_index].AutoAddr4 = AutoAddr4
+		listItem_info[Type][cur_index].DayTimeID = DayTimeID
+		listItem_info[Type][cur_index].DayTime1 = DayTime1
+		listItem_info[Type][cur_index].DayTime2 = DayTime2
+		listItem_info[Type][cur_index].DayTime3 = DayTime3
 
 		cur_index = cur_index +1;
 	end
@@ -268,6 +274,10 @@ function GMDetail_OnClick(id)
 	ex_npcName[3]:SetText(listItem_info[m_flags][m_index].AutoName3);
 	ex_npcName[4]:SetText(listItem_info[m_flags][m_index].AutoName4);
 
+	ex_dayTime[1]:SetText(listItem_info[m_flags][m_index].DayTimeID);
+	ex_dayTime[2]:SetText(listItem_info[m_flags][m_index].DayTime1);
+	ex_dayTime[3]:SetText(listItem_info[m_flags][m_index].DayTime2);
+	ex_dayTime[4]:SetText(listItem_info[m_flags][m_index].DayTime3);
 	win_ex:Visible(true);
 	win_ex:Top();
 
@@ -286,6 +296,10 @@ function GMEventEditEx_OK()
 	listItem_info[m_flags][m_index].AutoName2 = ex_npcName[2]:GetText()
 	listItem_info[m_flags][m_index].AutoName3 = ex_npcName[3]:GetText()
 	listItem_info[m_flags][m_index].AutoName4 = ex_npcName[4]:GetText()
+	listItem_info[m_flags][m_index].DayTimeID = ex_dayTime[1]:GetText()
+	listItem_info[m_flags][m_index].DayTime1  = ex_dayTime[2]:GetText()
+	listItem_info[m_flags][m_index].DayTime2  = ex_dayTime[3]:GetText()
+	listItem_info[m_flags][m_index].DayTime3  = ex_dayTime[4]:GetText()
 
 	win_ex:Visible(false);
 end
@@ -308,6 +322,10 @@ function GMEventEditEx_Clear()
 	ex_npcName[2]:SetText("");
 	ex_npcName[3]:SetText("");
 	ex_npcName[4]:SetText("");
+	ex_dayTime[1]:SetText("");
+	ex_dayTime[2]:SetText("");
+	ex_dayTime[3]:SetText("");
+	ex_dayTime[4]:SetText("");
 end
 
 --GMEventEdit_OnLoad();

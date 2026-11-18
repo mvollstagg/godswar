@@ -1,41 +1,43 @@
-<?xml version="1.0" encoding="GB2312"?>
-<!--¶ÔÓ¦KeyCodes.h-->
+ï»¿<?xml version="1.0" encoding="GB2312"?>
+<!--å¯¹åº”KeyCodes.h-->
 <HotKey>
-  <!--¶ÔÓ¦KeyCodes.h-->
-  <!--¶ÔÓ¦Alt+Z-->
+  <!--å¯¹åº”KeyCodes.h-->
+  <!--å¯¹åº”Alt+Z-->
   <GUIManager Key="90" Ctrl="0" Shift="0" Alt="1"/>
-  <!--ÏµÍ³¶ÔÓ¦Esc-->
-  <SystemSetup Key="27"/>
-  <!--°ü¹ü¶ÔÓ¦B-->
+  <!--ç³»ç»Ÿå¯¹åº”Esc-->
+  <!--SystemSetup Key="27"-->
+  <!--åŒ…è£¹å¯¹åº”B-->
   <ItemBags Key="66"/>
-  <!--¼¼ÄÜ¶ÔÓ¦S-->
+  <!--æŠ€èƒ½å¯¹åº”S-->
   <SkillView Key="83"/>
-  <!--ÊôÐÔ¶ÔÓ¦C-->
+  <!--å±žæ€§å¯¹åº”C-->
   <PersonalInfo Key="67"/>
-  <!--ÈÎÎñ¶ÔÓ¦Q-->
+  <!--ä»»åŠ¡å¯¹åº”Q-->
   <Quest Key="81"/>
-  <!--Éú»î¼¼ÄÜ¶ÔÓ¦0-->
+  <!--ç”Ÿæ´»æŠ€èƒ½å¯¹åº”0-->
   <LivingSkill Key="57"/>
-  <!--½»¼Ê¶ÔÓ¦F-->
+  <!--äº¤é™…å¯¹åº”F-->
   <Relation Key="70"/>
-  <!--¹¤»á¶ÔÓ¦G-->
+  <!--å·¥ä¼šå¯¹åº”G-->
   <Consortia Key="71"/>
-  <!--¹Ò»ú¶ÔÓ¦F12-->
+  <!--æŒ‚æœºå¯¹åº”F12-->
   <Help Key="123"/>
-  <!--ÊÀ½ç¶ÔÓ¦M-->
+  <!--ä¸–ç•Œå¯¹åº”M-->
   <WorldMap Key="77"/>
-  <!--´òÔì×°±¸¶ÔÓ¦D-->
+  <!--æ‰“é€ è£…å¤‡å¯¹åº”D-->
   <EquipForge Key="68"/>
-  <!--ÆÁÄ»½ØÍ¼¶ÔÓ¦F11-->
+  <!--å±å¹•æˆªå›¾å¯¹åº”F11-->
   <ScreensHot Key="44"/>
-  <!--³èÎï»½³ö, ÕÙ»Ø-->
+  <!--å® ç‰©å”¤å‡º, å¬å›ž-->
   <PetOperator Key="76"/>
-  <!--Ò»¼ü»»×°W-->
-  <!--QuickEquip Key="87"-->
-  <!--Ò»³èÎï½çÃæP-->
+  <!--ä¸€é”®æ¢è£…W-->
+  <QuickEquip Key="87"/>
+  <!--ä¸€å® ç‰©ç•Œé¢P-->
   <PetHot Key="80"/>
+  <!--ç”Ÿæ´»æŠ€èƒ½L-->
+  <LiveSkill Key="86"/>
   
-  <!--¶ÔÓ¦F1,ÒÀ´ÎÀàÍÆ-->
+  <!--å¯¹åº”F1,ä¾æ¬¡ç±»æŽ¨-->
   <SkillF1 Key="112"/>
   <SkillF2 Key="113"/>
   <SkillF3 Key="114"/>
@@ -44,7 +46,7 @@
   <SkillF6 Key="117"/>
   <SkillF7 Key="118"/>
   <SkillF8 Key="119"/>
-  <!--¶ÔÓ¦1,ÒÀ´ÎÀàÍÆ-->
+  <!--å¯¹åº”1,ä¾æ¬¡ç±»æŽ¨-->
   <Skill1 Key="49"/>
   <Skill2 Key="50"/>
   <Skill3 Key="51"/>
@@ -53,12 +55,12 @@
   <Skill6 Key="54"/>
   <Skill7 Key="55"/>
   <Skill8 Key="56"/>
-  <!--¶ÔÓ¦Ctrl+1£¬ÒÀ´ÎÀàÍÆ-->
+  <!--å¯¹åº”Ctrl+1ï¼Œä¾æ¬¡ç±»æŽ¨-->
   <SkillCtrl1 Key="49" Ctrl="1" Shift="0" Alt="0"/>
   <SkillCtrl2 Key="50" Ctrl="1" Shift="0" Alt="0"/>
   <SkillCtrl3 Key="51" Ctrl="1" Shift="0" Alt="0"/>
   <SkillCtrl4 Key="52" Ctrl="1" Shift="0" Alt="0"/>
   <SkillCtrl5 Key="53" Ctrl="1" Shift="0" Alt="0"/>
-  <!--¶ÔÓ¦Tab-->
+  <!--å¯¹åº”Tab-->
   <TabKey Key="9"/>
 </HotKey>

@@ -117,4 +117,17 @@ public sealed class LoginPacketsTests
         Assert.Equal("test3", parsedUs.Account);
         Assert.Equal((byte)1, parsedUs.ServerId);
     }
+
+    [Fact]
+    public void MsgGameServerInfo_V227ClientPayload_Has44ByteLayout()
+    {
+        var gs = new MsgGameServerInfo("GodsWar", "127.0.0.1", 6001, 1, GameServerState.Normal);
+        byte[] payload = gs.ToV227ClientPayload(isLast: true);
+
+        Assert.Equal(MsgGameServerInfo.V227ClientPayloadLength, payload.Length);
+        Assert.Equal((byte)1, payload[36]);    // ServerId
+        Assert.Equal((byte)1, payload[37]);    // State
+        Assert.Equal((byte)0x80, payload[38]); // Recommended/default flag
+        Assert.Equal((byte)1, payload[42]);    // IsLast
+    }
 }

@@ -21,6 +21,8 @@
     <ftn    Type="Text"   Rectangle="31,3,90,62" TexturePos="893,327" Texture="./Localization/en_us/UI/Texture/main.gwo" Text=""/>
     <ftnSparta    Type="Text"   ID="212007" Rectangle="31,3,90,62"  TexturePos="893,209" Texture="./Localization/en_us/UI/Texture/main.gwo" Text="" />
     <ftnAthens    Type="Text"   ID="212008" Rectangle="31,3,90,62" TexturePos="893,268" Texture="./Localization/en_us/UI/Texture/main.gwo" Text=""/>
+    <ftnMale      Type="Text"   ID="212009" Rectangle="200,47,220,67"  TexturePos="657,41" Texture="./Localization/en_us/UI/Texture/main.gwo" Text="" />
+    <ftnFemale    Type="Text"   ID="212010" Rectangle="200,47,220,67" TexturePos="657,21" Texture="./Localization/en_us/UI/Texture/main.gwo" Text=""/>
     <Rank         Type="Text"   ID="212020" Rectangle="99,43,123,65" TexturePos="0,250" Texture="./Localization/en_us/UI/Texture/main.gwo" Text="" Font="MainMap" FontColor="YELLOW_TEXTCOLOR" TextFormat="5"/>
   </TargetInfo>
   <PopMenu Template="T_SimpleWindow" ID="213000"   Rectangle="440,76,541,305"  Visible="0" Layer="1">

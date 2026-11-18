@@ -33,28 +33,28 @@ MSG.PETINDENTURE0 = PETSAM_X0_19;
 MSG.PETINDENTURE1 = PETSAM_X0_20;
 
 function SamseraUI_OnLoad()
-	win = uiapi:GetElement("SamsaraWin");	
+	win = uiapi:GetElement("SamsaraWin");
 	win:UpdateRenderBuffer();
 end
 
 
 -- 状态改变
-function Samsera_StateChange(state)	
+function Samsera_StateChange(state)
 	samsera_opButton = uiapi:GetElement(873015);
 	samsera_viewInfo = uiapi:GetElement(873016);
 	samsera_descInfo = uiapi:GetElement(873013);
-	
+
 	if 1 == state then
-		samsera_opButton:SetText(str_samsara);				
-		samsera_viewInfo:SetText(str_samsara_review);			
-		samsera_descInfo:SetText(str_samsara_growing);			
+		samsera_opButton:SetText(str_samsara);
+		samsera_viewInfo:SetText(str_samsara_review);
+		samsera_descInfo:SetText(str_samsara_growing);
 	elseif 2 == state then
-		samsera_opButton:SetText(str_samsara_continue);				
-		samsera_viewInfo:SetText(str_samsara_view);			
-		samsera_descInfo:SetText(str_samsara_growing);						
+		samsera_opButton:SetText(str_samsara_continue);
+		samsera_viewInfo:SetText(str_samsara_view);
+		samsera_descInfo:SetText(str_samsara_growing);
 	elseif 3 == state then
-		samsera_opButton:SetText(str_samsara_finish);				
-		samsera_viewInfo:SetText(str_samsara_trait);			
+		samsera_opButton:SetText(str_samsara_finish);
+		samsera_viewInfo:SetText(str_samsara_trait);
 		samsera_descInfo:SetText(str_samsara_baseadd);
 	end
 end
@@ -78,8 +78,21 @@ function Samsera_PetSetType(value)
 		pettype:SetText(PETTYPE7);
 	elseif value == 8 then
 		pettype:SetText(PETTYPE8);
-	elseif value == 9 then	
+	elseif value == 9 then
 		pettype:SetText(PETTYPE9);
+	elseif value == 10 then
+		pettype:SetText(PETTYPE10);
+	elseif value == 11 then
+		pettype:SetText(PETTYPE11);
+	elseif value == 12 then
+		pettype:SetText(PETTYPE12);
+	elseif value == 13 then
+		pettype:SetText(PETTYPE13);
+    elseif value == 14 then
+		pettype:SetText(PETTYPE14);
+	elseif value == 15 then
+		pettype:SetText(PETTYPE15);
+
 	end;
 end
 
@@ -116,7 +129,7 @@ function Samsera_PetSetAptitude(value)
 		aptitude:SetText(PETAPTITUDE14);
 	elseif value == 15 then
 		aptitude:SetText(PETAPTITUDE15);
-	end;	
+	end;
 end
 
 -- 设置性别
@@ -125,7 +138,7 @@ function Samsera_PetSetSex(value)
 	if value == 1 then
 		petsex:SetText(PETDP_X0_13);
 	else
-		petsex:SetText(PETDP_X0_14);		
+		petsex:SetText(PETDP_X0_14);
 	end;
 end
 
@@ -197,10 +210,10 @@ function Samsera_UpdateTraitBaseCol(state, id, value)
 			pElement:SetText(str_update_3);
 		elseif 4 == value then
 			pElement:SetText(str_update_4);
-		elseif 5 == value then		
+		elseif 5 == value then
 			pElement:SetText(str_update_5);
-		end	
-	end	
+		end
+	end
 end
 
 SamseraUI_OnLoad();

@@ -1,56 +1,93 @@
-<?xml version="1.0" encoding="GB2312"?>
+ï»¿<?xml version="1.0" encoding="GB2312"?>
 <!--this is Emotion config-->
 <!--
-	Name				±íÇé´úºÅ
-	Rectangle			±íÇé´óÐ¡
-	TexturePos			±íÇéÌùÍ¼Î»ÖÃ
-	Horizontal			ìõÊÇ·ñË®Æ½ÅÅÁÐ
-	Frame				ÓÐ¶àÉÙìõ
-	mspf					Ã¿ìõ¶àÉÙºÁÃë
-	OnScale_X			ºá×ø±êËõ·Å±È
-	OnScale_Y			×Ý×ø±êËõ·Å±È
-	Texture				±íÇéÌùÍ¼ËùÔÚµÄÎ»ÖÃ
+	Name				è¡¨æƒ…ä»£å·
+	Rectangle			è¡¨æƒ…å¤§å°
+	TexturePos			è¡¨æƒ…è´´å›¾ä½ç½®
+	Horizontal			ç¥¯æ˜¯å¦æ°´å¹³æŽ’åˆ—
+	Frame				æœ‰å¤šå°‘ç¥¯
+	mspf					æ¯ç¥¯å¤šå°‘æ¯«ç§’
+	OnScale_X			æ¨ªåæ ‡ç¼©æ”¾æ¯”
+	OnScale_Y			çºµåæ ‡ç¼©æ”¾æ¯”
+	Texture				è¡¨æƒ…è´´å›¾æ‰€åœ¨çš„ä½ç½®
 -->
 <Emotion>
-    <EmotionConfig NumofEachLine="10">
-       <!--×ÊÔ´Í¼µÚÒ»ÐÐ-->
-       <Emotion0 	Name="#000"	Rectangle="0,0,25,25"	TexturePos="0,0"	Horizontal="1"	Frame="13"	mmspf="200"	OnScale_X="1.0"	OnScale_Y="1.0"	Texture="./Localization/en_us/UI/Texture/Emotion/00.tga"/>  
-		<Emotion1 	Name="#001"	Rectangle="0,0,25,25"	TexturePos="325,0"	Horizontal="1"	Frame="2"	mspf="200"	OnScale_X="1.0"	OnScale_Y="1.0"	Texture="./Localization/en_us/UI/Texture/Emotion/00.tga"/>
-		<Emotion2 	Name="#002"	Rectangle="0,0,25,25"	TexturePos="375,0"	Horizontal="1"	Frame="2"	mspf="200"	OnScale_X="1.0"	OnScale_Y="1.0"	Texture="./Localization/en_us/UI/Texture/Emotion/00.tga"/>
+    <EmotionConfig NumofEachLine="11">
+       <!--èµ„æºå›¾ç¬¬ä¸€è¡Œ-->
+                <Emotion1 	Name="#001"	Rectangle="0,0,25,25"	TexturePos="0,0"	Horizontal="1"	Frame="13"	mspf="200"	OnScale_X="1.0"	OnScale_Y="1.0"	Texture="./Localization/en_us/UI/Texture/Emotion/00.gwo"/>  
+		<Emotion2 	Name="#002"	Rectangle="0,0,25,25"	TexturePos="325,0"	Horizontal="1"	Frame="2"	mspf="200"	OnScale_X="1.0"	OnScale_Y="1.0"	Texture="./Localization/en_us/UI/Texture/Emotion/00.gwo"/>
+		<Emotion3 	Name="#003"	Rectangle="0,0,25,25"	TexturePos="375,0"	Horizontal="1"	Frame="2"	mspf="200"	OnScale_X="1.0"	OnScale_Y="1.0"	Texture="./Localization/en_us/UI/Texture/Emotion/00.gwo"/>
 		
-		<!--×ÊÔ´Í¼µÚ¶þÐÐ-->
-		<Emotion3 	Name="#003"	Rectangle="0,0,25,25"	TexturePos="0,25"	Horizontal="1"	Frame="2"	mspf="200"	OnScale_X="1.0"	OnScale_Y="1.0"	Texture="./Localization/en_us/UI/Texture/Emotion/00.tga"/>
-		<Emotion4 	Name="#004"	Rectangle="0,0,25,25"	TexturePos="50,25"	Horizontal="1"	Frame="2"	mspf="200"	OnScale_X="1.0"	OnScale_Y="1.0"	Texture="./Localization/en_us/UI/Texture/Emotion/00.tga"/>
-		<Emotion5	Name="#005"	Rectangle="0,0,25,25"	TexturePos="100,25"	Horizontal="1"	Frame="2"	mspf="200"	OnScale_X="1.0"	OnScale_Y="1.0"	Texture="./Localization/en_us/UI/Texture/Emotion/00.tga"/>
-		<Emotion6 	Name="#006"	Rectangle="0,0,25,25"	TexturePos="150,25"	Horizontal="1"	Frame="2"	mspf="200"	OnScale_X="1.0"	OnScale_Y="1.0"	Texture="./Localization/en_us/UI/Texture/Emotion/00.tga"/>
-		<Emotion7 	Name="#007"	Rectangle="0,0,25,25"	TexturePos="200,25"	Horizontal="1"	Frame="2"	mspf="200"	OnScale_X="1.0"	OnScale_Y="1.0"	Texture="./Localization/en_us/UI/Texture/Emotion/00.tga"/>
-		<Emotion8 	Name="#008"	Rectangle="0,0,25,25"	TexturePos="250,25"	Horizontal="1"	Frame="4"	mspf="200"	OnScale_X="1.0"	OnScale_Y="1.0"	Texture="./Localization/en_us/UI/Texture/Emotion/00.tga"/>
-		<Emotion9 	Name="#009"	Rectangle="0,0,25,25"	TexturePos="350,25"	Horizontal="1"	Frame="4"	mspf="200"	OnScale_X="1.0"	OnScale_Y="1.0"	Texture="./Localization/en_us/UI/Texture/Emotion/00.tga"/>
+		<!--èµ„æºå›¾ç¬¬äºŒè¡Œ-->
+		<Emotion4 	Name="#004"	Rectangle="0,0,25,25"	TexturePos="0,25"	Horizontal="1"	Frame="2"	mspf="200"	OnScale_X="1.0"	OnScale_Y="1.0"	Texture="./Localization/en_us/UI/Texture/Emotion/00.gwo"/>
+		<Emotion5 	Name="#005"	Rectangle="0,0,25,25"	TexturePos="50,25"	Horizontal="1"	Frame="2"	mspf="200"	OnScale_X="1.0"	OnScale_Y="1.0"	Texture="./Localization/en_us/UI/Texture/Emotion/00.gwo"/>
+		<Emotion6	Name="#006"	Rectangle="0,0,25,25"	TexturePos="100,25"	Horizontal="1"	Frame="2"	mspf="200"	OnScale_X="1.0"	OnScale_Y="1.0"	Texture="./Localization/en_us/UI/Texture/Emotion/00.gwo"/>
+		<Emotion7 	Name="#007"	Rectangle="0,0,25,25"	TexturePos="150,25"	Horizontal="1"	Frame="2"	mspf="200"	OnScale_X="1.0"	OnScale_Y="1.0"	Texture="./Localization/en_us/UI/Texture/Emotion/00.gwo"/>
+		<Emotion8 	Name="#008"	Rectangle="0,0,25,25"	TexturePos="200,25"	Horizontal="1"	Frame="2"	mspf="200"	OnScale_X="1.0"	OnScale_Y="1.0"	Texture="./Localization/en_us/UI/Texture/Emotion/00.gwo"/>
+		<Emotion9 	Name="#009"	Rectangle="0,0,25,25"	TexturePos="250,25"	Horizontal="1"	Frame="4"	mspf="200"	OnScale_X="1.0"	OnScale_Y="1.0"	Texture="./Localization/en_us/UI/Texture/Emotion/00.gwo"/>
+		<Emotion10 	Name="#010"	Rectangle="0,0,25,25"	TexturePos="350,25"	Horizontal="1"	Frame="4"	mspf="200"	OnScale_X="1.0"	OnScale_Y="1.0"	Texture="./Localization/en_us/UI/Texture/Emotion/00.gwo"/>
 		
-		<!--×ÊÔ´Í¼µÚÈýÐÐ-->
-		<Emotion10 	Name="#010"	Rectangle="0,0,25,25"	TexturePos="0,50"	Horizontal="1"	Frame="4"	mspf="200"	OnScale_X="1.0"	OnScale_Y="1.0"	Texture="./Localization/en_us/UI/Texture/Emotion/00.tga"/>
-		<Emotion11 	Name="#011"	Rectangle="0,0,25,25"	TexturePos="100,50"	Horizontal="1"	Frame="4"	mspf="350"	OnScale_X="1.0"	OnScale_Y="1.0"	Texture="./Localization/en_us/UI/Texture/Emotion/00.tga"/>
-		<Emotion12 	Name="#012"	Rectangle="0,0,25,25"	TexturePos="200,50"	Horizontal="1"	Frame="6"	mspf="300"	OnScale_X="1.0"	OnScale_Y="1.0"	Texture="./Localization/en_us/UI/Texture/Emotion/00.tga"/>
-		<Emotion13 	Name="#013"	Rectangle="0,0,25,25"	TexturePos="350,50"	Horizontal="1"	Frame="6"	mspf="400"	OnScale_X="1.0"	OnScale_Y="1.0"	Texture="./Localization/en_us/UI/Texture/Emotion/00.tga"/>
+		<!--èµ„æºå›¾ç¬¬ä¸‰è¡Œ-->
+		<Emotion11 	Name="#011"	Rectangle="0,0,25,25"	TexturePos="0,50"	Horizontal="1"	Frame="4"	mspf="200"	OnScale_X="1.0"	OnScale_Y="1.0"	Texture="./Localization/en_us/UI/Texture/Emotion/00.gwo"/>
+		<Emotion12 	Name="#012"	Rectangle="0,0,25,25"	TexturePos="100,50"	Horizontal="1"	Frame="4"	mspf="350"	OnScale_X="1.0"	OnScale_Y="1.0"	Texture="./Localization/en_us/UI/Texture/Emotion/00.gwo"/>
+		<Emotion13 	Name="#013"	Rectangle="0,0,25,25"	TexturePos="200,50"	Horizontal="1"	Frame="6"	mspf="300"	OnScale_X="1.0"	OnScale_Y="1.0"	Texture="./Localization/en_us/UI/Texture/Emotion/00.gwo"/>
+		<Emotion14 	Name="#014"	Rectangle="0,0,25,25"	TexturePos="350,50"	Horizontal="1"	Frame="6"	mspf="400"	OnScale_X="1.0"	OnScale_Y="1.0"	Texture="./Localization/en_us/UI/Texture/Emotion/00.gwo"/>
 		
-		<!--×ÊÔ´Í¼µÚËÄÐÐ-->
-		<Emotion14 	Name="#014"	Rectangle="0,0,25,25"	TexturePos="0,75"	Horizontal="1"	Frame="8"	mspf="200"	OnScale_X="1.0"	OnScale_Y="1.0"	Texture="./Localization/en_us/UI/Texture/Emotion/00.tga"/>
-		<Emotion15 	Name="#015"	Rectangle="0,0,25,25"	TexturePos="200,75"	Horizontal="1"	Frame="8"	mspf="250"	OnScale_X="1.0"	OnScale_Y="1.0"	Texture="./Localization/en_us/UI/Texture/Emotion/00.tga"/>
+		<!--èµ„æºå›¾ç¬¬å››è¡Œ-->
+		<Emotion15 	Name="#015"	Rectangle="0,0,25,25"	TexturePos="0,75"	Horizontal="1"	Frame="8"	mspf="200"	OnScale_X="1.0"	OnScale_Y="1.0"	Texture="./Localization/en_us/UI/Texture/Emotion/00.gwo"/>
+		<Emotion16 	Name="#016"	Rectangle="0,0,25,25"	TexturePos="200,75"	Horizontal="1"	Frame="8"	mspf="250"	OnScale_X="1.0"	OnScale_Y="1.0"	Texture="./Localization/en_us/UI/Texture/Emotion/00.gwo"/>
 		
-		<!--×ÊÔ´Í¼µÚÎåÐÐ-->
-		<Emotion16 	Name="#016"	Rectangle="0,0,25,25"	TexturePos="0,100"	Horizontal="1"	Frame="14"	mspf="250"	OnScale_X="1.0"	OnScale_Y="1.0"	Texture="./Localization/en_us/UI/Texture/Emotion/00.tga"/>
-		<Emotion17 	Name="#017"	Rectangle="0,0,25,25"	TexturePos="350,100"	Horizontal="1"	Frame="6"	mspf="250"	OnScale_X="1.0"	OnScale_Y="1.0"	Texture="./Localization/en_us/UI/Texture/Emotion/00.tga"/>
+		<!--èµ„æºå›¾ç¬¬äº”è¡Œ-->
+		<Emotion17 	Name="#017"	Rectangle="0,0,25,25"	TexturePos="0,100"	Horizontal="1"	Frame="14"	mspf="250"	OnScale_X="1.0"	OnScale_Y="1.0"	Texture="./Localization/en_us/UI/Texture/Emotion/00.gwo"/>
+		<Emotion18 	Name="#018"	Rectangle="0,0,25,25"	TexturePos="350,100"	Horizontal="1"	Frame="6"	mspf="250"	OnScale_X="1.0"	OnScale_Y="1.0"	Texture="./Localization/en_us/UI/Texture/Emotion/00.gwo"/>
 		
-		<!--×ÊÔ´Í¼µÚÁùÐÐ-->
-		<Emotion18 	Name="#018"	Rectangle="0,0,25,25"	TexturePos="0,125"	Horizontal="1"	Frame="8"	mspf="250"	OnScale_X="1.0"	OnScale_Y="1.0"	Texture="./Localization/en_us/UI/Texture/Emotion/00.tga"/>
-		<Emotion19 	Name="#019"	Rectangle="0,0,25,25"	TexturePos="200,125"	Horizontal="1"	Frame="10"	mspf="350"	OnScale_X="1.0"	OnScale_Y="1.0"	Texture="./Localization/en_us/UI/Texture/Emotion/00.tga"/>
+		<!--èµ„æºå›¾ç¬¬å…­è¡Œ-->
+		<Emotion19 	Name="#019"	Rectangle="0,0,25,25"	TexturePos="0,125"	Horizontal="1"	Frame="8"	mspf="250"	OnScale_X="1.0"	OnScale_Y="1.0"	Texture="./Localization/en_us/UI/Texture/Emotion/00.gwo"/>
+		<Emotion20 	Name="#020"	Rectangle="0,0,25,25"	TexturePos="200,125"	Horizontal="1"	Frame="10"	mspf="350"	OnScale_X="1.0"	OnScale_Y="1.0"	Texture="./Localization/en_us/UI/Texture/Emotion/00.gwo"/>
 		
-		<!--×ÊÔ´Í¼µÚÆßÐÐ-->
-		<Emotion20 	Name="#020"	Rectangle="0,0,25,25"	TexturePos="0,150"	Horizontal="1"	Frame="17"	mspf="200"	OnScale_X="1.0"	OnScale_Y="1.0"	Texture="./Localization/en_us/UI/Texture/Emotion/00.tga"/>
+		<!--èµ„æºå›¾ç¬¬ä¸ƒè¡Œ-->
+		<Emotion21 	Name="#021"	Rectangle="0,0,25,25"	TexturePos="0,150"	Horizontal="1"	Frame="17"	mspf="200"	OnScale_X="1.0"	OnScale_Y="1.0"	Texture="./Localization/en_us/UI/Texture/Emotion/00.gwo"/>
+
+                <!--èµ„æºå›¾ç¬¬å…«è¡Œ-->
+		<Emotion22 	Name="#022"	Rectangle="0,0,25,25"	TexturePos="0,175"	Horizontal="1"	Frame="9"	mspf="200"	OnScale_X="1.0"	OnScale_Y="1.0"	Texture="./Localization/en_us/UI/Texture/Emotion/00.gwo"/>
+                <Emotion23 	Name="#023"	Rectangle="0,0,25,25"	TexturePos="225,175"	Horizontal="1"	Frame="5"	mspf="200"	OnScale_X="1.0"	OnScale_Y="1.0"	Texture="./Localization/en_us/UI/Texture/Emotion/00.gwo"/>
+                <Emotion24 	Name="#024"	Rectangle="0,0,25,25"	TexturePos="350,175"	Horizontal="1"	Frame="5"	mspf="200"	OnScale_X="1.0"	OnScale_Y="1.0"	Texture="./Localization/en_us/UI/Texture/Emotion/00.gwo"/>  
+  
+                <!--èµ„æºå›¾ç¬¬ä¹è¡Œ-->
+		<Emotion25 	Name="#025"	Rectangle="0,0,25,25"	TexturePos="0,200"	Horizontal="1"	Frame="11"	mspf="200"	OnScale_X="1.0"	OnScale_Y="1.0"	Texture="./Localization/en_us/UI/Texture/Emotion/00.gwo"/>
+		<Emotion26 	Name="#026"	Rectangle="0,0,25,25"	TexturePos="275,200"	Horizontal="1"	Frame="4"	mspf="200"	OnScale_X="1.0"	OnScale_Y="1.0"	Texture="./Localization/en_us/UI/Texture/Emotion/00.gwo"/>
+		<Emotion27 	Name="#027"	Rectangle="0,0,25,25"	TexturePos="375,200"	Horizontal="1"	Frame="4"	mspf="200"	OnScale_X="1.0"	OnScale_Y="1.0"	Texture="./Localization/en_us/UI/Texture/Emotion/00.gwo"/>
+
+
+                <!--èµ„æºå›¾ç¬¬åè¡Œ-->
+                <Emotion28 	Name="#028"	Rectangle="0,0,25,25"	TexturePos="0,225"	Horizontal="1"	Frame="7"	mspf="200"	OnScale_X="1.0"	OnScale_Y="1.0"	Texture="./Localization/en_us/UI/Texture/Emotion/00.gwo"/>
+                <Emotion29 	Name="#029"	Rectangle="0,0,25,25"	TexturePos="175,225"	Horizontal="1"	Frame="5"	mspf="200"	OnScale_X="1.0"	OnScale_Y="1.0"	Texture="./Localization/en_us/UI/Texture/Emotion/00.gwo"/> 
+                <Emotion30 	Name="#030"	Rectangle="0,0,25,25"	TexturePos="300,225"	Horizontal="1"	Frame="2"	mspf="250"	OnScale_X="1.0"	OnScale_Y="1.0"	Texture="./Localization/en_us/UI/Texture/Emotion/00.gwo"/>
+                <Emotion31 	Name="#031"	Rectangle="0,0,25,25"	TexturePos="350,225"	Horizontal="1"	Frame="2"	mspf="250"	OnScale_X="1.0"	OnScale_Y="1.0"	Texture="./Localization/en_us/UI/Texture/Emotion/00.gwo"/>
+
+                <!--èµ„æºå›¾ç¬¬åä¸€è¡Œ-->
+		<Emotion32 	Name="#032"	Rectangle="0,0,25,25"	TexturePos="0,250"	Horizontal="1"	Frame="10"	mspf="200"	OnScale_X="1.0"	OnScale_Y="1.0"	Texture="./Localization/en_us/UI/Texture/Emotion/00.gwo"/>
+		<Emotion33 	Name="#033"	Rectangle="0,0,25,25"	TexturePos="250,250"	Horizontal="1"	Frame="4"	mspf="200"	OnScale_X="1.0"	OnScale_Y="1.0"	Texture="./Localization/en_us/UI/Texture/Emotion/00.gwo"/>
+                <Emotion34 	Name="#034"	Rectangle="0,0,25,25"	TexturePos="350,250"	Horizontal="1"	Frame="6"	mspf="200"	OnScale_X="1.0"	OnScale_Y="1.0"	Texture="./Localization/en_us/UI/Texture/Emotion/00.gwo"/>
+
+                <!--èµ„æºå›¾ç¬¬åäºŒè¡Œ-->
+                <Emotion35 	Name="#035"	Rectangle="0,0,25,25"	TexturePos="0,275"	Horizontal="1"	Frame="11"	mspf="200"	OnScale_X="1.0"	OnScale_Y="1.0"	Texture="./Localization/en_us/UI/Texture/Emotion/00.gwo"/> 
+                <Emotion36 	Name="#036"	Rectangle="0,0,25,25"	TexturePos="275,275"	Horizontal="1"	Frame="6"	mspf="200"	OnScale_X="1.0"	OnScale_Y="1.0"	Texture="./Localization/en_us/UI/Texture/Emotion/00.gwo"/>
+                <Emotion37 	Name="#037"	Rectangle="0,0,25,25"	TexturePos="450,275"	Horizontal="1"	Frame="2"	mspf="200"	OnScale_X="1.0"	OnScale_Y="1.0"	Texture="./Localization/en_us/UI/Texture/Emotion/00.gwo"/>
+ 
+                <!--èµ„æºå›¾ç¬¬åä¸‰è¡Œ-->
+                <Emotion38 	Name="#038"	Rectangle="0,0,25,25"	TexturePos="0,300"	Horizontal="1"	Frame="6"	mspf="200"	OnScale_X="1.0"	OnScale_Y="1.0"	Texture="./Localization/en_us/UI/Texture/Emotion/00.gwo"/>
+		<Emotion39 	Name="#039"	Rectangle="0,0,25,25"	TexturePos="150,300"	Horizontal="1"	Frame="4"	mspf="200"	OnScale_X="1.0"	OnScale_Y="1.0"	Texture="./Localization/en_us/UI/Texture/Emotion/00.gwo"/>
+		<Emotion40 	Name="#040"	Rectangle="0,0,25,25"	TexturePos="250,300"	Horizontal="1"	Frame="2"	mspf="200"	OnScale_X="1.0"	OnScale_Y="1.0"	Texture="./Localization/en_us/UI/Texture/Emotion/00.gwo"/>
+ 
+                <!--èµ„æºå›¾ç¬¬åå››è¡Œ-->
+                <Emotion41 	Name="#041"	Rectangle="0,0,25,25"	TexturePos="0,325"	Horizontal="1"	Frame="11"	mspf="200"	OnScale_X="1.0"	OnScale_Y="1.0"	Texture="./Localization/en_us/UI/Texture/Emotion/00.gwo"/>
+                
+
     </EmotionConfig>	
 </Emotion>
 <UIConfig>
-    <EmotionWnd	Type="Window"  ID="5000000"	Modal="0" Rectangle="350,74,650,685" Visible="0"	Enable="0" Layer="3">		
+    <EmotionWnd	Type="Window"  ID="5000000"	Modal="0" Rectangle="350,55,650,666" Visible="0"	Enable="0" Layer="3">		
     </EmotionWnd>
 </UIConfig>
 

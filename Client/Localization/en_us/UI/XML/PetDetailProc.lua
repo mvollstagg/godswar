@@ -71,7 +71,7 @@ function PetDetail_OnLoad()
 	petConstellation = win:GetChild("PetConstellation");
   petFoodType = win:GetChild("PetFoodType");
 
-	win:UpdateRenderBuffer();	
+	win:UpdateRenderBuffer();
 end
 
 -- 寿命
@@ -92,7 +92,7 @@ function PetDetail_PetSetSex(value)
 	if value == 1 then
 		petsex:SetText(MSG.PETSEX1);
 	else
-		petsex:SetText(MSG.PETSEX2);		
+		petsex:SetText(MSG.PETSEX2);
 	end;
 end
 
@@ -115,8 +115,21 @@ function PetDetail_PetSetType(value)
 		pettype:SetText(PETTYPE7);
 	elseif value == 8 then
 		pettype:SetText(PETTYPE8);
-	elseif value == 9 then	
+	elseif value == 9 then
 		pettype:SetText(PETTYPE9);
+	elseif value == 10 then
+		pettype:SetText(PETTYPE10);
+	elseif value == 11 then
+		pettype:SetText(PETTYPE11);
+	elseif value == 12 then
+		pettype:SetText(PETTYPE12);
+	elseif value == 13 then
+		pettype:SetText(PETTYPE13);
+	elseif value == 14 then
+		pettype:SetText(PETTYPE14);
+	elseif value == 15 then
+		pettype:SetText(PETTYPE15);
+
 	end;
 end
 
@@ -179,7 +192,7 @@ function PetDetail_PetSetAptitude(value)
 		aptitude:SetText(PETAPTITUDE14);
 	elseif value == 15 then
 		aptitude:SetText(PETAPTITUDE15);
-	end;	
+	end;
 end
 
 -- 设置按钮的图标
@@ -209,7 +222,7 @@ function UpdatePetGeniusIcon(id,state)
 	if state == 0 then
 		petGeniusButton:GetChild(0):SetTexturePos(252, 0); --锁
 	end;
-	
+
 end
 
 -- 设置星座值
@@ -338,7 +351,7 @@ end
 function PetDetail_UpdatePetIndenture(id)
 	PetBond = uiapi:GetElement(832025);
 	if 0 == id then
-		PetBond:SetText(MSG.PETINDENTURE0);		
+		PetBond:SetText(MSG.PETINDENTURE0);
 	elseif 1 == id then
 		PetBond:SetText(MSG.PETINDENTURE1);
 	elseif 2 == id then
@@ -359,10 +372,10 @@ function PetDetail_BindStateUpdate(state)
 	petBindState = uiapi:GetElement(832026);
 		-- 0: 未绑定　１：已绑定
 		if 0 == state then
-			petBindState:SetText(PETD_X0_47);			
+			petBindState:SetText(PETD_X0_47);
 		elseif 1 == state then
 			petBindState:SetText(PETD_X0_48);
-		else 
+		else
 			petBindState:SetText("");
 		end
 end

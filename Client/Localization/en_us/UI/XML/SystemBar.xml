@@ -40,7 +40,11 @@
 		<!--商城按钮-->
 		<EnterMallBtn Type="Button" ID="211015" Rectangle="262,-222,314,-170" Texture="./Localization/en_us/UI/Texture/Main.gwo" TexturePos="383,676" Visible="1" OnScaleX="0.9" OnScaleY="0.9"/>
 		<LevUpMsg Type="Button" ID="211022" Rectangle="155,-475,180,-444" Texture="./Localization/en_us/UI/Texture/Main.gwo" TexturePos="468,198" Font="MainFonts" FontColor="DEFAULT_TEXTCOLOR" TextFormat="5" TextWeight="1" OnClick="UpGrade_OnSelfUpGrade()" Visible="0"/>
+		
+	<!--生活技能-->	
+	<LiveSkill Type="Button" ID="-1" Rectangle="130,-21,160,10" Texture="./Localization/en_us/UI/Texture/Main.gwo" TexturePos="589,74" OnClick ="LiveSkillBtn_OnClick()" Visible="1" OnScaleX="0.9" OnScaleY="0.9"  OnHotKey="LiveSkillBtn_OnClick()"   HotKey="86"  OnHovered="LiveSkillFunc()" OnLeft="LiveSkillLeftFunc()"   />
 	</SystemBar>
 	<!--<XML File="./Localization/en_us/UI/XML/AutoFight.xml" />-->
 	<XML File="./Localization/en_us/UI/XML/Constellation.xml"/>
+	 <Script File="./Localization/en_us/UI/XML/ButtonClick.lua"/>
 </UIConfig>

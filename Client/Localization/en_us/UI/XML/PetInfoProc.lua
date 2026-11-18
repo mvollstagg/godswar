@@ -24,8 +24,8 @@ function PetInfo_OnLoad()
 	PetInfo_aptitude   = PetInfo_win:GetChild("PetAptitude");
 	PetInfo_petsex     = PetInfo_win:GetChild("PetSex");
 	PetInfo_petConstellation = PetInfo_win:GetChild("PetConstellation");
-	
-	PetInfo_win:UpdateRenderBuffer();	
+
+	PetInfo_win:UpdateRenderBuffer();
 end
 
 
@@ -34,7 +34,7 @@ function PetInfo_PetSetSex(value)
 	if value == 1 then
 		PetInfo_petsex:SetText(PetInfo_MSG.PETSEX1);
 	else
-		PetInfo_petsex:SetText(PetInfo_MSG.PETSEX2);		
+		PetInfo_petsex:SetText(PetInfo_MSG.PETSEX2);
 	end;
 end
 
@@ -57,8 +57,21 @@ function PetInfo_PetSetType(value)
 		PetInfo_pettype:SetText(PETTYPE7);
 	elseif value == 8 then
 		PetInfo_pettype:SetText(PETTYPE8);
-	elseif value == 9 then	
+	elseif value == 9 then
 		PetInfo_pettype:SetText(PETTYPE9);
+	elseif value == 10 then
+		PetInfo_pettype:SetText(PETTYPE10);
+	elseif value == 11 then
+		PetInfo_pettype:SetText(PETTYPE11);
+	elseif value == 12 then
+		PetInfo_pettype:SetText(PETTYPE12);
+	elseif value == 13 then
+		PetInfo_pettype:SetText(PETTYPE13);
+    elseif value == 14 then
+		PetInfo_pettype:SetText(PETTYPE14);
+	elseif value == 15 then
+		PetInfo_pettype:SetText(PETTYPE15);
+
 	end;
 end
 
@@ -94,7 +107,7 @@ function PetInfo_PetSetAptitude(value)
 		PetInfo_aptitude:SetText(PETAPTITUDE14);
 	elseif value == 15 then
 		PetInfo_aptitude:SetText(PETAPTITUDE15);
-	end;	
+	end;
 end
 
 -- …Ë÷√–«◊˘÷µ

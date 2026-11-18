@@ -6,7 +6,7 @@
 		<PetName Type="Text" Texture="" ID="830001" Rectangle="66,68,166,110" Font="MainMap" FontColor="DEFAULT_TEXTCOLOR" TextFormat="4" Text=""/>
 		<!--类型-->
 		<PetTypeLabel Type="Text" Texture="" Rectangle="25,90,66,132" Font="MainMap" FontColor="BASE_HEADCOLOR" TextFormat="4" SText="PETD_X0_3"/>
-		<PetType Type="Text" Texture="" ID="830002" Rectangle="71,90,171,132" Font="MainMap" FontColor="DEFAULT_TEXTCOLOR" TextFormat="4" Text=""/>
+		<PetType Type="Text" Texture="" ID="830002" Rectangle="61,90,161,132" Font="MainMap" FontColor="DEFAULT_TEXTCOLOR" TextFormat="4" Text=""/>
 		<!--更改名字-->
 		<PetChangeName Template="T_Button2" ID="830003" Rectangle="281,122,342,149" Font="MainMap" FontColor="DEFAULT_TEXTCOLOR" SText="PETD_X0_26"/>
 		<!--合体效果-->
@@ -15,8 +15,8 @@
 		<PetSexLabel Type="Text" Texture="" Rectangle="25,112,66,154" Font="MainMap" FontColor="BASE_HEADCOLOR" TextFormat="4" SText="PETD_X0_9"/>
 		<PetSex Type="Text" ID="830011" Texture="" Rectangle="81,112,181,154" Font="MainMap" FontColor="DEFAULT_TEXTCOLOR" TextFormat="4" Text=""/>
 		<!--食物类型-->
-		<PetFoodTypeLabel Type="Text" Texture="" Rectangle="170,90,271,132" Font="MainMap" FontColor="BASE_HEADCOLOR" TextFormat="4" SText="PETD_X0_28" OnHovered="PetDetailUIHov(0)" CanHovered="1" OnLeft = "PetOnLeft()"/>
-		<PetFoodType Type="Text" Texture="" Rectangle="248,90,300,132" Font="MainMap" FontColor="DEFAULT_TEXTCOLOR" TextFormat="4" Text=""/>
+		<PetFoodTypeLabel Type="Text" Texture="" Rectangle="190,90,291,132" Font="MainMap" FontColor="BASE_HEADCOLOR" TextFormat="4" SText="PETD_X0_28" OnHovered="PetDetailUIHov(0)" CanHovered="1" OnLeft = "PetOnLeft()"/>
+		<PetFoodType Type="Text" Texture="" Rectangle="268,90,320,132" Font="MainMap" FontColor="DEFAULT_TEXTCOLOR" TextFormat="4" Text=""/>
 		<!--灵魂契约-->
 		<PetAptitudeLabel Type="Text" Texture="" Rectangle="140,112,241,154" Font="MainMap" FontColor="BASE_HEADCOLOR" TextFormat="4" SText="PETD_X0_29" OnHovered="PetDetailUIHov(1)" CanHovered="1" OnLeft = "PetOnLeft()"/>
 		<PetAptitude Type="Text" ID="832025" Texture="" Rectangle="208,112,260,154" Font="MainMap" FontColor="DEFAULT_TEXTCOLOR" TextFormat="4" SText="PETD_X0_30"/>

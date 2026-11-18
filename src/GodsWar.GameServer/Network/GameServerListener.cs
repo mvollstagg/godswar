@@ -76,8 +76,26 @@ public sealed class GameServerListener : BackgroundService
         {
             client.NoDelay = true;
             await using NetworkStream stream = client.GetStream();
-            // 1.0.282 US client <-> GameServer link is plaintext (no XOR cipher).
-            await using var connection = new PacketConnection(stream, encrypted: false);
+
+            // Peek first 4 bytes to auto-detect v2.27 XOR-encrypted MsgLoginGameServer (opcode 10000 = 10 27 ^ BC 26 = AC 01)
+            // vs plaintext 1.0.282 client.
+            byte[] prefix = new byte[4];
+            int read = 0;
+            while (read < 4)
+            {
+                int n = await stream.ReadAsync(prefix.AsMemory(read, 4 - read), stoppingToken).ConfigureAwait(false);
+                if (n == 0)
+                {
+                    return;
+                }
+                read += n;
+            }
+
+            bool isV227 = prefix[2] == 0xAC && prefix[3] == 0x01;
+            XorCipher? cipher = isV227 ? XorCipher.CreateV227() : null;
+
+            await using var prefixedStream = new PrefixedStream(prefix, stream);
+            await using var connection = new PacketConnection(prefixedStream, cipher);
             await _sessionHandler.HandleConnectionAsync(connection, remoteIp, stoppingToken).ConfigureAwait(false);
         }
     }

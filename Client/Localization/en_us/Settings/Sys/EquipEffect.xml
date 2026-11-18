@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="GB2312"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <!--this is EquipEff config-->
 <EquipEff>
     <Eqpt LvId="0" Effect="0" Exp="9688" Fun="0"/>

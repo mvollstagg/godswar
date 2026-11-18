@@ -240,6 +240,8 @@ public readonly record struct RoleSummary(
 public sealed class MsgRoleInfo
 {
     public const int PayloadLength = 352;
+    public const int V227PayloadLength = 496; // 500 - 4
+    public const int V227EquipCount = 21;
     public const int MaxRoles = 4;
     public const int EquipCount = 12;
 
@@ -273,6 +275,40 @@ public sealed class MsgRoleInfo
             // MSVC natural alignment puts iEquip[12] at +40 relative to slot start (or +40 in slot 0 after ucNum+Name+6B+1B pad).
             int equipOffset = i == 0 ? 40 : 88 * i + 40;
             for (int e = 0; e < EquipCount; e++)
+            {
+                int equipId = e < role.EquipBaseIds.Length ? role.EquipBaseIds[e] : -1;
+                BinaryPrimitives.WriteInt32LittleEndian(payload.AsSpan(equipOffset + e * 4, 4), equipId);
+            }
+        }
+
+        return payload;
+    }
+
+    /// <summary>
+    /// Serializes the 496-byte payload (500 bytes framed) expected by the v2.26.002 (v2.27) client.
+    /// </summary>
+    public byte[] ToV227Payload()
+    {
+        byte[] payload = new byte[V227PayloadLength];
+        int count = Math.Min(Roles.Count, MaxRoles);
+        payload[0] = (byte)count;
+
+        for (int i = 0; i < count; i++)
+        {
+            RoleSummary role = Roles[i];
+            int slotStart = i == 0 ? 1 : 124 * i;
+            MsgLogin.WriteFixedAscii(role.Name, payload.AsSpan(slotStart, ProtocolConstants.MaxNameLength));
+
+            int metaOffset = slotStart + ProtocolConstants.MaxNameLength;
+            payload[metaOffset + 0] = role.Camp;
+            payload[metaOffset + 1] = role.Profession;
+            payload[metaOffset + 2] = role.Level;
+            payload[metaOffset + 3] = role.Gender;
+            payload[metaOffset + 4] = role.HairStyle;
+            payload[metaOffset + 5] = role.FaceShap;
+
+            int equipOffset = i == 0 ? 40 : 124 * i + 40;
+            for (int e = 0; e < V227EquipCount; e++)
             {
                 int equipId = e < role.EquipBaseIds.Length ? role.EquipBaseIds[e] : -1;
                 BinaryPrimitives.WriteInt32LittleEndian(payload.AsSpan(equipOffset + e * 4, 4), equipId);

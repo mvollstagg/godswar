@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <UIConfig>
-  <SystemSetupBack Type="Window" ID="240000" Layer="1" Rectangle="421,271,603,497" Visible="0" Enable="1" >
+  <SystemSetupBack Type="Window" ID="240000" Layer="1" Rectangle="421,271,603,497" Visible="0" Enable="1" UseEsc="1">
 
    
     <ClosetBtn Type="Button"   Texture="./Localization/en_us/UI/Texture/main.gwo" ID="240008" Rectangle="85,3,106,24" TexturePos="124,540" Text="" Visible="0"/>

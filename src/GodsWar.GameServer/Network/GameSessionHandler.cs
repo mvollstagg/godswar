@@ -65,7 +65,10 @@ public sealed class GameSessionHandler
                 }
 
                 (ushort opcode, byte[] payload) = packet.Value;
-                switch ((GameOpcode)opcode)
+                GameOpcode gameOpcode = connection.Cipher is not null
+                    ? V227OpcodeMap.FromWire(opcode)
+                    : (GameOpcode)opcode;
+                switch (gameOpcode)
                 {
                     case GameOpcode.MsgLoginGameServer:
                         account = await HandleLoginAsync(connection, payload, remoteIp, cancellationToken).ConfigureAwait(false);
@@ -111,7 +114,7 @@ public sealed class GameSessionHandler
                             if (map is not null)
                             {
                                 await map.MoveAsync(player, walk.X, walk.Z, walk.Atan2, walk.State, cancellationToken).ConfigureAwait(false);
-                                PortalZone? portal = map.FindPortalAt(walk.X, walk.Z);
+                                PortalZone? portal = map.FindPortalAt(walk.X, walk.Z, connection.Cipher is not null);
                                 if (portal is not null && _chatAndPortal is not null)
                                 {
                                     await _chatAndPortal.TransitionMapAsync(player, portal.TargetMapId, portal.TargetX, portal.TargetZ, cancellationToken).ConfigureAwait(false);
@@ -222,6 +225,13 @@ public sealed class GameSessionHandler
                         if (player is not null && player.InWorld && _npcShopAndForge is not null)
                         {
                             await _npcShopAndForge.HandleStorageItemAsync(player, payload, cancellationToken).ConfigureAwait(false);
+                        }
+                        break;
+
+                    case GameOpcode.MsgNpcQuestView:
+                        if (player is not null && player.InWorld && _quests is not null)
+                        {
+                            await _quests.HandleQuestViewAsync(player, payload, cancellationToken).ConfigureAwait(false);
                         }
                         break;
 
@@ -680,7 +690,10 @@ public sealed class GameSessionHandler
         }
 
         var roleInfo = new MsgRoleInfo(summaries);
-        await connection.SendPacketAsync((ushort)GameOpcode.MsgRoleInfo, roleInfo.ToPayload(), cancellationToken).ConfigureAwait(false);
+        byte[] rolePayload = connection.Cipher is not null
+            ? roleInfo.ToV227Payload()
+            : roleInfo.ToPayload();
+        await connection.SendPacketAsync((ushort)GameOpcode.MsgRoleInfo, rolePayload, cancellationToken).ConfigureAwait(false);
     }
 
     private async Task HandleCreateRoleAsync(
@@ -690,10 +703,14 @@ public sealed class GameSessionHandler
         CancellationToken cancellationToken)
     {
         MsgCreateRole msg = MsgCreateRole.Parse(payload);
+        ushort manageReturnOpcode = connection.Cipher is not null
+            ? (ushort)GameOpcode.MsgManageReturnV227
+            : (ushort)GameOpcode.MsgManageReturn;
+
         if (string.IsNullOrWhiteSpace(msg.Name) || msg.Name.Length > 31)
         {
             await connection.SendPacketAsync(
-                (ushort)GameOpcode.MsgManageReturn,
+                manageReturnOpcode,
                 new MsgManageReturn((ushort)GameOpcode.MsgCreateRole, ManageReturnCode.NameTooLong).ToPayload(),
                 cancellationToken).ConfigureAwait(false);
             return;
@@ -702,7 +719,7 @@ public sealed class GameSessionHandler
         if (msg.Camp > 1 || msg.Gender > 1 || msg.Profession > 3 || msg.Belief > 1 || msg.HairStyle > 74 || msg.FaceShap > 4)
         {
             await connection.SendPacketAsync(
-                (ushort)GameOpcode.MsgManageReturn,
+                manageReturnOpcode,
                 new MsgManageReturn((ushort)GameOpcode.MsgCreateRole, ManageReturnCode.IllegalCharacters).ToPayload(),
                 cancellationToken).ConfigureAwait(false);
             return;
@@ -736,7 +753,7 @@ public sealed class GameSessionHandler
         var returnCode = (ManageReturnCode)(int)result.Status;
 
         await connection.SendPacketAsync(
-            (ushort)GameOpcode.MsgManageReturn,
+            manageReturnOpcode,
             new MsgManageReturn((ushort)GameOpcode.MsgCreateRole, returnCode).ToPayload(),
             cancellationToken).ConfigureAwait(false);
 
@@ -755,9 +772,12 @@ public sealed class GameSessionHandler
     {
         MsgDeleteRole msg = MsgDeleteRole.Parse(payload);
         bool deleted = await _characterRepository.DeleteCharacterAsync(account, msg.Name, cancellationToken).ConfigureAwait(false);
+        ushort manageReturnOpcode = connection.Cipher is not null
+            ? (ushort)GameOpcode.MsgManageReturnV227
+            : (ushort)GameOpcode.MsgManageReturn;
 
         await connection.SendPacketAsync(
-            (ushort)GameOpcode.MsgManageReturn,
+            manageReturnOpcode,
             new MsgManageReturn(
                 (ushort)GameOpcode.MsgDeleteRole,
                 deleted ? ManageReturnCode.DeleteSuccess : ManageReturnCode.DeleteFailed).ToPayload(),

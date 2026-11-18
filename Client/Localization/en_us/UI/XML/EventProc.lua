@@ -17,6 +17,7 @@ local prolist_config = {};--重要公告内容
 local weeklist_cofig = {};--本周活动内容
 local guidelist_cofig = {};--成长指南内容
 local curlist_config = {}; --当前容器内的内容
+local curTime_text = nil
 
 --动态刷新列表
 local dcur_index = -1;
@@ -36,6 +37,7 @@ local not_click = true;
 --初始化
 function Event_OnLoad()
 	win = uiapi:GetElement(481000);
+        win:SetPosition(101,150);
 	day_list = uiapi:GetElement(481100);
 	pro_list =  uiapi:GetElement(481120);
 	week_list = uiapi:GetElement(481140);
@@ -46,6 +48,7 @@ function Event_OnLoad()
 	event_btn = uiapi:GetElement(481610);
 	btn_r,btn_g,btn_b,btn_a = event_btn:GetFontColor();
 
+	curTime_text = win:GetChild("CurrentDate")
 	uiapi:ClearItem(day_list);
 	uiapi:ClearItem(pro_list);
 	uiapi:ClearItem(week_list);
@@ -74,6 +77,9 @@ function Event_Init()
 	uiapi:ClearItem(pro_list);
 	uiapi:ClearItem(week_list);
 	uiapi:ClearItem(guide_list);
+
+local posx,posy = win:GetPosition()
+     win:SetPosition(posx,posy)
 
 	print("Event_Init");
 end
@@ -235,6 +241,8 @@ function UpDate_EventInfo()
 		multi_edit:SetText(text);
 
 		curlist_config = prolist_config[0];
+		--自动寻路的处理
+		Event_SetAutoSeekWay()
 
 		uiapi:ActiveList(-1,day_list);
 		uiapi:ActiveList(-1,week_list);
@@ -370,6 +378,7 @@ end
 
 --设置活动窗体是否可见
 function EventBtn_OnClick()
+    win = uiapi:GetElement("ActivityWin");
 	win:Visible(not win:IsVisible());
 	if win:IsVisible() then
 	    win:SetPosition(101,150);
@@ -399,7 +408,27 @@ function EventBtn_Update()
 
 
 end
+--日期的显示
+function Event_Time(text,day)
+	local str = ""
+	if day == 0 then
+		str = str..EP_L0_0
+	elseif day == 1 then
+		str = str..EP_L0_1
+	elseif day == 2 then
+		str = str..EP_L0_2
+	elseif day == 3 then
+		str = str..EP_L0_3
+	elseif day == 4 then
+		str = str..EP_L0_4
+	elseif day == 5 then
+		str = str..EP_L0_5
+	elseif day == 6 then
+		str = str..EP_L0_6
+	end
+	curTime_text:SetText(str)
 
+end
 --Event_OnLoad();
 
 

@@ -91,8 +91,8 @@ public readonly record struct MsgLoginReturnInfo(LoginResultCode Info)
 {
     public const int PayloadLength = 2;
 
-    public static ushort GetOpcode(int clientVersion) =>
-        clientVersion > 0 && clientVersion < 1_000_200
+    public static ushort GetOpcode(int clientVersion, bool isV227 = false) =>
+        !isV227 && clientVersion > 0 && clientVersion < 1_000_200
             ? (ushort)LoginOpcode.MsgLoginReturnInfoLegacy
             : (ushort)LoginOpcode.MsgLoginReturnInfo;
 
@@ -122,7 +122,24 @@ public readonly record struct MsgGameServerInfo(
     GameServerState State)
 {
     public const int ClientPayloadLength = 74; // 78 - 4
+    public const int V227ClientPayloadLength = 44; // 48 - 4
     public const int ServerRegistrationMinPayloadLength = 72; // 76 - 4
+
+    /// <summary>
+    /// Serializes the 44-byte payload (48 bytes framed) expected by the v2.26.002 (v2.27) client.
+    /// </summary>
+    public byte[] ToV227ClientPayload(bool isLast = true)
+    {
+        byte[] payload = new byte[V227ClientPayloadLength];
+        MsgLogin.WriteFixedAscii(ServerName, payload.AsSpan(0, ProtocolConstants.MaxNameLength));
+        BinaryPrimitives.WriteUInt32LittleEndian(payload.AsSpan(32, 4), Port);
+        payload[36] = ServerId;
+        payload[37] = (byte)State;
+        payload[38] = 0x80; // Default/recommended flag checked at 0x58a97f
+        payload[39] = 0;    // Region/tab id
+        payload[42] = isLast ? (byte)1 : (byte)0;
+        return payload;
+    }
 
     /// <summary>
     /// Serializes the 74-byte payload (78 bytes framed) expected by the 1.0.282 US client.

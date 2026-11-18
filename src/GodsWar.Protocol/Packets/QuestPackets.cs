@@ -174,6 +174,7 @@ public readonly record struct MsgNpcAcceptQuest(
     ItemEquipSlot[] RewardItems)
 {
     public const int PayloadSize = 20 + 32 + 16 + 4 * 32; // 196B
+    public const int V227PayloadSize = 72 + 8 * ItemEquipSlot.WireSize; // 648B (652B framed)
 
     public static MsgNpcAcceptQuest Parse(ReadOnlySpan<byte> payload)
     {
@@ -231,6 +232,26 @@ public readonly record struct MsgNpcAcceptQuest(
         {
             ItemEquipSlot rw = i < RewardItems.Length ? RewardItems[i] : ItemEquipSlot.Empty;
             QuestWireConstants.WriteItemData32(buf.AsSpan(68 + i * 32, 32), rw);
+        }
+
+        return buf;
+    }
+
+    /// <summary>
+    /// Serializes the 648-byte payload (652 bytes framed) expected by the v2.26.002 (v2.27)
+    /// <c>MSG_NPC_QUESTVIEW</c> / <c>MSG_NPC_ACCEPTQUEST</c> handler (<c>0x4a379c</c>),
+    /// which uses 72-byte <c>SEquip</c> reward slots starting at payload offset 72.
+    /// </summary>
+    public byte[] ToV227Payload()
+    {
+        byte[] buf = new byte[V227PayloadSize];
+        ToPayload().AsSpan(0, 68).CopyTo(buf);
+
+        for (int i = 0; i < QuestWireConstants.RewardsCount; i++)
+        {
+            ItemEquipSlot rw = i < RewardItems.Length ? RewardItems[i] : ItemEquipSlot.Empty;
+            rw.WriteTo(buf.AsSpan(72 + i * ItemEquipSlot.WireSize, ItemEquipSlot.WireSize));
+            ItemEquipSlot.Empty.WriteTo(buf.AsSpan(72 + (4 + i) * ItemEquipSlot.WireSize, ItemEquipSlot.WireSize));
         }
 
         return buf;

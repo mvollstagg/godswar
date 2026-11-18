@@ -74,7 +74,7 @@
         <autotext Type="Text" Font="MainMap" Rectangle="8,303,383,322" FontColor="YELLOW_TEXTCOLOR" TextFormat="16" SText="AF_X0_17" />
 
         <saveback Template="T_BgWindow" ID="-1" Rectangle="6,353,376,388" />
-        <shut_button Template="T_Button4" Rectangle="199,358,281,385" OnClick="AutoRun_OnClick(true)" SText="AF_X0_14" Texture="./Localization/en_us/UI/Texture/main.gwo" TexturePos="42,540" />
+        <shut_button Template="T_Button4" ID="122011" Rectangle="199,358,281,385" OnClick="AutoRun_OnClick(true)" SText="AF_X0_14" Texture="./Localization/en_us/UI/Texture/main.gwo" TexturePos="42,540" />
         <save_button Template="T_Button4" Rectangle="291,358,373,385" OnClick="SaveSetting_OnClick()" SText="AF_X0_13" Texture="./Localization/en_us/UI/Texture/main.gwo" TexturePos="42,540" />
 
       </AutoTab>

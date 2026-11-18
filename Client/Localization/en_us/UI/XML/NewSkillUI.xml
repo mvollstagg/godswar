@@ -66,7 +66,10 @@
     <Skill19 Type="Button" ID="120069"	Rectangle="642,-366,683,-324" Texture="./Localization/en_us/UI/Texture/main.gwo" TexturePos="0,540" Font="MainMap" FontColor="DEFAULT_TEXTCOLOR" TextFormat="10" BtnTopTexture="./Localization/en_us/UI/Texture/icon.gwo" BtnTopPos="982,982" BtnTopRect="3,3,39,39"/>
     <Skill20 Type="Button" ID="120070"	Rectangle="642,-324,683,-282" Texture="./Localization/en_us/UI/Texture/main.gwo" TexturePos="0,540" Font="MainMap" FontColor="DEFAULT_TEXTCOLOR" TextFormat="10" BtnTopTexture="./Localization/en_us/UI/Texture/icon.gwo" BtnTopPos="982,982" BtnTopRect="3,3,39,39"/>
     <Skill21 Type="Button" ID="120071"	Rectangle="642,-282,683,-240" Texture="./Localization/en_us/UI/Texture/main.gwo" TexturePos="0,540" Font="MainMap" FontColor="DEFAULT_TEXTCOLOR" TextFormat="10" BtnTopTexture="./Localization/en_us/UI/Texture/icon.gwo" BtnTopPos="982,982" BtnTopRect="3,3,39,39"/>
-    
+    <!--答题按钮-->
+    <Skill22 Type="Button" ID="120072" Rectangle="623,-498,665,-452" OnUpdate="Answer_Update()" Texture="./Localization/en_us/UI/Texture/main.gwo" OnClick="Answer_MianBtn()" TexturePos="438,504" Font="MainMap" FontColor="DEFAULT_TEXTCOLOR" TextFormat="10" BtnTopTexture="./Localization/en_us/UI/Texture/icon.gwo" BtnTopPos="982,982" BtnTopRect="3,3,39,39" />
+    <!--新手奖励按钮-->
+     <Skill23 Type="Button" ID="-1"	Rectangle="580,-450,623,-409" Texture="./Localization/en_us/UI/Texture/icon2.gwo" TexturePos="59,442" Font="MainMap" FontColor="DEFAULT_TEXTCOLOR" TextFormat="10" BtnTopTexture="./Localization/en_us/UI/Texture/icon.gwo" BtnTopPos="982,982" BtnTopRect="3,3,39,39" OnClick="AClue_Visable()" Visible="0" />
 
     <Key1 Type="Text" Rectangle="28,9,68,51" Text="1" Font="MainMap" FontColor="DEFAULT_TEXTCOLOR"/>
     <Key2 Type="Text" Rectangle="70,9,110,51" Text="2" Font="MainMap" FontColor="DEFAULT_TEXTCOLOR"/>
@@ -102,8 +105,13 @@
     <!--背景右方图-->
     <WinRight Type="Text" ID="120097" Rectangle="356,0,382,56" TexturePos="344,953" Texture="./Localization/en_us/UI/Texture/main.gwo" Text="" Font="MainMap" FontColor="DEFAULT_TEXTCOLOR" Visible="0"/>
     <HideBtn Type="Button"  Rectangle="663,-498,690,-462" TexturePos="353,541" Texture="./Localization/en_us/UI/Texture/main.gwo" Text="" Font="MainMap" FontColor="DEFAULT_TEXTCOLOR" OnClick="HideBtn_OnClick()"/>
+    
+    <!--奖励提示按纽-->
+    <AwardsBtn Type="Button" ID="-1" Rectangle="576,-488,629,-445" Visible="0" OnClick="AwardsDraw1_Visible()" OnUpdate="AwardsDraw1_Update()"  OnHovered="AwardsDraw1_OnHovered()" OnLeft="AwardsDraw1_OnLeft()"  Texture="./Localization/en_us/UI/Texture/icon2.gwo" TexturePos="57,440" Font="MainMap" FontColor="DEFAULT_TEXTCOLOR" />
+    <AwardsBtn1 Type="Button" ID="-1" Rectangle="576,-488,620,-442" Visible="0" OnClick="AwardsDraw1_Visible()" Texture="./Localization/en_us/UI/Texture/icon2.gwo" TexturePos="2,437" Font="MainMap" FontColor="DEFAULT_TEXTCOLOR" />
 
   </SkillUI>
 
 <Script File="./Localization/en_us/UI/XML/ButtonClick.lua"/>
+<Script File="./Localization/en_us/UI/XML/AwardFunctionProc.lua"/>
 </UIConfig>

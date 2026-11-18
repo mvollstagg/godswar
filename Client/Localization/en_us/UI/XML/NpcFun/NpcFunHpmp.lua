@@ -1,4 +1,4 @@
-﻿local win = UIAPI:GetElement("FirstWin");
+local win = UIAPI:GetElement("FirstWin");
 --活动
 function NpcFunHpmp_SetUI(Type,Index)
 	FirstWin_ButtonA1:Visible(true);
@@ -10,38 +10,42 @@ end
 function NpcFunHpmp_SetText(Type,Index,BtnID,SubID)
 	if Index== 1 then    ----第几个页面------
 		if SubID== 100      then
+			FirstWin_Text1:SetText(NF_HPMP_1001);
+			FirstWin_Text1:Visible(true);		    
 			local Button = win:GetChild("FirstWin_Button" .. BtnID);
-			Button:SetPosition(65,150);
+			Button:SetPosition(25,95);
 			Button:SetText(NF_L0_HM110);
 			Button:Visible(true);
 		elseif SubID == 101 then
 			local Button = win:GetChild("FirstWin_Button" .. BtnID);
-			Button:SetPosition(65,180);
+			Button:SetPosition(25,115);
 			Button:SetText(NF_L0_HM111);
 			Button:Visible(true);
 		elseif SubID == 102 then
 			local Button = win:GetChild("FirstWin_Button" .. BtnID);
-			Button:SetPosition(65,210);
+			Button:SetPosition(25,135);
 			Button:SetText(NF_L0_HM112);
 			Button:Visible(true);
 		elseif SubID == 120 then
+			FirstWin_Text1:SetText(NF_HPMP_1001);
+			FirstWin_Text1:Visible(true);		    
 			local Button = win:GetChild("FirstWin_Button" .. BtnID);
-			Button:SetPosition(65,150);
+			Button:SetPosition(25,95);
 			Button:SetText(NF_L0_HM113);
 			Button:Visible(true);
 		elseif SubID == 121 then
 			local Button = win:GetChild("FirstWin_Button" .. BtnID);
-			Button:SetPosition(65,180);
+			Button:SetPosition(25,115);
 			Button:SetText(NF_L0_HM114);
 			Button:Visible(true);
 		elseif SubID == 122 then
 			local Button = win:GetChild("FirstWin_Button" .. BtnID);
-			Button:SetPosition(65,210);
+			Button:SetPosition(25,135);
 			Button:SetText(NF_L0_HM115);
 			Button:Visible(true);
 		elseif SubID == 123 then
 			local Button = win:GetChild("FirstWin_Button" .. BtnID);
-			Button:SetPosition(65,240);
+			Button:SetPosition(25,155);
 			Button:SetText(NF_L0_HM116);
 			Button:Visible(true);
 		end;

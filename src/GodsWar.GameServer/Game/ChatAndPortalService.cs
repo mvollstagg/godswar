@@ -224,7 +224,12 @@ public sealed class ChatAndPortalService
 
             case "/level" when parts.Length >= 2 && int.TryParse(parts[1], NumberStyles.Integer, CultureInfo.InvariantCulture, out int lv):
             {
+                int oldLevel = Math.Max(1, (int)player.Character.FighterJobLv);
                 short clamped = (short)Math.Clamp(lv, 1, GameTables.PlayerMaxLevel);
+                if (clamped > oldLevel)
+                {
+                    player.Character.SkillPoint += clamped - oldLevel;
+                }
                 player.Character.FighterJobLv = clamped;
                 player.Character.ScholarJobLv = clamped;
                 player.Character.MaxHp = GameTables.GetPlayerMaxHp(clamped, player.Character.Profession);
@@ -232,7 +237,12 @@ public sealed class ChatAndPortalService
                 player.Character.CurHp = player.Character.MaxHp;
                 player.Character.CurMp = player.Character.MaxMp;
                 await player.SendAsync(GameOpcode.MsgUpgrade, GameplayHandlers.BuildUpgradePacket(player).ToPayload(), ct).ConfigureAwait(false);
+                await player.SendAsync(
+                    GameOpcode.MsgSkillPointUpgrade,
+                    new MsgSkillPointUpgrade(player.UiId, (uint)Math.Max(0, player.Character.SkillPoint)).ToPayload(),
+                    ct).ConfigureAwait(false);
                 await player.SendAsync(GameOpcode.MsgSelfProperty, new MsgSelfProperty(player.ToClientObjectData()).ToPayload(), ct).ConfigureAwait(false);
+                await player.SendAsync(GameOpcode.MsgSynGameData, player.ToSynGameData(_world.Catalog).ToPayload(), ct).ConfigureAwait(false);
                 await _characters.UpdateCharacterStateAsync(player.Character, ct).ConfigureAwait(false);
                 break;
             }

@@ -12,12 +12,12 @@
  
 -->
 <UIConfig>
-  <SystemMessageWin   Type="Window" ID="180000" Rectangle="118,170,818,270" Texture="./Localization/en_us/UI/Texture/main.gwo" TexturePos="523,163,766,233"  Visible="1" Enable="0" Layer="2">
-    <SystemMessageListBox     Type="ListBox"  ID="180006" Rectangle="0,0,700,140"     Texture="./Localization/en_us/UI/Texture/main.gwo" Height="30" />
+  <SystemMessageWin   Type="Window" ID="180000" Rectangle="0,170,1024,270" Texture="./Localization/en_us/UI/Texture/main.gwo" TexturePos="523,163,766,233"  Visible="1" Enable="0" Layer="2" >
+    <SystemMessageListBox     Type="ListBox"  ID="180006" Rectangle="0,0,700,140"     Texture="./Localization/en_us/UI/Texture/main.gwo" Height="30"/>
   </SystemMessageWin>
   <!--公告信息-->
-  <ProclaimMessageWin   Type="Window" Rectangle="118,100,818,170" Texture="./Localization/en_us/UI/Texture/main.gwo" TexturePos="523,163,766,233"  Visible="1" Enable="0" Layer="2">
-    <ProclaimMessageListBox     Type="ListBox"  Rectangle="0,0,700,140"     Texture="./Localization/en_us/UI/Texture/main.gwo" Height="30" />
+  <ProclaimMessageWin   Type="Window" Rectangle="0,150,1024,220" Texture="./Localization/en_us/UI/Texture/main.gwo" TexturePos="523,163,766,233"  Visible="1" Enable="0" Layer="2" >
+    <ProclaimMessageListBox     Type="ListBox"  Rectangle="0,0,700,140"     Texture="./Localization/en_us/UI/Texture/main.gwo" Height="30"/>
   </ProclaimMessageWin>
 
   <EditWinUI          Type="Window" ID="180003" Rectangle="0,706,350,759"   Texture="./Localization/en_us/UI/Texture/main.gwo" TexturePos="522,162,991,354" Visible="1" Enable="0" Layer="0">
@@ -34,12 +34,17 @@
 
    
   
-    <ListSelectBtn    Type="Button"  Texture="./Localization/en_us/UI/Texture/main.gwo" TexturePos="480,672"  ID="180018" Rectangle="11,28,60,51"   SText="C_X0_6" Font="MainMap" TextFormat="5"/>
+    <!--ListSelectBtn    Type="Button"  Texture="./Localization/en_us/UI/Texture/main.gwo" TexturePos="480,672"  ID="180018" Rectangle="11,28,60,51"   SText="C_X0_6" Font="MainMap" TextFormat="5"/-->
     <NameEdit         Template="T_ChatEdit"     ID="180019" Rectangle="65,29,142,49"  />
     <WhisperTalkEdit  Template="T_ChatEditEx"     ID="180021" Rectangle="155,29,340,49" MaxText="80"/>
     <NormalTaklEdit   Template="T_ChatEditEx"     ID="180034" Rectangle="65,29,340,49"  MaxText="80"/>
     <PartitionWhisper Template="T_NormalText"   ID="180036" Rectangle="132,25,165,53" TexturePos="0,835" Visible="0"/>
   </EditWinUI>
+
+<!--频道屏蔽选择按钮-->
+<ChannelListSelectBtn Type="Window" ID="-1" Rectangle="0,732,59,760"   Texture="./Localization/en_us/UI/Texture/main.gwo" TexturePos="0,982" Visible="1" Enable="0" Layer="0">
+	<ListSelectBtn    Type="Button"  Texture="./Localization/en_us/UI/Texture/main.gwo" TexturePos="480,672"  ID="180018" Rectangle="11,3,59,26"   SText="C_X0_6" Font="MainMap" TextFormat="5"/>
+</ChannelListSelectBtn>
 
   <ChannelSelectWin   Template="T_SimpleWindow" ID="180004" Rectangle="14,584,104,736"     Visible="0" Enable="0" Layer="1" >
     <WorldBtn         Template="T_Button2_S"    ID="180027" Rectangle="29,11,79,33"    SText="C_X0_7" />
@@ -74,15 +79,17 @@
   </ChatPopMenu>
 
   
-  <MessageWin   Template="T_ChatWindow"  Rectangle="0,480,350,735"  Visible="1" Layer="0">
+  <MessageWin   Template="T_ChatWindow"  Rectangle="0,455,350,735"  Visible="1" Layer="0">
   </MessageWin>
   
   <HistoryMessageWin  Type="Window" ID="180001" Rectangle="0,505,330,653"   Texture="./Localization/en_us/UI/Texture/main.gwo" TexturePos="522,162,991,354"  Visible="1" Enable="0" Layer="0">
 
+    <InformationText    Type="Text"  Rectangle="27,-46,347,-26"  SText="C_X0_27" Font="MainMap"  FontColor="Chat_color"  TextFormat="16"/>
+    <InputText    Type="Text"  Rectangle="30,204,151,225"  SText="C_X0_28" Font="MainMap"  FontColor="GREEN_TEXTCOLOR"/>
 
     <!--ScrollBar背景-->
-    <ScrollBarBackground_Top    Template="T_NormalText"    ID="-1" Rectangle="0,21,21,42"    TexturePos="900,957" Visible="0"/>
-    <ScrollBarBackground_Middle Template="T_NormalText"    ID="-1" Rectangle="0,21,25,24"    TexturePos="900,979" Visible="0"/>
+    <ScrollBarBackground_Top    Template="T_NormalText"    ID="-1" Rectangle="0,41,21,62"    TexturePos="900,957" Visible="0"/>
+    <ScrollBarBackground_Middle Template="T_NormalText"    ID="-1" Rectangle="0,41,25,44"    TexturePos="900,979" Visible="0"/>
 
     <!--该背景紧贴HistoryListBoxPgDownBtn 由程序限制-->
     <ScrollBarBackground_Bottom Template="T_NormalText"    ID="-1" Rectangle="0,21,21,42"    TexturePos="900,983" Visible="0"/>
@@ -92,7 +99,7 @@
     <!--ScrollBar还没有设置-->
     <HistoryMessageListBox    Type="ListBox"        ID="180007" Rectangle="22,0,350,199"     Texture="" Height="20" ScrollTexture="./Localization/en_us/UI/Texture/main.gwo" ScrollPos="0,0" ScrollRect="0,23,17,153"  BtnPos="133,122" BtnRect="0,0,17,27"/>
 
-    <HistoryListBoxPgUpBtn    Type="Button" Texture="./Localization/en_us/UI/Texture/main.gwo" TexturePos="278,360" ID="180025" Rectangle="4,-16,20,-1" Text=""/>
+    <HistoryListBoxPgUpBtn    Type="Button" Texture="./Localization/en_us/UI/Texture/main.gwo" TexturePos="278,360" ID="180025" Rectangle="4,-46,20,-31" Text=""/>
     <!--该按钮紧贴窗口下方由程序限制-->
     <HistoryListBoxPgDownBtn  Type="Button"  Texture="./Localization/en_us/UI/Texture/main.gwo" TexturePos="293,360" ID="180026" Rectangle="4,184,20,199" Text=""/>
     
@@ -105,9 +112,14 @@
     <CharHelpBtn    Type="Button"  ID="180011" Texture="./Localization/en_us/UI/Texture/main.gwo" TexturePos="408,328"  Rectangle="260,204,281,225" Text="" OnClick="CharHelpBtn_OnClick()"/>
     
   </HistoryMessageWin>
+  <MessageWin1   Template="T_ChatWindow1"  Rectangle="0,388,351,457"  Visible="1" Layer="0">
+  </MessageWin1>
 
-  <RecentMessageWin   Type="Window" ID="180002" Rectangle="0,666,350,735"      Texture="./Localization/en_us/UI/Texture/main.gwo" TexturePos="522,162,991,354"  Visible="1" Enable="0" Layer="0">
-    <RecentMessageListBox     Type="ListBox"        ID="180008" Rectangle="22,0,350,60"  TexturePos="0,0"    Texture="./Localization/en_us/UI/Texture/main.gwo" Height="20" />
+  <RecentMessageWin   Type="Window" ID="180002" Rectangle="0,388,351,457"     Visible="1" Enable="0" Layer="0">
+    <RecentMessageListBox     Type="ListBox"        ID="180008" Rectangle="22,10,350,70" TexturePos="0,0" Texture=""    ScrollTexture="./Localization/en_us/UI/Texture/main.gwo" ScrollPos="1024,1024" ScrollRect="0,23,17,153"  BtnPos="133,122" Height="20" />
+    
+    <RecentMessageUpBtn Template="T_ZoomUpBotton" Rectangle="4,17,19,32" Font="MainFonts" FontColor="DEFAULT_TEXTCOLOR"  OnClick="UpListBox5Btn()"   TextFormat="5" />
+	<RecentMessageDownBtn Template="T_ZoomDownBotton" Rectangle="4,42,19,57" Font="MainFonts" FontColor="DEFAULT_TEXTCOLOR" OnClick="DownListBox5Btn()" TextFormat="5" />
   
   </RecentMessageWin>
   

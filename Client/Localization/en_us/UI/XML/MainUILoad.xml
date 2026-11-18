@@ -14,5 +14,6 @@
 <UIConfig>
   <XML File="./Localization/en_us/UI/XML/DynamicText.xml"/> 
   <XML File="./Localization/en_us/UI/XML/LuaMessageBox.xml"/> 
+  <XML File="./Localization/en_us/UI/XML/AnswersSystem.xml"/> 
 
 </UIConfig>

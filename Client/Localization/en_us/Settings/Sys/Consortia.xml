@@ -1,13 +1,13 @@
-<?xml version="1.0" encoding="GB2312"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <!--this is Consortia config-->
 <Consortia>
     <BuildInfo>
         <BuildID1 ID="1" Name="Guild Footstone" ImagePos="504,360" Description="A guild is based on the guild footstone and the guild level must be in accordance with the footstone level, so before upgrading other guild buildings, the footstone must be upgraded."/>
         <BuildID2 ID="2" Name="Common Guild Warehouse" ImagePos="540,360" Description="Guild property can be deposited in the Common Guild Warehouse. With the upgrade of the warehouse, its capacity will be also extended."/>
         <BuildID3 ID="3" Name="Super Guild Warehouse" ImagePos="576,360" Description="The Super Guild Warehouse can keep guild property with its great capacity."/>
-        <BuildID4 ID="4" Name="Common Tent" ImagePos="648,360" Description="A Common Tent is made of cloth with the capacity to hold 50 guild members."/>
-        <BuildID5 ID="5" Name="Senior House" ImagePos="684,360" Description="A Senior House is well decorated, with the capacity to hold 70 guild members."/>
-        <BuildID6 ID="6" Name="Luxurious House" ImagePos="720,360" Description="A Luxurious House is wide and bright with the capacity to hold 100 guild members."/>
+        <BuildID4 ID="4" Name="Common Tent" ImagePos="648,360" Description="Coarse cloth tent. When it hits a new level, the maximum member of your guild increases by 1."/>
+        <BuildID5 ID="5" Name="Senior House" ImagePos="684,360" Description="Delicately decorated house. When it hits a new level, the maximum member of your guild increases by 1."/>
+        <BuildID6 ID="6" Name="Luxurious House" ImagePos="720,360" Description="Wide and bright luxurious mansion. When it hits a new level, the maximum member of your guild increases by 1."/>
         <BuildID7 ID="10" Name="Apollo" ImagePos="720,396" Description="Apollo can help you increase your maximum MP"/>
         <BuildID8 ID="11" Name="Demeter" ImagePos="756,396" Description="Demeter can help you improve your HP restoration ability"/>
         <BuildID9 ID="12" Name="Hermes" ImagePos="864,396" Description="Hermes can help you increase your maximum HP"/>
@@ -21,7 +21,7 @@
         <BuildID17 ID="30" Name="God Altar" ImagePos="828,360" Description="After creating a God Altar, you can build more advanced altars. The God Altar can protect all guild members and improve their abilities."/>
     </BuildInfo>
     <CorsortiaDefaultValue>
-        <Default_Member ID="0" Value="40"/>
+        <Default_Member ID="0" Value="100"/>
         <Default_MaxMember ID="1" Value="10000"/>
         <Default_MaxAltar ID="2" Value="100"/>
         <Default_Money ID="3" Value="1000"/>
@@ -111,28 +111,28 @@
             <level10 ID="4" Clevel="10" ConsortiaImpactType="1" ConsortiaImpactValue="10" found="50000" bijou="500"/>
         </Building4>
         <Building5 ID="5">
-            <level1 ID="5" Clevel="1" ConsortiaImpactType="1" ConsortiaImpactValue="2" found="20000" bijou="200"/>
-            <level2 ID="5" Clevel="2" ConsortiaImpactType="1" ConsortiaImpactValue="4" found="30000" bijou="300"/>
-            <level3 ID="5" Clevel="3" ConsortiaImpactType="1" ConsortiaImpactValue="6" found="40000" bijou="400"/>
-            <level4 ID="5" Clevel="4" ConsortiaImpactType="1" ConsortiaImpactValue="8" found="50000" bijou="500"/>
-            <level5 ID="5" Clevel="5" ConsortiaImpactType="1" ConsortiaImpactValue="10" found="60000" bijou="600"/>
-            <level6 ID="5" Clevel="6" ConsortiaImpactType="1" ConsortiaImpactValue="12" found="80000" bijou="800"/>
-            <level7 ID="5" Clevel="7" ConsortiaImpactType="1" ConsortiaImpactValue="14" found="100000" bijou="1000"/>
-            <level8 ID="5" Clevel="8" ConsortiaImpactType="1" ConsortiaImpactValue="16" found="120000" bijou="1200"/>
-            <level9 ID="5" Clevel="9" ConsortiaImpactType="1" ConsortiaImpactValue="18" found="150000" bijou="1500"/>
-            <level10 ID="5" Clevel="10" ConsortiaImpactType="1" ConsortiaImpactValue="20" found="200000" bijou="2000"/>
+            <level1 ID="5" Clevel="1" ConsortiaImpactType="1" ConsortiaImpactValue="1" found="20000" bijou="200"/>
+            <level2 ID="5" Clevel="2" ConsortiaImpactType="1" ConsortiaImpactValue="2" found="30000" bijou="300"/>
+            <level3 ID="5" Clevel="3" ConsortiaImpactType="1" ConsortiaImpactValue="3" found="40000" bijou="400"/>
+            <level4 ID="5" Clevel="4" ConsortiaImpactType="1" ConsortiaImpactValue="4" found="50000" bijou="500"/>
+            <level5 ID="5" Clevel="5" ConsortiaImpactType="1" ConsortiaImpactValue="5" found="60000" bijou="600"/>
+            <level6 ID="5" Clevel="6" ConsortiaImpactType="1" ConsortiaImpactValue="6" found="80000" bijou="800"/>
+            <level7 ID="5" Clevel="7" ConsortiaImpactType="1" ConsortiaImpactValue="7" found="100000" bijou="1000"/>
+            <level8 ID="5" Clevel="8" ConsortiaImpactType="1" ConsortiaImpactValue="8" found="120000" bijou="1200"/>
+            <level9 ID="5" Clevel="9" ConsortiaImpactType="1" ConsortiaImpactValue="9" found="150000" bijou="1500"/>
+            <level10 ID="5" Clevel="10" ConsortiaImpactType="1" ConsortiaImpactValue="10" found="200000" bijou="2000"/>
         </Building5>
         <Building6 ID="6">
-            <level1 ID="6" Clevel="1" ConsortiaImpactType="1" ConsortiaImpactValue="3" found="80000" bijou="800"/>
-            <level2 ID="6" Clevel="2" ConsortiaImpactType="1" ConsortiaImpactValue="6" found="100000" bijou="1000"/>
-            <level3 ID="6" Clevel="3" ConsortiaImpactType="1" ConsortiaImpactValue="9" found="120000" bijou="1200"/>
-            <level4 ID="6" Clevel="4" ConsortiaImpactType="1" ConsortiaImpactValue="12" found="150000" bijou="1500"/>
-            <level5 ID="6" Clevel="5" ConsortiaImpactType="1" ConsortiaImpactValue="15" found="200000" bijou="2000"/>
-            <level6 ID="6" Clevel="6" ConsortiaImpactType="1" ConsortiaImpactValue="18" found="300000" bijou="3000"/>
-            <level7 ID="6" Clevel="7" ConsortiaImpactType="1" ConsortiaImpactValue="21" found="400000" bijou="4000"/>
-            <level8 ID="6" Clevel="8" ConsortiaImpactType="1" ConsortiaImpactValue="24" found="500000" bijou="5000"/>
-            <level9 ID="6" Clevel="9" ConsortiaImpactType="1" ConsortiaImpactValue="27" found="700000" bijou="7000"/>
-            <level10 ID="6" Clevel="10" ConsortiaImpactType="1" ConsortiaImpactValue="30" found="1000000" bijou="10000"/>
+            <level1 ID="6" Clevel="1" ConsortiaImpactType="1" ConsortiaImpactValue="1" found="80000" bijou="800"/>
+            <level2 ID="6" Clevel="2" ConsortiaImpactType="1" ConsortiaImpactValue="2" found="100000" bijou="1000"/>
+            <level3 ID="6" Clevel="3" ConsortiaImpactType="1" ConsortiaImpactValue="3" found="120000" bijou="1200"/>
+            <level4 ID="6" Clevel="4" ConsortiaImpactType="1" ConsortiaImpactValue="4" found="150000" bijou="1500"/>
+            <level5 ID="6" Clevel="5" ConsortiaImpactType="1" ConsortiaImpactValue="5" found="200000" bijou="2000"/>
+            <level6 ID="6" Clevel="6" ConsortiaImpactType="1" ConsortiaImpactValue="6" found="300000" bijou="3000"/>
+            <level7 ID="6" Clevel="7" ConsortiaImpactType="1" ConsortiaImpactValue="7" found="400000" bijou="4000"/>
+            <level8 ID="6" Clevel="8" ConsortiaImpactType="1" ConsortiaImpactValue="8" found="500000" bijou="5000"/>
+            <level9 ID="6" Clevel="9" ConsortiaImpactType="1" ConsortiaImpactValue="9" found="700000" bijou="7000"/>
+            <level10 ID="6" Clevel="10" ConsortiaImpactType="1" ConsortiaImpactValue="10" found="1000000" bijou="10000"/>
         </Building6>
         <Building7 ID="10">
             <level1 ID="10" Clevel="1" WorshipImpactType="1" WorshipImpactValue="100" found="20000" bijou="200"/>

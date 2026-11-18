@@ -18,9 +18,14 @@ public sealed class PacketConnection : IAsyncDisposable
     private bool _disposed;
 
     public PacketConnection(Stream stream, bool encrypted = true)
+        : this(stream, encrypted ? new XorCipher() : null)
+    {
+    }
+
+    public PacketConnection(Stream stream, XorCipher? cipher)
     {
         _stream = stream ?? throw new ArgumentNullException(nameof(stream));
-        _cipher = encrypted ? new XorCipher() : null;
+        _cipher = cipher;
         _fillTask = FillPipeAsync(_disposeCts.Token);
     }
 
@@ -137,4 +142,52 @@ public sealed class PacketConnection : IAsyncDisposable
         _sendLock.Dispose();
         _disposeCts.Dispose();
     }
+}
+
+/// <summary>
+/// Wraps a <see cref="Stream"/> with a small already-read prefix buffer for protocol auto-detection.
+/// </summary>
+public sealed class PrefixedStream(byte[] prefix, Stream inner) : Stream
+{
+    private int _pos;
+
+    public override bool CanRead => true;
+    public override bool CanSeek => false;
+    public override bool CanWrite => inner.CanWrite;
+    public override long Length => throw new NotSupportedException();
+    public override long Position { get => throw new NotSupportedException(); set => throw new NotSupportedException(); }
+
+    public override void Flush() => inner.Flush();
+    public override Task FlushAsync(CancellationToken ct) => inner.FlushAsync(ct);
+
+    public override int Read(byte[] buffer, int offset, int count)
+    {
+        if (_pos < prefix.Length)
+        {
+            int n = Math.Min(count, prefix.Length - _pos);
+            prefix.AsSpan(_pos, n).CopyTo(buffer.AsSpan(offset, n));
+            _pos += n;
+            return n;
+        }
+
+        return inner.Read(buffer, offset, count);
+    }
+
+    public override async ValueTask<int> ReadAsync(Memory<byte> buffer, CancellationToken ct = default)
+    {
+        if (_pos < prefix.Length)
+        {
+            int n = Math.Min(buffer.Length, prefix.Length - _pos);
+            prefix.AsSpan(_pos, n).CopyTo(buffer.Span[..n]);
+            _pos += n;
+            return n;
+        }
+
+        return await inner.ReadAsync(buffer, ct).ConfigureAwait(false);
+    }
+
+    public override void Write(byte[] buffer, int offset, int count) => inner.Write(buffer, offset, count);
+    public override ValueTask WriteAsync(ReadOnlyMemory<byte> buffer, CancellationToken ct = default) => inner.WriteAsync(buffer, ct);
+    public override long Seek(long offset, SeekOrigin origin) => throw new NotSupportedException();
+    public override void SetLength(long value) => throw new NotSupportedException();
 }

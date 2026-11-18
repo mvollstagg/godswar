@@ -103,6 +103,8 @@ function RookieGuide_AddQuest(value,IsSyn)
 		local str = RGP_L0_1
 		str = str..t.Name
 		GameAPI:AddPersonalMessage_UTF8(str,2,1)
+		GameAPI:AddSystemMessage_UTF8(str,1)
+		
 		bBtnFlash =true
 	end
 
@@ -138,13 +140,18 @@ function RookieGuide_DelQuest(value,isComplete)
 		local strCom= RGP_L0_2
 		strCom = strCom..t.Name
 		GameAPI:AddPersonalMessage_UTF8(strCom,2,3)
+		GameAPI:AddSystemMessage_UTF8(strCom,3)
+
 		strCom = RGP_L0_3
 		strCom = strCom..t.Reward
 		GameAPI:AddPersonalMessage_UTF8(strCom,2,1)
+		GameAPI:AddSystemMessage_UTF8(strCom,1)
+
 	else
 		local strCom= RGP_L0_4
 		strCom = strCom..t.Name
 		GameAPI:AddPersonalMessage_UTF8(strCom,2,2)
+		GameAPI:AddSystemMessage_UTF8(strCom,2)
 	end
 end
 --选中类型
@@ -189,6 +196,7 @@ function RookieGuide_DeleteClick()
 	local index = uiapi:GetActiveList(quest_list)
 	if index < 0 then
 		GameAPI:AddPersonalMessage_UTF8(RGP_L0_6 ,2,2)
+		GameAPI:AddSystemMessage_UTF8(RGP_L0_6 ,2)
 		return
 	end
 	local index1 = uiapi:GetActiveList(type_list)
@@ -207,6 +215,7 @@ function RookieGuide_CompleteClick()
 	local index = uiapi:GetActiveList(quest_list)
 	if index < 0 then
 		GameAPI:AddPersonalMessage_UTF8(RGP_L0_6 ,2,2)
+		GameAPI:AddSystemMessage_UTF8(RGP_L0_6 ,2)
 		return
 	end
 	local index1 = uiapi:GetActiveList(type_list)

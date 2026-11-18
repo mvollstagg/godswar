@@ -30,33 +30,33 @@ local uiElement = nil;
 
 -- 初始化
 function IndentureUI_OnLoad()
-	win = uiapi:GetElement("BondWin");	
+	win = uiapi:GetElement("BondWin");
 	win:UpdateRenderBuffer();
 end
 
 -- 状态改变
-function Indenture_StateChange(state)	
+function Indenture_StateChange(state)
 	indenture_opButton = uiapi:GetElement(871015);
 	indenture_viewInfo = uiapi:GetElement(871017);
 	baseAdd = uiapi:GetElement(871016);
-	if 1 == state then	
+	if 1 == state then
 		indenture_opButton:SetText(str_indenture);
-		baseAdd:SetText(str_indenture_baseadd_1);		
-		indenture_viewInfo:SetText(str_indenture_info_onBegin);				
+		baseAdd:SetText(str_indenture_baseadd_1);
+		indenture_viewInfo:SetText(str_indenture_info_onBegin);
 	elseif 2 == state then
 		indenture_opButton:SetText(str_indenture_continue);
-		baseAdd:SetText(str_indenture_baseadd_1);		
+		baseAdd:SetText(str_indenture_baseadd_1);
 		indenture_viewInfo:SetText(str_indenture_info_onIndenture);
-	elseif 3 == state then		
-		indenture_opButton:SetText(str_indenture_finish);		
-		baseAdd:SetText(str_indenture_baseadd);		
+	elseif 3 == state then
+		indenture_opButton:SetText(str_indenture_finish);
+		baseAdd:SetText(str_indenture_baseadd);
 		indenture_viewInfo:SetText(str_indenture_info_onFinish);
 	end
 end
 
 -- 设置资质
 function Indenture_PetSetAptitude(value)
-	aptitude = uiapi:GetElement(871003);	
+	aptitude = uiapi:GetElement(871003);
 	if value == 1 then
 		aptitude:SetText(PETAPTITUDE1);
 	elseif value == 2 then
@@ -87,12 +87,12 @@ function Indenture_PetSetAptitude(value)
 		aptitude:SetText(PETAPTITUDE14);
 	elseif value == 15 then
 		aptitude:SetText(PETAPTITUDE15);
-	end;	
+	end;
 end
 
 -- 设置类型
 function Indenture_PetSetType(value)
-	pettype = uiapi:GetElement(871002);	
+	pettype = uiapi:GetElement(871002);
 
 	if value == 1 then
 		pettype:SetText(PETTYPE1);
@@ -110,8 +110,21 @@ function Indenture_PetSetType(value)
 		pettype:SetText(PETTYPE7);
 	elseif value == 8 then
 		pettype:SetText(PETTYPE8);
-	elseif value == 9 then	
+	elseif value == 9 then
 		pettype:SetText(PETTYPE9);
+	elseif value == 10 then
+		pettype:SetText(PETTYPE10);
+	elseif value == 11 then
+		pettype:SetText(PETTYPE11);
+	elseif value == 12 then
+		pettype:SetText(PETTYPE12);
+	elseif value == 13 then
+		pettype:SetText(PETTYPE13);
+	elseif value == 14 then
+		pettype:SetText(PETTYPE14);
+	elseif value == 15 then
+		pettype:SetText(PETTYPE15);
+
 	end;
 end
 
@@ -121,7 +134,7 @@ function Indenture_PetSetSex(value)
 	if value == 1 then
 		petsex:SetText(PETDP_X0_13);
 	else
-		petsex:SetText(PETDP_X0_14);		
+		petsex:SetText(PETDP_X0_14);
 	end;
 end
 
@@ -174,7 +187,7 @@ function Indenture_UpdatePetIndenture(id)
 	PetBond = uiapi:GetElement(871008);
 
  	if 0 == id then
-		PetBond:SetText(MSG.PETINDENTURE0);		
+		PetBond:SetText(MSG.PETINDENTURE0);
 	elseif 1 == id then
 		PetBond:SetText(MSG.PETINDENTURE1);
 	elseif 2 == id then
@@ -198,7 +211,7 @@ function Indenture_UpdateBaseText(id,state)
 		uiElement:SetText(MSG.PetIndentureUpFixed);
 	elseif 1 == state then
 		 uiElement:SetText(MSG.PetIndentureUpLast);
-	end;		
+	end;
 end
 
 IndentureUI_OnLoad();

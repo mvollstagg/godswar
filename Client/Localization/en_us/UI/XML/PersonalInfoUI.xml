@@ -163,7 +163,7 @@
     <Knight       Template="T_Button2_S" ID="281104" Rectangle="22,149,72,171" Font="MainMap" Format="4"  FontColor="BASE_HEADCOLOR"  SText="PI_X0_29"  />
     <KnightText   Template="T_Money" ID="281004"   Rectangle="80,149,190,165"   Format="4"  FontColor="ORDINARY_INFOCOLOR"  SText="PI_X0_4" />
     <!--推荐人-->
-    <Recommend      Template="T_Button2_S" ID="281026" Rectangle="186,123,236,145" Font="MainMap" Format="4"  FontColor="BASE_HEADCOLOR"  SText="PI_X0_30" />
+    <Recommend      Template="T_Button2_S" ID="281026" Rectangle="186,123,236,145" Font="MainMap" Format="4"  FontColor="BASE_HEADCOLOR"  SText="PI_X0_30" Visible="0" />
     
     
     <!--***********************************************************************************************************-->
@@ -258,6 +258,9 @@
     <RoleNameText    Template="T_NoBackgroundText" ID="281025"   Rectangle="5,51,258,67"   Format="4" TextFormat="5"  FontColor="GREEN_TEXTCOLOR" SText="PI_X0_26"  />
     <!--***********************************************************************************************************-->
 
+    <!--配偶-->
+    <spouse       Template="T_Money"  Rectangle="24,522,78,542" Font="MainMap" TextFormat="5"  FontColor="BASE_HEADCOLOR"  Text="配偶" Visible="0" />
+    <spouseText   Template="T_Money"   Rectangle="85,522,180,542"   TextFormat="5"  FontColor="ORDINARY_INFOCOLOR"  Text="" Visible="0"/>
 
 
 

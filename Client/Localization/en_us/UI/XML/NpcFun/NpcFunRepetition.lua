@@ -18,12 +18,22 @@ function NpcFunRepetition_SetText(Type,Index,BtnID,SubID)
 			Button:SetText(NF_L0_R11);
 			Button:Visible(true);
 		elseif SubID== 13 then
+			FirstWin_Text1:SetText(NF_L0_R0011);
+			FirstWin_Text1:Visible(true);
 			local Button = win:GetChild("FirstWin_Button" .. BtnID);
 			Button:SetText(NF_L0_R13);
 			Button:Visible(true);
 		elseif SubID== 14 then
 			local Button = win:GetChild("FirstWin_Button" .. BtnID);
 			Button:SetText(NF_L0_R14);
+			Button:Visible(true);
+		elseif SubID== 15 then
+			local Button = win:GetChild("FirstWin_Button" .. BtnID);
+			Button:SetText(LuaText["NF_EM_B15"]);
+			Button:Visible(true);
+		elseif SubID== 16 then
+			local Button = win:GetChild("FirstWin_Button" .. BtnID);
+			Button:SetText(LuaText["NF_EM_B16"]);
 			Button:Visible(true);
 		end;
 	elseif Index == 2 then    ----第二个页面
@@ -59,17 +69,22 @@ function NpcFunRepetition_SetText(Type,Index,BtnID,SubID)
 			local Button = win:GetChild("FirstWin_Button" .. BtnID);
 			Button:SetText(NF_L0_R200);
 			Button:Visible(true);
-			Button:SetPosition(45,245);
+			Button:SetPosition(25,135);
 		elseif SubID== 201 then
 			local Button = win:GetChild("FirstWin_Button" .. BtnID);
 			Button:SetText(NF_L0_R201);
 			Button:Visible(true);
-			Button:SetPosition(45,270);
+			Button:SetPosition(25,155);
 		elseif SubID== 202 then
 			local Button = win:GetChild("FirstWin_Button" .. BtnID);
 			Button:SetText(NF_L0_R202);
 			Button:Visible(true);
-			Button:SetPosition(45,295);
+			Button:SetPosition(25,175);
+		elseif SubID== 301 then
+			local Button = win:GetChild("FirstWin_Button" .. BtnID);
+			Button:SetText(NF_L0_R301);
+			Button:Visible(true);
+			Button:SetPosition(25,195);
 		elseif SubID ==203 then
 			FirstWin_Text1:SetText(NF_L0_R203);
 			FirstWin_Text1:Visible(true);
@@ -77,12 +92,12 @@ function NpcFunRepetition_SetText(Type,Index,BtnID,SubID)
 			local Button = win:GetChild("FirstWin_Button" .. BtnID);
 			Button:SetText(NF_L0_R204);
 			Button:Visible(true);
-			Button:SetPosition(45,440);
+			Button:SetPosition(25,215);
 		elseif SubID== 205 then
 			local Button = win:GetChild("FirstWin_Button" .. BtnID);
 			Button:SetText(NF_L0_R205);
 			Button:Visible(true);
-			Button:SetPosition(45,415);
+			Button:SetPosition(25,195);
 		elseif SubID ==206 then
 			FirstWin_Text1:SetText(NF_L0_R206);
 			FirstWin_Text1:Visible(true);
@@ -93,12 +108,30 @@ function NpcFunRepetition_SetText(Type,Index,BtnID,SubID)
 			local Button = win:GetChild("FirstWin_Button" .. BtnID);
 			Button:SetText(NF_L0_R209);
 			Button:Visible(true);
-			Button:SetPosition(45,345);
+			Button:SetPosition(25,225);
 		elseif SubID== 210 then
 			local Button = win:GetChild("FirstWin_Button" .. BtnID);
 			Button:SetText(NF_L0_R210);
 			Button:Visible(true);
-			Button:SetPosition(45,400);
+			Button:SetPosition(25,200);
+		elseif SubID== 211 then
+			FirstWin_Text1:SetText(LuaText["NF_EM_T211"]);
+			FirstWin_Text1:Visible(true);
+
+			local Button = win:GetChild("FirstWin_Button" .. BtnID);
+			Button:SetText(LuaText["NF_EM_B211"]);
+			Button:Visible(true);
+                        Button:SetPosition(25,155);
+		elseif SubID== 229 then
+			FirstWin_Text1:SetText(LuaText["NF_EM_T0229"]);
+			FirstWin_Text1:Visible(true);
+			local Button = win:GetChild("FirstWin_Button" .. BtnID);
+			Button:SetText(LuaText["NF_EM_B229"]);
+			Button:Visible(true);
+		elseif SubID== 230 then
+			local Button = win:GetChild("FirstWin_Button" .. BtnID);
+			Button:SetText(LuaText["NF_EM_B230"]);
+			Button:Visible(true);
 		elseif SubID ==212 then
 			FirstWin_Text1:SetText(NF_L0_R212);
 			FirstWin_Text1:Visible(true);
@@ -110,6 +143,10 @@ function NpcFunRepetition_SetText(Type,Index,BtnID,SubID)
 	elseif Index == 3 then    ----第三个页面
 		if SubID== 1000 then
 			FirstWin_Text1:SetText(NF_L0_R1000);
+			FirstWin_Text1:Visible(true);
+			NPCFUN:EndMessage(true);
+		elseif SubID== 300 or SubID == 301 then
+			FirstWin_Text1:SetText(LuaText["NF_EM_T" .. SubID]);
 			FirstWin_Text1:Visible(true);
 			NPCFUN:EndMessage(true);
 		elseif SubID== 1001 then
@@ -156,6 +193,10 @@ function NpcFunRepetition_SetText(Type,Index,BtnID,SubID)
 			FirstWin_Text1:SetText(NF_L0_R1511);
 			FirstWin_Text1:Visible(true);
 			NPCFUN:EndMessage(true);
+		elseif SubID== 1521 then
+			FirstWin_Text1:SetText(NF_L0_R1521);
+			FirstWin_Text1:Visible(true);
+			NPCFUN:EndMessage(true);
 		elseif SubID== 1800 then
 			FirstWin_Text1:SetText(NF_L0_R1800);
 			FirstWin_Text1:Visible(true);
@@ -172,7 +213,7 @@ function NpcFunRepetition_SetMsg(Type,Index,PreSubID,SubID)
 		FirstWin_Text1:SetText(NF_L0_R1600) ;
 		FirstWin_Text1:Visible(true);
 		FirstWin_ItemBtn1:Visible(true);
-	        FirstWin_ItemBtn1:SetPosition(60,300);
+	        FirstWin_ItemBtn1:SetPosition(25,85);
 		NPCFUN:HaveMessageBox(true);
 	end;
 end

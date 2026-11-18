@@ -22,7 +22,6 @@ NPC_FLAG_SYS_MATERIALBACK = 17 ----物资回收官,20090326,ver204,li
 NPC_FLAG_SYS_NEWMAN = 18 ----新手指引
 NPC_FLAG_SYS_STAR = 19-----星座幸运日
 NPC_FLAG_SYS_UNIONWAR = 20 ----公会活动
-NPC_FLAG_SYS_ASSOCIATION = 21---公会保卫活动
 NPC_FLAG_SYS_HEALTH = 22----健康跑
 NPC_FLAG_SYS_OLDMAN = 23----神秘老人
 NPC_FLAG_SYS_LOSTBOOK = 24----失落之书
@@ -41,6 +40,47 @@ NPC_FLAG_SYS_PETT = 36--宠物洗点
 NPC_FLAG_SYS_VOCATION = 37--职业套装
 NPC_FLAG_SYS_HALLO = 38--万圣节活动
 NPC_FLAG_SYS_THANK = 39--感恩节
+NPC_FLAG_SYS_SDAN = 40--圣诞节
+NPC_FLAG_SYS_MATERIAL = 41--丘比特(结婚)
+NPC_FLAG_SYS_CONGRATE = 42--婚礼祭司
+NPC_FLAG_SYS_DIVORCE = 43--丘比特阴影(解除婚姻)
+NPC_FLAG_SYS_WORK = 44--转职
+NPC_FLAG_SYS_Guardwar = 45--尼米尼山谷
+NPC_FLAG_SYS_HP = 46--尼米尼医师
+NPC_FLAG_SYS_FARM = 47--利兰丁农场保卫战
+NPC_FLAG_SYS_NewYear = 48--春节
+NPC_FLAG_SYS_EXP = 49--经验返还
+NPC_FLAG_SYS_HorseFeeder = 21 --骑宠饲养员
+NPC_FLAG_SYS_LUCKYGODS = 50--许愿池幸运神明
+NPC_FLAG_SYS_RELIVE = 51 --复活节
+NPC_FLAG_SYS_QUEST = 52--随机任务
+NPC_FLAG_SYS_MURDER = 53--刺杀执政官
+NPC_FLAG_SYS_MURDER2 = 54--刺杀执政官(毒药)
+NPC_FLAG_SYS_WORKDAY = 55---五一活动使者
+NPC_FLAG_SYS_WORKER = 56---肥料供应商 (五一活动)
+NPC_FLAG_SYS_Fane = 57--恶魔岛
+NPC_FLAG_SYS_FaneNmgv = 58
+NPC_FLAG_SYS_FaneTranmit1 = 59
+NPC_FLAG_SYS_CHEMIST = 60 --药剂师
+NPC_FLAG_SYS_Guardwar2 = 61--跨服挑战
+NPC_FLAG_SYS_FaneTranmit2 = 62 --飘渺幻境黑市传送
+NPC_FLAG_SYS_FaneTranmit3 = 63 --飘渺幻境黑市传送
+NPC_FLAG_SYS_LIFESKILL = 64 --生活技能
+NPC_FLAG_SYS_GATHER = 65 --采矿点
+NPC_FLAG_SYS_SummerVacation = 66 --暑期礼包兑换
+NPC_FLAG_SYS_TROY_HORT = 67 --特洛伊活动奖励人
+NPC_FLAG_SYS_TROY_Tranmit1 = 68 --特洛伊木马传送1
+NPC_FLAG_SYS_TROY_Tranmit2 = 69 --特洛伊木马传送2
+NPC_FLAG_SYS_TROY_AGAME = 70 --特洛伊 阿伽门农
+NPC_FLAG_SYS_TROY_BOX = 71 --特洛伊BOSS箱子
+NPC_FLAG_SYS_LOVEISLAND = 72 --采集地传送
+NPC_FLAG_SYS_Celebrated = 73 --购买打折道具
+NPC_FLAG_SYS_PERMIT = 74 --周年许愿
+NPC_FLAG_SYS_MOONCAKE = 75 --中秋兑换任务卷轴
+NPC_FLAG_SYS_MOON0 = 76 --兑换人物经验
+NPC_FLAG_SYS_MOON1 = 77 --人物专长
+NPC_FLAG_SYS_MOON2 = 78 --宠物经验
+NPC_FLAG_SYS_MOON3 = 79 --星座能量
 
 
 --获取所有UI资源
@@ -48,7 +88,8 @@ local win = UIAPI:GetElement("FirstWin");
 FirstWin_Text1= win:GetChild("FirstWin_Text1");
 FirstWin_Text2= win:GetChild("FirstWin_Text2");
 FirstWin_Text3= win:GetChild("FirstWin_Text3");
-
+FirstWin_Text4= win:GetChild("FirstWin_Text4");
+		
 FirstWin_Button1 = win:GetChild("FirstWin_Button1");
 FirstWin_Button2 = win:GetChild("FirstWin_Button2");
 FirstWin_Button3 = win:GetChild("FirstWin_Button3");
@@ -59,19 +100,19 @@ FirstWin_Button7 = win:GetChild("FirstWin_Button7");
 FirstWin_Button8 = win:GetChild("FirstWin_Button8");
 FirstWin_Button9 = win:GetChild("FirstWin_Button9");
 FirstWin_Button10 = win:GetChild("FirstWin_Button10");
-FirstWin_Button11 = win:GetChild("FirstWin_Button11");
+FirstWin_Button11 = win:GetChild("FirstWin_Button11");        
 FirstWin_Button12 = win:GetChild("FirstWin_Button12");
 
  FirstWin_ItemBtn1 = win:GetChild("FirstWin_ItemBtn1");
  FirstWin_ItemBtn2 = win:GetChild("FirstWin_ItemBtn2");
  FirstWin_ItemBtn3 = win:GetChild("FirstWin_ItemBtn3");
  FirstWin_ItemBtn4 = win:GetChild("FirstWin_ItemBtn4");
-
+   
  FirstWin_CheckBox1 = win:GetChild("FirstWin_CheckBox1");
  FirstWin_CheckBox2 = win:GetChild("FirstWin_CheckBox2");
  FirstWin_CheckBox3 = win:GetChild("FirstWin_CheckBox3");
  FirstWin_CheckBox4 = win:GetChild("FirstWin_CheckBox4");
-
+		
  FirstWin_ButtonA1 = win:GetChild("FirstWin_ButtonA1");
  FirstWin_ButtonA2 = win:GetChild("FirstWin_ButtonA2");
  FirstWin_ButtonA3 = win:GetChild("FirstWin_ButtonA3");
@@ -100,11 +141,59 @@ function Set_NpcFun_Text(Type,Index,BtnID,SubID)
 	if Type == NPC_FLAG_SYS_TRANMIT then    --------传送----------------------------------------------------------------------------------
 		NpcFunTranmit_SetText(Type,Index,BtnID,SubID)
 
+	elseif Type == NPC_FLAG_SYS_TROY_HORT or Type == NPC_FLAG_SYS_TROY_Tranmit1 or Type == NPC_FLAG_SYS_TROY_Tranmit2 or Type == NPC_FLAG_SYS_TROY_AGAME or Type == NPC_FLAG_SYS_TROY_BOX then --------------------------特洛伊--------------------------
+		NpcFunTroy_SetText(Type,Index,BtnID,SubID)
+
+	elseif Type == NPC_FLAG_SYS_Fane or Type == NPC_FLAG_SYS_FaneNmgv or Type == NPC_FLAG_SYS_FaneTranmit1 or Type == NPC_FLAG_SYS_FaneTranmit2 or Type == NPC_FLAG_SYS_FaneTranmit3 then  -------------------恶魔岛---------------------------------
+		 NpcFunFane_SetText(Type,Index,BtnID,SubID)
+
+	elseif Type == NPC_FLAG_SYS_QIXI then    --------七夕活动-----------------------------------------------------------------------
+		NpcFunQixi_SetText(Type,Index,BtnID,SubID)
+
+	elseif Type == NPC_FLAG_SYS_PERMIT then    --------周年庆活动-----------------------------------------------------------------------
+		NpcPermit_SetText(Type,Index,BtnID,SubID)
+
+	elseif Type == NPC_FLAG_SYS_MOON0 then    --------中秋活动0-----------------------------------------------------------------------
+		NpcFunMoon0_SetText(Type,Index,BtnID,SubID)
+
+	elseif Type == NPC_FLAG_SYS_MOON1 then    --------中秋活动1-----------------------------------------------------------------------
+		NpcFunMoon1_SetText(Type,Index,BtnID,SubID)
+
+	elseif Type == NPC_FLAG_SYS_MOON2 then    --------中秋活动2-----------------------------------------------------------------------
+		NpcFunMoon2_SetText(Type,Index,BtnID,SubID)
+
+	elseif Type == NPC_FLAG_SYS_MOON3 then    --------中秋活动3-----------------------------------------------------------------------
+		NpcFunMoon3_SetText(Type,Index,BtnID,SubID)
+
+	elseif Type == NPC_FLAG_SYS_LOVEISLAND then    --------采集地传送-----------------------------------------------------------------------
+		NpcFunLoveIsland_SetText(Type,Index,BtnID,SubID)
+
 	elseif Type == NPC_FLAG_SYS_CREDIT_EXCHANGE then    --------兑换-----------------------------------------------------------------------
 		NpcFunCredit_SetText(Type,Index,BtnID,SubID)
 
+	elseif Type == NPC_FLAG_SYS_SummerVacation then    --------暑假礼包-----------------------------------------------------------------------
+		NpcFunSummerVacation_SetText(Type,Index,BtnID,SubID)
+
+	elseif Type == NPC_FLAG_SYS_CHEMIST then    --------药剂师-----------------------------------------------------------------------
+		NpcFunChemist_SetText(Type,Index,BtnID,SubID)
+
+	elseif Type == NPC_FLAG_SYS_LIFESKILL then    --------生活技能----------------------------------------------------------------------
+		NpcFunLifeSkill_SetText(Type,Index,BtnID,SubID)
+
+	elseif Type == NPC_FLAG_SYS_GATHER then    --------采矿点----------------------------------------------------------------------
+		NpcFunGather_SetText(Type,Index,BtnID,SubID)
+
 	elseif Type == NPC_FLAG_SYS_WAR then    --------战场活动----------------------------------------------------------------------
 		NpcFunWar_SetText(Type,Index,BtnID,SubID)
+
+	elseif Type == NPC_FLAG_SYS_MURDER then    --------刺杀----------------------------------------------------------------------
+		NpcFunMurder_SetText(Type,Index,BtnID,SubID)
+
+	elseif Type == NPC_FLAG_SYS_MURDER2 then    --------刺杀2----------------------------------------------------------------------
+		NpcFunMurder2_SetText(Type,Index,BtnID,SubID)
+
+	elseif Type == NPC_FLAG_SYS_HorseFeeder then    --------骑宠饲养员----------------------------------------------------------------------
+		NpcFunHorseFeeder_SetText(Type,Index,BtnID,SubID)
 
 	elseif Type == NPC_FLAG_SYS_BREAK then    --------装备分解-------------------------------------------------------------------
 		NpcFunBreak_SetText(Type,Index,BtnID,SubID)
@@ -117,7 +206,7 @@ function Set_NpcFun_Text(Type,Index,BtnID,SubID)
 
 	elseif Type == NPC_FLAG_ACTIVITY then	--------活动------------------------
 		NpcFunActivity_SetText(Type,Index,BtnID,SubID)
-
+	
 	elseif Type == NPC_FLAG_SYS_UNIONTIME then	--------公会福利-----------------------------------------------------------------------
 		NpcFunUionTime_SetText(Type,Index,BtnID,SubID)
 
@@ -132,7 +221,7 @@ function Set_NpcFun_Text(Type,Index,BtnID,SubID)
 
 	elseif Type == NPC_FLAG_SYS_DESIDENTIFY then	--------称谓鉴定-----------------------------------------------------------------------
 		NpcFunDesidentify_SetText(Type,Index,BtnID,SubID)
-
+	
 	elseif Type == NPC_FLAG_SYS_DESAWARD then	--------称谓奖励-----------------------------------------------------------------------
 		NpcFunDesaward_SetText(Type,Index,BtnID,SubID)
 
@@ -144,7 +233,7 @@ function Set_NpcFun_Text(Type,Index,BtnID,SubID)
 
 	elseif Type == NPC_FLAG_SYS_SKILLBOOK then    --------------抽取技能书-----------------------------------------------------------------------------
 		NpcFunSkillbook_SetText(Type,Index,BtnID,SubID)
-
+	
 	elseif Type == NPC_FLAG_SYS_MATERIALBACK then		---------物资回收官-----------20090326,ver204,li
 		NpcFunMaterialBack_SetText(Type,Index,BtnID,SubID)
 
@@ -212,8 +301,50 @@ function Set_NpcFun_Text(Type,Index,BtnID,SubID)
 
 	elseif Type == NPC_FLAG_SYS_HALLO then    -------万圣节-------------------------------------------------------------------
 		NpcFunHallo_SetText(Type,Index,BtnID,SubID)
+		
 	elseif Type == NPC_FLAG_SYS_THANK then    -------万圣节-------------------------------------------------------------------
 		NpcFunThank_SetText(Type,Index,BtnID,SubID)
+		
+		
+	elseif Type == NPC_FLAG_SYS_MATERIAL then    -------丘比特-------------------------------------------------------------------
+		NpcFunMaterial_SetText(Type,Index,BtnID,SubID)
+	elseif Type == NPC_FLAG_SYS_CONGRATE then    -------婚礼祭师-------------------------------------------------------------------
+		NpcFunCongrate_SetText(Type,Index,BtnID,SubID)
+	elseif Type == NPC_FLAG_SYS_DIVORCE then    -------离婚-------------------------------------------------------------------
+		NpcFunDivrce_SetText(Type,Index,BtnID,SubID)
+	elseif Type == NPC_FLAG_SYS_WORK then    -------转职-------------------------------------------------------------------
+		NpcFunWork_SetText(Type,Index,BtnID,SubID)
+
+	elseif Type == NPC_FLAG_SYS_Guardwar then    -------尼米尼查询-------------------------------------------------------------------
+		NpcFunGuardwar_SetText(Type,Index,BtnID,SubID)
+
+	elseif Type == NPC_FLAG_SYS_HP then    -------尼米尼医师-------------------------------------------------------------------
+		NpcFunHP_SetText(Type,Index,BtnID,SubID)
+
+	elseif Type == NPC_FLAG_SYS_SDAN then    -------圣诞节-------------------------------------------------------------------
+		NpcFunSDAN_SetText(Type,Index,BtnID,SubID)
+	elseif Type == NPC_FLAG_SYS_FARM then    -------农场保卫战-------------------------------------------------------------------
+		NpcFunFarm_SetText(Type,Index,BtnID,SubID)
+	elseif Type == NPC_FLAG_SYS_NewYear then    -------春节-------------------------------------------------------------------
+		NpcFunNewYear_SetText(Type,Index,BtnID,SubID)
+	elseif Type == NPC_FLAG_SYS_EXP then    -------经验返还-------------------------------------------------------------------
+		NpcFunExp_SetText(Type,Index,BtnID,SubID)
+
+	elseif Type == NPC_FLAG_SYS_LUCKYGODS then    -------许愿池幸运神明-------------------------------------------------------------------
+		NpcFunLuckyGods_SetText(Type,Index,BtnID,SubID)
+	elseif Type == NPC_FLAG_SYS_QUEST then    -------随机任务-------------------------------------------------------------------
+		NpcFunQuest_SetText(Type,Index,BtnID,SubID)
+	elseif Type == NPC_FLAG_SYS_RELIVE then    -------复活节-------------------------------------------------------------------
+	        NpcFunRelive_SetText(Type,Index,BtnID,SubID)  	
+	elseif Type == NPC_FLAG_SYS_WORKDAY then    -------五一节日使者-------------------------------------------------------------------
+		NpcFunWorkday_SetText(Type,Index,BtnID,SubID)
+	elseif Type == NPC_FLAG_SYS_WORKER then    -------肥料供应商-------------------------------------------------------------------
+		NpcFunWorker_SetText(Type,Index,BtnID,SubID)
+	elseif Type == NPC_FLAG_SYS_Guardwar2 then    -------跨服挑战-------------------------------------------------------------------
+		NpcFunGuardwar2_SetText(Type,Index,BtnID,SubID)
+	elseif Type == NPC_FLAG_SYS_Celebrated then    -------购买打折道具-------------------------------------------------------------------
+		NpcFunCelebrated_SetText(Type,Index,BtnID,SubID)
+
 	end
 
 end
@@ -229,6 +360,8 @@ function Set_MessageBox(Type,Index,PreSubID,SubID)
 	elseif Type == NPC_FLAG_SYS_CREDIT_EXCHANGE then    --------兑换提示框-----------------------------------------------------------------------
 		NpcFunCredit_SetMsg(Type,Index,PreSubID,SubID)
 
+	elseif Type == NPC_FLAG_SYS_LIFESKILL then    --------生活技能-----------------------------------------------------------------------
+		NpcFunLifeSkill_SetMsg(Type,Index,PreSubID,SubID)
 	elseif Type == NPC_FLAG_SYS_REPETITION  then  -------------------副本剧情提示框--------------------------------------------------------------
 		 NpcFunRepetition_SetMsg(Type,Index,PreSubID,SubID)
 
@@ -246,9 +379,10 @@ function Set_MessageBox(Type,Index,PreSubID,SubID)
 
 	elseif Type == NPC_FLAG_SYS_ALTAR then    --------------祭坛-----------------------------------------------------------------------------
 		NpcFunAltar_SetMsg(Type,Index,PreSubID,SubID)
-
+		
 	elseif Type == NPC_FLAG_GUILDQUEST then  -------------------公会任务提示框--------------------------------------------------------------
 		 NpcFunGuildQuest_SetMsg(Type,Index,PreSubID,SubID)
+
 	end;
 end
 --显示不同类型的窗体界面
@@ -262,117 +396,6 @@ function Set_NpcFun_UI(Type,Index)
 	FirstWin_ButtonA1:Visible(true);
 	FirstWin_ButtonA2:Visible(true);
 	win:Visible(true);
-
-
-    	if Type == NPC_FLAG_SYS_STAR then
-	        FirstWin_Text1:SetPosition(45,100);
-	        FirstWin_Text2:SetPosition(45,120);
-	        FirstWin_Text3:SetPosition(45,160);
-
-    	elseif Type == NPC_FLAG_SYS_ALTAR then
-                if Index == 1 then
-	           FirstWin_Text1:SetPosition(45,100);
-	           FirstWin_Text2:SetPosition(45,120);
-	           FirstWin_Text3:SetPosition(45,140);
-
-		   NpcFun_SetButtonPosition(45,160)
-		end;
-                if Index == 2 then
-	           FirstWin_Text1:SetPosition(45,100);
-	           FirstWin_Text2:SetPosition(45,140);
-	           FirstWin_Text3:SetPosition(45,160);
-
-		   NpcFun_SetButtonPosition(40,160)
-                end;
-                if Index == 3 then
-	           FirstWin_Text1:SetPosition(45,100);
-	           FirstWin_Text2:SetPosition(45,170);
-	           FirstWin_Text3:SetPosition(45,190);
-
-		   NpcFun_SetButtonPosition(25,210)
-                end;
-		if Index == 4 then
-	           FirstWin_Text1:SetPosition(45,100);
-	           FirstWin_Text2:SetPosition(45,120);
-	           FirstWin_Text3:SetPosition(45,140);
-
-   		   NpcFun_SetButtonPosition(45,160)
-                end;
- 		if Index == 5 then
-	           FirstWin_Text1:SetPosition(45,100);
-	           FirstWin_Text2:SetPosition(45,120);
-	           FirstWin_Text3:SetPosition(45,140);
-
-   		   NpcFun_SetButtonPosition(45,160)
-
-	           FirstWin_ButtonA1:SetPosition(220,500);
-	           FirstWin_ButtonA2:SetPosition(220,500);
-                end;
-    	elseif Type == NPC_FLAG_SYS_AWARD then
-                if Index == 1 then
-	           FirstWin_Text1:SetPosition(45,100);
-	           FirstWin_Text2:SetPosition(45,120);
-	           FirstWin_Text3:SetPosition(45,140);
-
-		   NpcFun_SetButtonPosition(45,160)
-                end;
-                if Index == 2 then
-	           FirstWin_Text1:SetPosition(45,100);
-	           FirstWin_Text2:SetPosition(45,140);
-	           FirstWin_Text3:SetPosition(45,160);
-
-   		   NpcFun_SetButtonPosition(40,160)
-                end;
-                if Index == 3 then
-	           FirstWin_Text1:SetPosition(45,100);
-	           FirstWin_Text2:SetPosition(45,170);
-	           FirstWin_Text3:SetPosition(45,190);
-
-  	           NpcFun_SetButtonPosition(25,210);
-                end;
-		if Index == 4 then
-	           FirstWin_Text1:SetPosition(45,100);
-	           FirstWin_Text2:SetPosition(45,120);
-	           FirstWin_Text3:SetPosition(45,140);
-
-		   NpcFun_SetButtonPosition(45,160);
-                end;
- 		if Index == 5 then
-	           FirstWin_Text1:SetPosition(45,100);
-	           FirstWin_Text2:SetPosition(45,120);
-	           FirstWin_Text3:SetPosition(45,140);
-
-		   NpcFun_SetButtonPosition(45,160);
-
-	           FirstWin_ButtonA1:SetPosition(220,500);
-	           FirstWin_ButtonA2:SetPosition(220,500);
-
-                end;
-
-    	elseif Type == NPC_FLAG_SYS_BREAK then
-                if Index== 3 then
-                   zb = 0
-                end;
-    	elseif Type == NPC_FLAG_SYS_DESIDENTIFY then
-	        FirstWin_Text1:SetPosition(45,100);
-	        FirstWin_Text2:SetPosition(45,120);
-	        FirstWin_Text3:SetPosition(45,160);
-
-		NpcFun_SetButtonPosition(35,160);
-
-    	elseif Type == NPC_FLAG_SYS_DESAWARD then
-	        FirstWin_Text1:SetPosition(45,100);
-	        FirstWin_Text2:SetPosition(45,120);
-	        FirstWin_Text3:SetPosition(45,160);
-
-  		NpcFun_SetButtonPosition(35,160);
-
-    	elseif Type == NPC_FLAG_SYS_SIGNACT then
-	        FirstWin_Text1:SetPosition(45,100);
-	        FirstWin_Text2:SetPosition(45,120);
-	        FirstWin_Text3:SetPosition(45,160);
-
-    	end;
 end
 
 --UI都隐藏-------------------
@@ -380,6 +403,7 @@ function NpcFun_Clear()
 	FirstWin_Text1:Visible(false);
 	FirstWin_Text2:Visible(false);
 	FirstWin_Text3:Visible(false);
+	FirstWin_Text4:Visible(false);
 
 	FirstWin_Button1:Visible(false);
 	FirstWin_Button2:Visible(false);
@@ -413,10 +437,12 @@ function NpcFun_Clear()
 	Input12:Visible(false);
 	Input13:Visible(false);
 
+	InputText2:Visible(false);
 	Input21:Visible(false);
 	Input22:Visible(false);
 	Input23:Visible(false);
 
+	InputText3:Visible(false);
 	Input31:Visible(false);
 	Input32:Visible(false);
 	Input33:Visible(false);
@@ -425,39 +451,47 @@ end
 
 --初始化UI的原始位置------------------------------------------------------------------------------------
 function SetOriginalPosition()
-	FirstWin_Text1:SetPosition(45,100);
-	FirstWin_Text2:SetPosition(15,100);
-	FirstWin_Text3:SetPosition(15,120);
+	FirstWin_Text1:SetPosition(25,30);
+	FirstWin_Text2:SetPosition(15,30);
+	FirstWin_Text3:SetPosition(15,50);
+	FirstWin_Text4:SetPosition(25,30);
 
-	FirstWin_Button1:SetPosition(65,100);
+	FirstWin_Button1:SetPosition(25,135);
         FirstWin_Button1:Enable(true);
-	FirstWin_Button1:SetTextFormat(5);
-	FirstWin_Button2:SetPosition(65,120);
+	FirstWin_Button1:SetTextFormat(0);
+	FirstWin_Button2:SetPosition(25,155);
         FirstWin_Button2:Enable(true);
-	FirstWin_Button2:SetTextFormat(5);
-	FirstWin_Button3:SetPosition(65,140);
+	FirstWin_Button2:SetTextFormat(0);
+	FirstWin_Button3:SetPosition(25,175);
         FirstWin_Button3:Enable(true);
-	FirstWin_Button3:SetTextFormat(5);
-	FirstWin_Button3:SetTextFormat(5);
-	FirstWin_Button4:SetPosition(65,160);
+	FirstWin_Button3:SetTextFormat(0);
+	FirstWin_Button4:SetPosition(25,195);
         FirstWin_Button4:Enable(true);
-	FirstWin_Button4:SetTextFormat(5);
-	FirstWin_Button5:SetPosition(65,180);
+	FirstWin_Button4:SetTextFormat(0);
+	FirstWin_Button5:SetPosition(25,215);
         FirstWin_Button5:Enable(true);
-	FirstWin_Button6:SetPosition(65,200);
+	FirstWin_Button5:SetTextFormat(0);
+	FirstWin_Button6:SetPosition(25,235);
         FirstWin_Button6:Enable(true);
-	FirstWin_Button7:SetPosition(65,220);
+	FirstWin_Button6:SetTextFormat(0);
+	FirstWin_Button7:SetPosition(320,135);
         FirstWin_Button7:Enable(true);
-	FirstWin_Button8:SetPosition(65,240);
+	FirstWin_Button7:SetTextFormat(0);
+	FirstWin_Button8:SetPosition(320,155);
         FirstWin_Button8:Enable(true);
-	FirstWin_Button9:SetPosition(65,260);
+	FirstWin_Button8:SetTextFormat(0);
+	FirstWin_Button9:SetPosition(320,175);
         FirstWin_Button9:Enable(true);
-	FirstWin_Button10:SetPosition(65,280);
+	FirstWin_Button9:SetTextFormat(0);
+	FirstWin_Button10:SetPosition(320,195);
         FirstWin_Button10:Enable(true);
-	FirstWin_Button11:SetPosition(65,300);
+	FirstWin_Button10:SetTextFormat(0);
+	FirstWin_Button11:SetPosition(320,215);
         FirstWin_Button11:Enable(true);
-	FirstWin_Button12:SetPosition(65,320);
+	FirstWin_Button11:SetTextFormat(0);
+	FirstWin_Button12:SetPosition(320,235);
         FirstWin_Button12:Enable(true);
+	FirstWin_Button12:SetTextFormat(0);
 
 	FirstWin_CheckBox1:SetPosition(45,220);
 	FirstWin_CheckBox2:SetPosition(90,220);
@@ -469,10 +503,11 @@ function SetOriginalPosition()
         FirstWin_ItemBtn3:Visible(true);
 	FirstWin_ItemBtn4:Visible(true);
 
-	FirstWin_ButtonA1:SetPosition(175,500);
-	FirstWin_ButtonA2:SetPosition(250,500);
+	FirstWin_ButtonA1:SetPosition(440,250);
+	FirstWin_ButtonA2:SetPosition(515,250);
 	InputText1:SetText("");
-
+	InputText2:SetText("");
+	
 end
 
 function NpcFun_SetButtonPosition(firstX,firstY)

@@ -169,26 +169,131 @@ public sealed class MonsterEntity
         NextMoveAtUtc = DateTime.UtcNow.AddSeconds(Random.Shared.Next(3, 10));
     }
 
-    public MsgObjectInfo ToObjectInfo(ushort? clientMapId = null) => new(
-        WorldObjectType.Monster,
-        Faction,
-        clientMapId ?? MapId,
-        UiId,
-        (byte)Math.Clamp(Level, 1, 255),
-        Hp,
-        MaxHp,
-        X,
-        0f,
-        Z,
-        Atan2,
-        ObjectName,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        []);
+    private static readonly Dictionary<(ushort MapId, string Name), string> V227MonsterFallbacks = new()
+    {
+        // Map 0: Athens
+        [(0, "C_elite_greecewarrior_005")] = "C_elite_greecewarrior_003",
+        [(0, "C_elite_greecewarrior_008")] = "C_elite_greecewarrior_003",
+        // Map 1: Athens_Newbie
+        [(1, "A_elite_snake_001")] = "A_elite_bull_006",
+        [(1, "A_elite_stub_002")] = "A_elite_bull_006",
+        [(1, "A_elite_wasp_002")] = "A_elite_bull_006",
+        [(1, "A_normal_deer_001")] = "A_normal_ark_003",
+        [(1, "A_normal_snake_001")] = "A_normal_ark_003",
+        [(1, "A_normal_stub_002")] = "A_normal_ark_003",
+        [(1, "A_normal_wasp_002")] = "A_normal_ark_003",
+        [(1, "A_normal_wasp_008")] = "A_normal_ark_003",
+        [(1, "C_elite_greecewarrior_003")] = "C_elite_greecewarrior_006",
+        [(1, "C_elite_greecewarrior_008")] = "C_elite_greecewarrior_006",
+        [(1, "C_elite_mage_001")] = "C_elite_greecewarrior_006",
+        // Map 3: Parnitha_1
+        [(3, "B_elite_greecewarrior_008")] = "A_boss_boar_001",
+        // Map 4: Parnitha_2
+        [(4, "B_boss_turtle_001")] = "B_bossB_octopus_001",
+        [(4, "B_elite_crocodilian_002")] = "B_eliteB_froggy_003",
+        [(4, "B_elite_mage_011")] = "B_eliteB_froggy_003",
+        [(4, "B_elite_mage_017")] = "B_eliteB_froggy_003",
+        [(4, "B_elite_persiawarrior_003")] = "B_eliteB_froggy_003",
+        [(4, "B_elite_skeleton_008")] = "B_eliteB_froggy_003",
+        [(4, "B_normal_crocodilian_002")] = "B_normalB_centaur_008",
+        [(4, "B_normal_mage_011")] = "B_normalB_centaur_008",
+        [(4, "B_normal_mage_017")] = "B_normalB_centaur_008",
+        [(4, "B_normal_persiawarrior_003")] = "B_normalB_centaur_008",
+        [(4, "B_normal_persiawarrior_004")] = "B_normalB_centaur_008",
+        [(4, "B_normal_skeleton_008")] = "B_normalB_centaur_008",
+        [(4, "B_normal_skeleton_014")] = "B_normalB_centaur_008",
+        [(4, "B_normal_turtle_003")] = "B_normalB_centaur_008",
+        // Map 50: Sparta
+        [(50, "C_elite_greecewarrior_009")] = "C_elite_greecewarrior_004",
+        [(50, "C_elite_greecewarrior_012")] = "C_elite_greecewarrior_004",
+        // Map 51: Sparta_Newbie
+        [(51, "A_elite_ark_001")] = "A_elite_skeleton_002",
+        [(51, "A_elite_snake_006")] = "A_elite_skeleton_002",
+        [(51, "A_elite_stub_001")] = "A_elite_skeleton_002",
+        [(51, "A_normal_ark_001")] = "A_normal_ark_002",
+        [(51, "A_normal_skeleton_003")] = "A_normal_ark_002",
+        [(51, "A_normal_skeleton_004")] = "A_normal_ark_002",
+        [(51, "A_normal_skeleton_005")] = "A_normal_ark_002",
+        [(51, "A_normal_skeleton_006")] = "A_normal_ark_002",
+        [(51, "A_normal_skeleton_007")] = "A_normal_ark_002",
+        [(51, "A_normal_snake_002")] = "A_normal_ark_002",
+        [(51, "A_normal_snake_006")] = "A_normal_ark_002",
+        [(51, "A_normal_stub_001")] = "A_normal_ark_002",
+        [(51, "A_normal_stub_003")] = "A_normal_ark_002",
+        [(51, "C_elite_greecewarrior_004")] = "C_elite_greecewarrior_011",
+        [(51, "C_elite_greecewarrior_009")] = "C_elite_greecewarrior_011",
+        [(51, "C_elite_mage_004")] = "C_elite_greecewarrior_011",
+        // Map 53: Nemea_1
+        [(53, "B_elite_greecewarrior_011")] = "A_boss_wolf_005",
+        [(53, "B_elite_greecewarrior_012")] = "A_boss_wolf_005",
+        // Map 54: Nemea_2
+        [(54, "B_boss_lion_001")] = "B_bossB_spriggan_001",
+        [(54, "B_elite_dryad_007")] = "B_eliteB_dryad_001_000",
+        [(54, "B_elite_harpies_004")] = "B_eliteB_dryad_001_000",
+        [(54, "B_elite_wasp_005")] = "B_eliteB_dryad_001_000",
+        [(54, "B_elite_wolf_004")] = "B_eliteB_dryad_001_000",
+        [(54, "B_elite_wraith_001")] = "B_eliteB_dryad_001_000",
+        [(54, "B_normal_dryad_001")] = "B_normalB_dryad_002",
+        [(54, "B_normal_dryad_002")] = "B_normalB_dryad_002",
+        [(54, "B_normal_dryad_007")] = "B_normalB_dryad_002",
+        [(54, "B_normal_harpies_004")] = "B_normalB_dryad_002",
+        [(54, "B_normal_lion_002")] = "B_normalB_dryad_002",
+        [(54, "B_normal_wasp_005")] = "B_normalB_dryad_002",
+        [(54, "B_normal_wolf_004")] = "B_normalB_dryad_002",
+        [(54, "B_normal_wraith_001")] = "B_normalB_dryad_002",
+        // Map 100: Derveni_All
+        [(100, "A_elite_snake_008")] = "A_normal_greecewarrior_009",
+        [(100, "B_normal_centaur_003")] = "B_normal_centaur_004",
+        // Map 152: Thermopylae_All
+        [(152, "B_elite_boar_002")] = "B_eliteB_amazon_004",
+        [(152, "B_elite_froggy_001")] = "B_eliteB_amazon_004",
+        [(152, "B_elite_spider_007")] = "B_eliteB_amazon_004",
+        [(152, "B_elite_stymphalianbird_002")] = "B_eliteB_amazon_004",
+        [(152, "B_elite_turtle_004")] = "B_eliteB_amazon_004",
+        [(152, "B_elite_wraith_004")] = "B_eliteB_amazon_004",
+        [(152, "B_normal_boar_002")] = "B_normalB_amazon_001",
+        [(152, "B_normal_froggy_001")] = "B_normalB_amazon_001",
+        [(152, "B_normal_greecewarrior_005")] = "B_normalB_amazon_001",
+        [(152, "B_normal_greecewarrior_008")] = "B_normalB_amazon_001",
+        [(152, "B_normal_persiawarrior_002")] = "B_normalB_amazon_001",
+        [(152, "B_normal_spider_007")] = "B_normalB_amazon_001",
+        [(152, "B_normal_stymphalianbird_002")] = "B_normalB_amazon_001",
+        [(152, "B_normal_turtle_004")] = "B_normalB_amazon_001",
+        [(152, "B_normal_wraith_004")] = "B_normalB_amazon_001",
+        [(152, "C_boss_persiawarrior_001")] = "C_boss_greecewarrior_001",
+        [(152, "C_elite_mage_001")] = "C_elite_greecewarrior_003",
+        [(152, "C_elite_mage_011")] = "C_elite_greecewarrior_003",
+        [(152, "C_normal_mage_011")] = "C_boss_greecewarrior_001",
+    };
+
+    public MsgObjectInfo ToObjectInfo(ushort? clientMapId = null, bool isV227 = false)
+    {
+        ushort mapId = clientMapId ?? MapId;
+        string name = isV227 && V227MonsterFallbacks.TryGetValue((MapId, ObjectName), out string? fallback)
+            ? fallback
+            : ObjectName;
+
+        return new(
+            WorldObjectType.Monster,
+            Faction,
+            mapId,
+            UiId,
+            (byte)Math.Clamp(Level, 1, 255),
+            Hp,
+            MaxHp,
+            X,
+            0f,
+            Z,
+            Atan2,
+            name,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            []);
+    }
 }

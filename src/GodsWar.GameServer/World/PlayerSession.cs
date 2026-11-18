@@ -309,7 +309,12 @@ public sealed class PlayerSession
     }
 
     public ValueTask SendAsync(GameOpcode opcode, ReadOnlyMemory<byte> payload, CancellationToken cancellationToken = default)
-        => Connection.SendPacketAsync((ushort)opcode, payload, cancellationToken);
+    {
+        ushort wireOpcode = Connection.Cipher is not null
+            ? V227OpcodeMap.ToWire(opcode)
+            : (ushort)opcode;
+        return Connection.SendPacketAsync(wireOpcode, payload, cancellationToken);
+    }
 
     public MsgSelfInfo ToSelfInfo() => new(
         Character.Id,

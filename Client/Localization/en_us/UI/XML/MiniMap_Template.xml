@@ -160,5 +160,29 @@
   <!--亚特兰蒂斯入口-->
   <Atlantis_Entrance    Texture="./Localization/en_us/UI/Texture/MinMap/Atlantis_Entrance.gwo" />
   
+  <!--勇士试炼场四-->
+  <Field_Test4    Texture="./Localization/en_us/UI/Texture/MinMap/Field_Test4.gwo" />
+  
+  <!--利兰丁农场-->
+  <Lelantine_Farm    Texture="./Localization/en_us/UI/Texture/MinMap/Lelantine_Farm.gwo" />
+  
+   <!--恶魔岛-->
+  <Fane    Texture="./Localization/en_us/UI/Texture/MinMap/Fane.gwo" />
+  
+  <!--尼米尼-->
+  <Guardwa2    Texture="./Localization/en_us/UI/Texture/MinMap/Guardwa2.gwo" />
+  
+    <!--港湾遇袭-->
+  <Salame    Texture="./Localization/en_us/UI/Texture/MinMap/Salame.gwo" />
+  
+     <!--港湾遇袭二-->
+  <Salame2    Texture="./Localization/en_us/UI/Texture/MinMap/Salame2.gwo" />
+
+
+ <!--特洛伊-->
+  <Troy    Texture="./Localization/en_us/UI/Texture/MinMap/Troy.gwo" />
+  
+  <!--爱情岛猎苑区-->
+  <Love_Island    Texture="./Localization/en_us/UI/Texture/MinMap/Love_Island.gwo" />
 </UITemplate>
 

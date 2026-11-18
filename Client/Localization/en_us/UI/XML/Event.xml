@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <UIConfig>
   <ActivityWin Template="T_NormalWindow" ID="481000" Rectangle="100,150,795,650" OnLoad="Event_OnLoad()" Visible ="0" BtnRect="625,13,662,50" BtnPos="0,80" MoveRect="0,0,1024,768">
-  <!--CurrentDate  Type="Text"  ID="-1" Rectangle="80,50,100,70" Font="MainMap" Text="2009年8月17日 星期一"/-->
-  <EventTabBar Type="TabBar"  Rectangle="0,0,695,500" Enable="0">
+  <CurrentDate  Type="Text"  ID="-1" Rectangle="80,50,100,70" Font="MainMap" Text=""/>
+  <EventTabBar Type="TabBar"  Rectangle="0,0,695,500">
     
     <!--本日活动-->
-    <TodayEvent Template="T_Tab" Rectangle="50,48,127,71" Text="Events">
+    <TodayEvent Template="T_Tab" Rectangle="260,48,337,71" Text="Today">
         <Activityback Template="T_BgWindow" ID="-1" Rectangle="20,77,375,485">
-            <Today Type="Text" Font="MainMap" Rectangle="95,1,250,20" FontColor="YELLOW_TEXTCOLOR" TextFormat="21" Text="Events This Week" />
+            <Today Type="Text" Font="MainMap" Rectangle="95,1,250,20" FontColor="YELLOW_TEXTCOLOR" TextFormat="21" Text="Today" />
             <TodayWin  Template="T_BgWindow" ID="" Rectangle="10,25,346,193" Visible ="1" Enable="0" >
 
                <ListBox1Top  Type="Text"  ID="-1" Rectangle="312,22,337,47"   TexturePos="720,0" Texture="./Localization/en_us/UI/Texture/main.gwo"   Text=""/>
@@ -17,7 +17,7 @@
                <UpBtn Type="Button" ID="-1"   Rectangle="309,0,337,22"    TexturePos="0,228"   Texture="./Localization/en_us/UI/Texture/main.gwo"   Font="Mainlogin2" FontColor="DEFAULT_TEXTCOLOR" Text="" OnClick="UpListBoxBtn()"/>
                <DownBtn Type="Button" ID="-1" Rectangle="309,146,337,168" TexturePos="29,228"  Texture="./Localization/en_us/UI/Texture/main.gwo"   Font="Mainlogin2" FontColor="DEFAULT_TEXTCOLOR" Text="" OnClick="DownListBoxBtn()"/>
 
-               <ListBox Type="ListBox" ID="481100"  Rectangle="3,0,328,138" OnSelected="Event_DayList_OnSelected()" TexturePos="144,20"  ScrollTexture="./Localization/en_us/UI/Texture/main.gwo" ScrollRect="312,26,335,145" ScrollPos="1024,1024" BtnPos="133,122" BtnRect="0,0,17,27" Height="20" >
+               <ListBox Type="ListBox" ID="481100"  Rectangle="3,0,328,178" OnSelected="Event_DayList_OnSelected()" TexturePos="144,20"  ScrollTexture="./Localization/en_us/UI/Texture/main.gwo" ScrollRect="312,26,335,145" ScrollPos="1024,1024" BtnPos="133,122" BtnRect="0,0,17,27" Height="20" >
                </ListBox>
             </TodayWin>
             
@@ -32,7 +32,7 @@
                 <UpBtn Type="Button" ID="-1"   Rectangle="309,0,337,22"    TexturePos="0,228"   Texture="./Localization/en_us/UI/Texture/main.gwo"   Font="Mainlogin2" FontColor="DEFAULT_TEXTCOLOR" Text="" OnClick="UpListBoxBtn()"/>
                 <DownBtn Type="Button" ID="-1" Rectangle="309,146,337,168" TexturePos="29,228"  Texture="./Localization/en_us/UI/Texture/main.gwo"   Font="Mainlogin2" FontColor="DEFAULT_TEXTCOLOR" Text="" OnClick="DownListBoxBtn()"/>
 
-                <ListBox Type="ListBox" ID="481120" Rectangle="3,6,328,164" OnSelected="Event_ProList_OnSelected()" TexturePos="144,20"  ScrollTexture="./Localization/en_us/UI/Texture/main.gwo" ScrollRect="312,20,335,135" ScrollPos="1024,1024" BtnPos="133,122" BtnRect="0,0,17,27" Height="20">
+                <ListBox Type="ListBox" ID="481120" Rectangle="3,6,328,184" OnSelected="Event_ProList_OnSelected()" TexturePos="144,20"  ScrollTexture="./Localization/en_us/UI/Texture/main.gwo" ScrollRect="312,20,335,135" ScrollPos="1024,1024" BtnPos="133,122" BtnRect="0,0,17,27" Height="20">
 		        </ListBox>
             </AnnouncementWin>
           
@@ -40,8 +40,8 @@
     </TodayEvent>
     
     <!--本周活动-->
-    <WeekEvent Template="T_Tab" Rectangle="337,48,414,71" Text="" Visible ="0" Enable="0"  TexturePos="1024,1024" Texture="./Localization/en_us/UI/Texture/main.gwo">
-        <WeekEventWin Template="T_BgWindow" ID="-1" Rectangle="20,77,375,485" Visible ="0">
+    <WeekEvent Template="T_Tab" Rectangle="337,48,414,71" Text="Weekly">
+        <WeekEventWin Template="T_BgWindow" ID="-1" Rectangle="20,77,375,485">
             <ListBox1Top  Type="Text"  ID="-1" Rectangle="332,22,357,47"   TexturePos="720,0" Texture="./Localization/en_us/UI/Texture/main.gwo"   Text=""/>
             <ListBox1Btm  Type="Text"  ID="-1" Rectangle="332,361,357,386" TexturePos="720,30" Texture="./Localization/en_us/UI/Texture/main.gwo"   Text=""/>
             <ListBoxScrollMid Type="Text" ID="-1" Texture="./Localization/en_us/UI/Texture/main.gwo" Rectangle="332,47,357,48" TexturePos="720,26"  Font="Mainlogin2" FontColor="DEFAULT_TEXTCOLOR" Text="" OnScaleY="314"/>
@@ -49,14 +49,14 @@
             <UpBtn Type="Button" ID="-1"   Rectangle="329,0,357,22"    TexturePos="0,228"   Texture="./Localization/en_us/UI/Texture/main.gwo"   Font="Mainlogin2" FontColor="DEFAULT_TEXTCOLOR" Text="" OnClick="UpListBoxBtn()"/>
             <DownBtn Type="Button" ID="-1" Rectangle="329,386,357,408" TexturePos="29,228"  Texture="./Localization/en_us/UI/Texture/main.gwo"   Font="Mainlogin2" FontColor="DEFAULT_TEXTCOLOR" Text="" OnClick="DownListBoxBtn()"/>
 
-            <ListBox Type="ListBox" ID="481140" Rectangle="3,30,348,138" OnSelected="Event_WeekList_OnSelected()" TexturePos="144,20"  ScrollTexture="./Localization/en_us/UI/Texture/main.gwo" ScrollRect="332,-4,355,355" ScrollPos="1024,1024" BtnPos="1024,1024" BtnRect="0,0,17,27" Height="20">
+            <ListBox Type="ListBox" ID="481140" Rectangle="3,30,348,455" OnSelected="Event_WeekList_OnSelected()" TexturePos="144,20"  ScrollTexture="./Localization/en_us/UI/Texture/main.gwo" ScrollRect="332,-4,355,355" ScrollPos="1024,1024" BtnPos="133,122" BtnRect="0,0,17,27" Height="20">
             </ListBox>
         </WeekEventWin>
     </WeekEvent>
     
     <!--成长指南-->
-    <GrowthGuide Template="T_Tab" Rectangle="414,48,491,71" Text="" Visible ="0" Enable="0"  TexturePos="1024,1024" Texture="./Localization/en_us/UI/Texture/main.gwo">
-         <GrowthGuideWin Template="T_BgWindow" ID="-1" Rectangle="20,77,375,485" Visible ="0">
+    <!--GrowthGuide Template="T_Tab" Rectangle="414,48,491,71" Text="Guide">
+         <GrowthGuideWin Template="T_BgWindow" ID="-1" Rectangle="20,77,375,485">
             <ListBox1Top  Type="Text"  ID="-1" Rectangle="332,22,357,47"   TexturePos="720,0" Texture="./Localization/en_us/UI/Texture/main.gwo"   Text=""/>
             <ListBox1Btm  Type="Text"  ID="-1" Rectangle="332,361,357,386" TexturePos="720,30" Texture="./Localization/en_us/UI/Texture/main.gwo"   Text=""/>
             <ListBoxScrollMid Type="Text" ID="-1" Texture="./Localization/en_us/UI/Texture/main.gwo" Rectangle="332,47,357,48" TexturePos="720,26"  Font="Mainlogin2" FontColor="DEFAULT_TEXTCOLOR" Text="" OnScaleY="314"/>
@@ -64,10 +64,10 @@
             <UpBtn Type="Button" ID="-1"   Rectangle="329,0,357,22"    TexturePos="0,228"   Texture="./Localization/en_us/UI/Texture/main.gwo"   Font="Mainlogin2" FontColor="DEFAULT_TEXTCOLOR" Text="" OnClick="UpListBoxBtn()"/>
             <DownBtn Type="Button" ID="-1" Rectangle="329,386,357,408" TexturePos="29,228"  Texture="./Localization/en_us/UI/Texture/main.gwo"   Font="Mainlogin2" FontColor="DEFAULT_TEXTCOLOR" Text="" OnClick="DownListBoxBtn()"/>
 
-            <ListBox Type="ListBox" ID="481160" Rectangle="3,30,348,138" OnSelected="Event_GuideList_OnSelected()" TexturePos="144,20"  ScrollTexture="./Localization/en_us/UI/Texture/main.gwo" ScrollRect="332,-4,355,355" ScrollPos="1024,1024" BtnPos="1024,1024" BtnRect="0,0,17,27" Height="20">
+            <ListBox Type="ListBox" ID="481160" Rectangle="3,30,348,455" OnSelected="Event_GuideList_OnSelected()" TexturePos="144,20"  ScrollTexture="./Localization/en_us/UI/Texture/main.gwo" ScrollRect="332,-4,355,355" ScrollPos="1024,1024" BtnPos="133,122" BtnRect="0,0,17,27" Height="20">
             </ListBox>
         </GrowthGuideWin>
-    </GrowthGuide>
+    </GrowthGuide-->
   </EventTabBar>
 
 

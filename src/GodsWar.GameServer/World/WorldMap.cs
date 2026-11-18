@@ -58,13 +58,64 @@ public sealed class WorldMap
 
     public NpcSpawnData? GetNpc(uint npcId) => _npcsById.GetValueOrDefault(npcId);
 
-    public PortalZone? FindPortalAt(float x, float z)
+    private static readonly Dictionary<ushort, PortalZone[]> V227PortalOverrides = new()
     {
+        [0] = // Athens gate at (201, -119) -> Athens_Newbie (spawn safely inside suburbs at 102, -204)
+        [
+            new PortalZone(196f, 208f, -126f, -114f, "Athens_Newbie", 1, 102f, -204f),
+        ],
+        [50] = // Sparta gate at (201, -119) -> Sparta_Newbie (spawn safely inside suburbs at 102, -204)
+        [
+            new PortalZone(196f, 208f, -126f, -114f, "Sparta_Newbie", 51, 102f, -204f),
+        ],
+        [1] = // Athens_Newbie -> Athens (spawn safely inside city at 178, -110, away from 201, -119)
+        [
+            new PortalZone(98f, 108f, -234f, -222f, "Athens", 0, 178f, -110f),
+            new PortalZone(-222f, -208f, 58f, 68f, "Marathon_All", 2, 192f, 18f),
+        ],
+        [51] = // Sparta_Newbie -> Sparta (spawn safely inside city at 178, -110, away from 201, -119)
+        [
+            new PortalZone(98f, 108f, -234f, -222f, "Sparta", 50, 178f, -110f),
+            new PortalZone(-222f, -208f, 58f, 68f, "Peloponnese_All", 52, 212f, -127f),
+        ],
+        [2] = // Marathon_All (Parnitha Port) -> Parnitha_1 (-216, -50) & Athens_Newbie (209, 23)
+        [
+            new PortalZone(-228f, -210f, -56f, -40f, "Parnitha_1", 3, 180f, -36f),
+            new PortalZone(204f, 224f, 10f, 28f, "Athens_Newbie", 1, -190f, 62f),
+        ],
+    };
+
+    public PortalZone? FindPortalAt(float x, float z, bool isV227 = false)
+    {
+        if (isV227 && V227PortalOverrides.TryGetValue(Scene.MapId, out PortalZone[]? overrides))
+        {
+            for (int i = 0; i < overrides.Length; i++)
+            {
+                if (overrides[i].Contains(x, z))
+                {
+                    return overrides[i];
+                }
+            }
+        }
+
         for (int i = 0; i < Portals.Count; i++)
         {
             if (Portals[i].Contains(x, z))
             {
                 return Portals[i];
+            }
+        }
+
+        if (isV227)
+        {
+            const float pad = 6f;
+            for (int i = 0; i < Portals.Count; i++)
+            {
+                PortalZone p = Portals[i];
+                if (x >= p.MinX - pad && x <= p.MaxX + pad && z >= p.MinZ - pad && z <= p.MaxZ + pad)
+                {
+                    return p;
+                }
             }
         }
 
@@ -129,16 +180,17 @@ public sealed class WorldMap
                     notifyOthers.Add(other);
                 }
 
+                bool isV227 = player.Connection.Cipher is not null;
                 foreach (NpcSpawnData npc in cell.Npcs.Values)
                 {
-                    toJoiningPlayer.Add(ToNpcObjectInfo(npc).ToPayload());
+                    toJoiningPlayer.Add(ToNpcObjectInfo(npc, isV227).ToPayload());
                 }
 
                 foreach (MonsterEntity monster in cell.Monsters.Values)
                 {
                     if (monster.IsVisible)
                     {
-                        toJoiningPlayer.Add(monster.ToObjectInfo(Scene.ClientMapId).ToPayload());
+                        toJoiningPlayer.Add(monster.ToObjectInfo(Scene.ClientMapId, isV227).ToPayload());
                     }
                 }
             }
@@ -221,16 +273,17 @@ public sealed class WorldMap
                         }
                     }
 
+                    bool isV227 = player.Connection.Cipher is not null;
                     foreach (NpcSpawnData npc in cell.Npcs.Values)
                     {
-                        enterObjectsForSelf.Add(ToNpcObjectInfo(npc).ToPayload());
+                        enterObjectsForSelf.Add(ToNpcObjectInfo(npc, isV227).ToPayload());
                     }
 
                     foreach (MonsterEntity monster in cell.Monsters.Values)
                     {
                         if (monster.IsVisible)
                         {
-                            enterObjectsForSelf.Add(monster.ToObjectInfo(Scene.ClientMapId).ToPayload());
+                            enterObjectsForSelf.Add(monster.ToObjectInfo(Scene.ClientMapId, isV227).ToPayload());
                         }
                     }
                 }
@@ -970,7 +1023,19 @@ public sealed class WorldMap
         }
     }
 
-    private MsgObjectInfo ToNpcObjectInfo(NpcSpawnData npc) => new(
+    private static readonly Dictionary<string, string> V227NpcFallbacks = new(StringComparer.OrdinalIgnoreCase)
+    {
+        ["Athens_033_Male11"] = "Athens_001_AthenianCivilian1",
+        ["Athens_044_FemVillager3"] = "Athens_001_AthenianCivilian1",
+        ["Peloponnese_All_004_Exec10"] = "Peloponnese_All_001_FemMale17",
+        ["Sparta_033_Male14"] = "Sparta_001_SpartanCivilian1",
+        ["Sparta_044_FemVillager1"] = "Sparta_001_SpartanCivilian1",
+        ["Thermopylae_All_001_AthenianWarrior3"] = "Thermopylae_001_AthenianCivilian1",
+        ["Thermopylae_All_002_SpartanGen3"] = "Thermopylae_001_AthenianCivilian1",
+        ["Thermopylae_All_003_MaleMerchant2"] = "Thermopylae_001_AthenianCivilian1",
+    };
+
+    private MsgObjectInfo ToNpcObjectInfo(NpcSpawnData npc, bool isV227 = false) => new(
         WorldObjectType.Npc,
         npc.Faction,
         Scene.ClientMapId,
@@ -982,7 +1047,7 @@ public sealed class WorldMap
         npc.Y,
         npc.Z,
         npc.Atan2,
-        npc.Name);
+        isV227 && V227NpcFallbacks.TryGetValue(npc.Name, out string? fallback) ? fallback : npc.Name);
 
     private static MsgObjectInfo ToMonsterObjectInfo(MonsterSpawnData monster) => new(
         WorldObjectType.Monster,

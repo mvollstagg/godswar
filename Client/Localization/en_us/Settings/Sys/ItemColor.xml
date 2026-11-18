@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="GB2312"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <!--this is ItemColor config-->
 <ItemColor>
     <Equip>
@@ -8,9 +8,11 @@
             <BaseLevel3 BaseLv="3" BaseName="Delicate" BaseColor="ItemCOLOR"/>
             <BaseLevel4 BaseLv="4" BaseName="Good" BaseColor="GREEN_TEXTCOLOR"/>
             <BaseLevel5 BaseLv="5" BaseName="Superior" BaseColor="GUILD_COLOR"/>
-            <BaseLevel6 BaseLv="6" BaseName="Classic" BaseColor="YELLOW_TEXTCOLOR"/>
-            <BaseLevel7 BaseLv="7" BaseName="Eternal" BaseColor="WHISPER_COLOR"/>
-            <BaseLevel8 BaseLv="8" BaseName="Epic" BaseColor="Itemper_color"/>
+            <BaseLevel6 BaseLv="6" BaseName="Classic" BaseColor="Classical_color"/>
+            <BaseLevel7 BaseLv="7" BaseName="Eternal" BaseColor="YELLOW_TEXTCOLOR"/>
+            <BaseLevel8 BaseLv="8" BaseName="Epic" BaseColor="WHISPER_COLOR"/>
+            <BaseLevel9 BaseLv="9" BaseName="Legendary" BaseColor="Legend_color"/>
+            <BaseLevel10 BaseLv="10" BaseName="Mystic" BaseColor="Itemper_color"/>
         </Base>
         <Append>
             <AppLevel1 AppendLv="1" AppendStar="1" AppendColor="DEFAULT_TEXTCOLOR" AppAttributeColor="GREEN_TEXTCOLOR"/>
@@ -22,7 +24,9 @@
             <AppLevel7 AppendLv="7" AppendStar="7" AppendColor="GUILD_COLOR" AppAttributeColor="GREEN_TEXTCOLOR"/>
             <AppLevel8 AppendLv="8" AppendStar="8" AppendColor="YELLOW_TEXTCOLOR" AppAttributeColor="GREEN_TEXTCOLOR"/>
             <AppLevel9 AppendLv="9" AppendStar="9" AppendColor="WHISPER_COLOR" AppAttributeColor="GREEN_TEXTCOLOR"/>
-            <AppLevel10 AppendLv="10" AppendStar="10" AppendColor="Itemper_color" AppAttributeColor="GREEN_TEXTCOLOR"/>
+            <AppLevel10 AppendLv="10" AppendStar="10" AppendColor="WHISPER_COLOR" AppAttributeColor="GREEN_TEXTCOLOR"/>
+            <AppLevel11 AppendLv="11" AppendStar="11" AppendColor="Legend_color" AppAttributeColor="GREEN_TEXTCOLOR"/>
+            <AppLevel12 AppendLv="12" AppendStar="12" AppendColor="Itemper_color" AppAttributeColor="GREEN_TEXTCOLOR"/>
         </Append>
         <Pet>
             <Aptitude1 BaseLv="1" BaseName="Weak" BaseColor="DEFAULT_TEXTCOLOR"/>

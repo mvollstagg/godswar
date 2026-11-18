@@ -92,6 +92,8 @@ ASW_X0_2 = "Moving"
 
 -- ButtonClick.lua
 BC_X0_1 = "Server Time"
+BC_X0_2 = "Male"
+BC_X0_3 = "Female"
 
 -- BattleUI.xml
 
@@ -154,7 +156,8 @@ C_X0_23 = "3. /G  guild chat"
 C_X0_24 = "4. /T  team chat"
 C_X0_25 = "Chat Record:"
 C_X0_26 = "Use the ↑ and ↓ keys to retrieve the last ten messages"
-
+C_X0_27 = "Be careful of information that may appear in the chat box."
+C_X0_28 = "~Press Enter to chat~"
 -- ChatWndUI.xml
 
 CW_X0_1 = "Chatting with XXX"
@@ -335,8 +338,8 @@ D_X0_5 = "Description"
 
 D_X1_1 = "Start"
 D_X1_2 = "Extra draw"
-D_X1_3 = "Obtain" 
-D_X1_4 = "Reopen" 
+D_X1_3 = "Obtain"
+D_X1_4 = "Reopen"
 
 
 -- EquipForge.xml
@@ -424,7 +427,7 @@ GM_X0_2 = "Setting"
 HS_X0_1 = "Help List"
 HS_X0_2 = "Newbie Help"
 HS_X0_3 = "Stats"
-HS_X0_4 = "Quest" 
+HS_X0_4 = "Quest"
 HS_X0_5 = "Skill"
 HS_X0_6 = "  Warrior"
 HS_X0_7 = "  Champion"
@@ -437,8 +440,16 @@ HS_X0_13 = "Previous"
 HS_X0_14 = "Back"
 HS_X0_15 = "AFK Sys"
 HS_X0_16 = "Recommend a Friend"
+HS_X0_18 = "Holy Suit"
+HS_X0_19 = "Holy Stone"
+HS_X0_20 = "Pet System"
+HS_X0_21 = "Pets tidbits"
+HS_X0_22 = "Growth and Skill"
+HS_X0_23 = "Professions"
+HS_X0_24 = "Mount System"
 
--- HelpSystemConfig.lua 
+
+-- HelpSystemConfig.lua
 -- 这个文件中文集中 请翻译这个文件
 
 -- HelpSystemProc.lua
@@ -515,6 +526,17 @@ HSP_L0_69 = "任务第三层2第二层1第一个按钮text"
 HSP_L0_70 = "任务第三层2第二层2第二个按钮text"
 HSP_L0_71 = "技能第三层2第二层1第一个按钮text"
 HSP_L0_72 = "技能第三层2第二层2第二个按钮text"
+HSP_L0_74 = "How do I get a pet?"
+HSP_L0_75 = "What attributes do pets have?"
+HSP_L0_76 = "What do I need to do for my pet to learn a skill?"
+HSP_L0_77 = "How do I sign a Soul Contract with my pet?"
+HSP_L0_78 = "About Pet Merge"
+HSP_L0_79 = "About Pet Rebirth"
+HSP_L0_80 = "Get a new suit for you pet"
+HSP_L0_81 = "Professions Introduction"
+HSP_L0_82 = "Manufacture UI Details"
+HSP_L0_83 = "How to acquire required ingredients"
+
 
 -- HelpSystemSkillConfig.lua
 -- 这个文件中文集中 请翻译这个文件
@@ -540,7 +562,7 @@ I_X0_4 = "Show"
 I_X0_5 = "Silver"
 I_X0_6 = "Gold"
 I_X0_7 = "Set Stall"
-I_X0_8 = "E-Gold"
+I_X0_8 = "B-GOLD"
 
 --ItemBagsExUI.xml
 
@@ -555,6 +577,13 @@ IB_X0_8 = "The function of changing gear by using one key"
 IB_X0_9 = "Transfer gear info to the gear-change settings"
 IB_X0_10 = "Set Stall"
 IB_X0_11 = "Set Gear"
+IB_X0_12 = "Mounts"
+IB_X0_13 = "Mount Coronet"
+IB_X0_14 = "Mount Armor"
+IB_X0_15 = "Mount Soul"
+IB_X0_16 = "Mount Saddle"
+IB_X0_17 = "Mount Tassels"
+
 
 -- LevelExp.xml
 
@@ -570,7 +599,7 @@ LS_X0_4 = "All Servers"
 
 -- LoginUI.xml
 
-L_X0_1 = "Quit"
+L_X0_1 = "Exit Game"
 L_X0_2 = "Plug-in"
 L_X0_3 = "Account"
 L_X0_4 = "Password"
@@ -608,7 +637,7 @@ L_X0_35 = "Last Login"
 L_X0_36 = "|cff00FF00●|cffFFFFFF Normal"
 L_X0_37 = "|cffFFFF00●|cffFFFFFF Busy"
 L_X0_38 = "|cffFF0000●|cffFFFFFF Full"
-L_X0_39 = "|cffFFFF00★|cffFFFFFF Visited servers"
+L_X0_39 = "|cffff4500★|cffFFFFFF previously used servers"
 L_X0_40 = "Recommended Server"
 L_X0_41 = "Confirm"
 L_X0_42 = "More Servers"
@@ -616,6 +645,7 @@ L_X0_43 = " IGG"
 L_X0_44 = "facebook"
 L_X0_45 = "EnterGame"
 L_X0_46 = "Please Login Facebook First"
+L_X0_47 = "Choose a realm"
 
 -- MallUIConfig.xml
 
@@ -679,7 +709,7 @@ PI_X0_17 = "MDEF"
 PI_X0_18 = "Healing"
 PI_X0_19 = "Hitting"
 PI_X0_20 = "Dodge"
-PI_X0_21 = "Critical"
+PI_X0_21 = "Crit"
 PI_X0_22 = "Tenacity"
 PI_X0_23 = "Damage"
 PI_X0_24 = "M.Dmg"
@@ -708,7 +738,7 @@ QI_X0_3 = "Search"
 QI_X0_4 = "Inquire"
 QI_X0_5 = "Send Pet"
 QI_X0_6 = "[Sent Pet]"
-QI_X0_7 = "Up Quest"
+QI_X0_7 = "Increase EXP gain"
 QI_X0_8 = "Appraisal"
 
 -- QuestViewUI.xml
@@ -812,7 +842,7 @@ ST_X0_15 = "Upgraded skill slot requires"
 ST_X0_16 = "|cFFFFFF00Zodiac energy:"
 ST_X0_17 = "Talent points:"
 ST_X0_18 = "Zodiac level:"
-ST_X0_19 = "Expense:" 
+ST_X0_19 = "Expense:"
 
 -- StallBuyUI.xml
 
@@ -841,6 +871,8 @@ S_X0_2 = "Draw"
 S_X0_3 = "Storage"
 S_X0_4 = "Reward"
 S_X0_5 = "Rewards can't be removed fr-om 1:00am-3:00am everyday"
+S_X0_6 = "The function that allows you to adjust the angle of view using the arrow keys has been activated, but this function will only work in the main cities, the suburbs and the Pindus Mountains."
+S_X0_7 = "The function that allows you to adjust the angle of view using the arrow keys has been turned off. To turn it on, just click it."
 
 
 -- SystemBar.lua
@@ -867,6 +899,7 @@ SB_X1_17 = "Skill(S)"
 SB_X1_18 = "Talent(S)"
 SB_X1_19 = "Talent"
 SB_X1_20 = "Start"
+SB_X1_21 = "Professions(V)"
 
 -- SystemSetupUI.xml
 
@@ -923,10 +956,10 @@ TI_X0_24 = "Damage:"
 TI_X0_25 = "M.Dmg:"
 TI_X0_26 = "Hitting:"
 TI_X0_27 = "Dodge:"
-TI_X0_28 = "Critical:"
+TI_X0_28 = "Crit:"
 TI_X0_29 = "Tenacity:"
 TI_X0_30 = "Healing:"
-TI_X0_31 = "Absorb:" 
+TI_X0_31 = "Absorb:"
 TI_X0_32 = "View Pet"
 
 -- TeamUI.xml
@@ -957,6 +990,8 @@ TPP_X0_7 = "Faction Locked"
 
 UG_X0_1 = "Website"
 UG_X0_2 = "Help"
+UG_X0_3 = "Fill in"
+UG_X0_4 = "Close"
 
 -- UpGradeConfig.lua
 -- 这个文件中文集中 请翻译这个文件
@@ -1080,7 +1115,7 @@ PETD_X0_44 = "Technique:"
 PETD_X0_45 = "Wisdom:"
 PETD_X0_46 = "Luck:"
 PETD_X0_47 = "Unbound"
-PETD_X0_48 = "Bounded"
+PETD_X0_48 = "Bound"
 PETD_X0_49 = "Savvy Value"
 PETD_X0_50 = "Bound Status:"
 PETD_X0_51 = "Atuo Upgrade"
@@ -1126,7 +1161,12 @@ PETTYPE6 = "Puppet";
 PETTYPE7 = "Aviators";
 PETTYPE8 = "Ghosts";
 PETTYPE9 = "Mermaids";
-
+PETTYPE10 = "Loyal Dog";
+PETTYPE11 = "Tiger baby";
+PETTYPE12 = "Blue Crystal Dragon"
+PETTYPE13 = "Dodo";
+PETTYPE14 = "Elf Guardian";
+PETTYPE15 = "Wandering Spirit"
 -- 资质对应描述
 PETAPTITUDE1 = "Weak";
 PETAPTITUDE2 = "Fool";
@@ -1250,6 +1290,8 @@ SM_L0_01 = "Wow,you are just level"
 SM_L0_02 = ", but you dare to challenge the level "
 SM_L0_03 = " quest!"
 SM_L0_04 = "Awesome! You've almost reached the highest level, and you also meet the Up Quest requirement."
+SM_L0_05 = "Player"
+SM_L0_06 = "10% more experience will be gained when turning in a completed quest."
 -- PetChangeName.xml
 PETCN_X0_1 = "Renaming Stones are needed if you have renamed the pet once. Do you want to rename it?"
 PETCN_X0_2 = "Please enter a new name"
@@ -1333,6 +1375,7 @@ PETUNI_X0_14 = "Resist Magic Attx"
 PETUNI_X0_15 = "Decr Magic Dmg"
 PETUNI_X0_16 = "Decr Crit Dmg"
 PETUNI_X0_17 = "Reflexive Dmg"
+PETUNI_X0_18 = "Shown above is a preview of the merger result affected by pet savvy. When merged, a player character will get bonus |cFFE3170D pet savvy|cffffffff and |cFFE3170D pet spells|cffffffff."
 --RookieGuideProc.lua
 RGP_L0_1 = "Quest Received: "
 RGP_L0_2 = "Quest Finished"
@@ -1340,3 +1383,75 @@ RGP_L0_3 = "Reward: "
 RGP_L0_4 = "Quest deleted: "
 RGP_L0_5 = "Confirm Deletion"
 RGP_L0_6 = "Please select a quest"
+
+--AnswersSystem.xml
+ANSWERSY_X0_1 = "Continue"
+ANSWERSY_X0_2 = "End quiz"
+ANSWERSY_X0_3 = "Claim Rewards"
+ANSWERSY_X0_4 = "Just by answering some simple questions you can win lots of experience and Talent Points very easily. You can receive a quiz and answer 10 questions in total each hour. If you answer all of the 10 questions correctly, you will get the entire designated reward amount. If you answer some incorrectly, you will get get half of the rewards. Every time you finish a quiz, you have the chance to get 200 Bound Gold."
+ANSWERSY_X0_5 = "Additionally, at |cFF32CD32 0:45pm and 7:45pm|cffffffff, you can join the Quiz Contest. The top 10 players will get tons of Talent Points."
+ANSWERSY_X0_6 = "Quiz Contest Rankings"
+ANSWERSY_X0_7 = "Quiz Contest"
+ANSWERSY_X0_8 = "|cFFE3170Dsec |cffffffff you'll see the next question"
+ANSWERSY_X0_9 = "Your current point(s): "
+
+--AwardFunction.xml
+AWARDF_X0_1 = "Check"
+AWARDF_X0_2 = "Claim"
+--AntiIndulge.xml
+ATDG_X0_1 = "Fill in the ID card number"
+ATDG_X0_2 = "Later"
+
+--BeginnerGuideUI.xml
+BEG_XO_1 = "Newbie Guide"
+
+--LiveSkillUI.xml
+LSU_XO_1="Activity Points:"
+LSU_XO_2="Recipe Collection:"
+LSU_XO_3="Professions:"
+LSU_XO_4="prof. skill exp:"
+LSU_XO_5="Upgrading Restrictions:"
+LSU_XO_6="Props:"
+LSU_XO_7="Recipes:"
+LSU_XO_8="AP consumed:"
+LSU_XO_9="Prof. Exp earned:"
+LSU_XO_10="Success rate:"
+LSU_XO_11="Manufacture"
+LSU_XO_12="Stop Manufacturing"
+LSU_XO_13="Recipe Success Rates:"
+LSU_XO_14="Players are required to upgrade to a certain level before their professional proficiency can be upgraded further."
+LSU_XO_15="Every use of a recipe will earn you a certain amount of Profession Exp as long as the Recipe level is not too low when compared with your Profession level."
+LSU_XO_16="The success rate depends on Profession proficiency. A 5% increase in Profession proficiency will bring about a 1% increase in the success rate of recipes."
+
+--GatherBox.xml
+GBX_XO_1="You are using"
+GBX_XO_2="Resource Gathering,"
+GBX_XO_3="Activity Points:"
+GBX_XO_4=" Stop Resource Gathering"
+
+--BuyUI.xml
+BY_XO_1="For sale"
+BY_XO_2="Unit price"
+BY_XO_3="Buy"
+BY_XO_4="items"
+BY_XO_5="Total price"
+BY_XO_6="Confirm"
+
+--StallBuyUI.xml
+SBU_XO_1="Stall"
+SBU_XO_2="in store"
+SBU_XO_3="purchase"
+SBU_XO_4="stall's name"
+
+--StallSellUI.xml
+SSU_XO_1="Remove all"
+SSU_XO_2="Remove"
+SSU_XO_3="On sales"
+SSU_XO_4="Cancel"
+
+
+
+
+
+
+

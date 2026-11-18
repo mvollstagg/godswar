@@ -11,7 +11,7 @@ local NOTE_10 = 1	--战场
 local NOTE_20 = 2	--跨级任务
 local NOTE_30 = 3	--公会
 local NOTE_40 = 4	--新手活动1
-local NOTE_50 = 5	--新手活动2
+local NOTE_50 = 5	--中秋
 local NOTE_60 = 6	--新手活动3
 local NOTE_70 = 7	--公会保卫活动
 local NOTE_80 = 8	--
@@ -38,12 +38,94 @@ local NOTE_180 = 28	--副本
 local NOTE_190 = 29	--潘神的化身
 local NOTE_59 = 30
 local NOTE_191 = 40	--道具调用脚本消息提示
+local NOTE_193= 31
+local NOTE_192= 32
+SrvMsg_NOTE_181 = 33
+SrvMsg_NOTE_182 = 41
+SrvMsg_NOTE_183 = 42 --murder
+SrvMsg_NOTE_184 = 43
+SrvMsg_NOTE_185 = 44 --运气176/暑假礼包
+SrvMsg_NOTE_186 = 45 --幸运神明
+SrvMsg_NOTE_187 = 46 --恶魔岛
+SrvMsg_NOTE_188 = 47 --跨服挑战赛
+SrvMsg_NOTE_189 = 48 --跨服挑战赛
+SrvMsg_NOTE_190 = 49 --跨服挑战赛
+SrvMsg_NOTE_191 = 50 --特洛伊
+SrvMsg_NOTE_192 = 51 --七夕
+SrvMsg_NOTE_100 = 52 --许愿
 
+--周年庆
+permit_msg = {
+["11056"] = 	NF_L0_TZN11056,
+["14260"] = 	NF_L0_TZN14260,
+["14240"] = 	NF_L0_TZN14240,
+["14280"] = 	NF_L0_TZN14280,
+["13009"] =	NF_L0_TZN13009,
+["13414"] =	NF_L0_TZN13414,
+["13010"] =	NF_L0_TZN13010,
+["13420"] =	NF_L0_TZN13420,
+["13014"] =	NF_L0_TZN13014,
+["13421"] =	NF_L0_TZN13421,
+["13016"] =	NF_L0_TZN13016,
+["13424"] =	NF_L0_TZN13424,
+["13022"] =	NF_L0_TZN13022,
+["13425"] =	NF_L0_TZN13425,
+["13025"] =	NF_L0_TZN13025,
+["13426"] =	NF_L0_TZN13426,
+["13032"] =	NF_L0_TZN13032,
+["13430"] =	NF_L0_TZN13430,
+["13200"] =	NF_L0_TZN13200,
+["13433"] =	NF_L0_TZN13433,
+["13205"] =	NF_L0_TZN13205,
+["13616"] =	NF_L0_TZN13616,
+["13207"] =	NF_L0_TZN13207,
+["13617"] =	NF_L0_TZN13617,
+["13208"] =	NF_L0_TZN13208,
+["13626"] =	NF_L0_TZN13626,
+["13211"] =	NF_L0_TZN13211,
+["13627"] =	NF_L0_TZN13627,
+["13213"] =	NF_L0_TZN13213,
+["13640"] =	NF_L0_TZN13640,
+["13413"] =	NF_L0_TZN13413,
+["13641"] =	NF_L0_TZN13641,
+["10241"] =	NF_L0_TZN10241,
+["10243"] =	NF_L0_TZN10243,
+["10253"] =	NF_L0_TZN10253,
+["10277"] =	NF_L0_TZN10277,
+["10279"] =	NF_L0_TZN10279,
+["10299"] =	NF_L0_TZN10299,
+["10242"] =	NF_L0_TZN10242,
+["10244"] =	NF_L0_TZN10244,
+["10254"] =	NF_L0_TZN10254,
+["10278"] =	NF_L0_TZN10278,
+["10280"] =	NF_L0_TZN10280,
+["10300"] =	NF_L0_TZN10300,
+["10235"] =	NF_L0_TZN10299,
+["4230"] =	NF_L0_TZN10242,
+["4231"] = 	NF_L0_TZN10244,
+["4232"] =	NF_L0_TZN10254,
+["4233"] =	NF_L0_TZN10278,
+["9961"] = 	NF_L0_TZN10280,
+["9962"] = 	NF_L0_TZN10300,
 
--- 技能书配置表
-local skill_msg = 
+}
+
+--运气大比拼
+luck_msg =
 {
-        ["3875"]=SM_875,  
+        ["100"]=NF_Z_M0,
+        ["101"]=NF_Z_M1,
+        ["102"]=NF_Z_M2,
+        ["103"]=NF_Z_M3,
+        ["104"]=NF_Z_M4,
+        ["105"]=NF_Z_M5,
+        ["106"]=NF_Z_M6,
+        ["107"]=NF_Z_M12
+}
+-- 技能书配置表
+local skill_msg =
+{
+        ["3875"]=SM_875,
         ["5001"]=SM_001,
         ["5002"]=SM_002,
         ["5005"]=SM_003,
@@ -138,23 +220,43 @@ local skill_msg =
 	["2001"]=SM_103,
 	["1003"]=SM_091,--YD雅典玩家
 	["1004"]=SM_092--SBD
-        
+
 };
 
 --战场
-local Battlefield_msg = 
+local Battlefield_msg =
 {
 
 	["100"]=SM_089,
 	["1001"]=SM_091,--YD雅典玩家
 	["1002"]=SM_092,--SBD
 	["1003"]=SM_093,
-	["1004"]=SM_094
+	["1004"]=SM_094,
+	["51040"]=SM_51040,
+	["51050"]=SM_51050,
+	["10001"]=LD_10001,
+	["10002"]=LD_10002,
+	["10003"]=LD_10003,
+	["10004"]=LD_10004,
+	["10005"]=LD_10005,
+	["10012"]=NF_L0_WKD10012,
+	["10013"]=NF_L0_WKD10013,
+	["10022"]=NF_L0_WKD10022,
+	["10023"]=NF_L0_WKD10023,
+	["10031"]=NF_L0_WKD10031,
+	["10032"]=NF_L0_WKD10032,
+	["10041"]=NF_L0_THWAR10041,
+	["10042"]=NF_L0_THWAR10042,
+	["10043"]=NF_L0_THWAR10043,
+	["10044"]=NF_L0_THWAR10044,
+	["10051"]=NF_L0_THWAR10051,
+	["10052"]=NF_L0_THWAR10052,
+	["10053"]=NF_L0_THWAR10053,
 
 };
 
 --公会保卫活动
-local Association_msg = 
+local Association_msg =
 {
 
 	["1000"]=SM_102,
@@ -170,7 +272,7 @@ local Association_msg =
 };
 
 --公会保卫活动2杀怪公告积分
-local Association_msg2 = 
+local Association_msg2 =
 {
 
 	["1"] = SM_121,
@@ -193,14 +295,14 @@ local Association_msg2 =
 };
 
 --公会保卫活动3boss
-local Association_msg3 = 
+local Association_msg3 =
 {
 	["1"]=SM_126
 
 };
 
 --公会活动
-local Union_msg = 
+local Union_msg =
 {
 
 	["1"]=SM_201,--YD
@@ -210,7 +312,7 @@ local Union_msg =
 };
 
 --新手活动
-local New_msg = 
+local New_msg =
 {
 
 	["101"]=SM_2000,
@@ -235,18 +337,30 @@ local New_msg =
 
 };
 
-
---新手活动1
-local Newone_msg = 
+--中秋
+local Newone_msg =
 {
-
-	["104"]=SM_2018
-
+["101"]	=	GW_101,
+["0"]	=	GW_0,
+["1"]	=	GW_1,
+["100"]	=	GW_100,
+["102"]	=	GW_102,
+["2"]	=	GW_2,
+["103"]	=	GW_103,
+["53"]	=	GW_53,
+["3"]	=	GW_3,
+["52"]	=	GW_52,
+["104"]	=	GW_104,
+["50"]	=	GW_50,
+["51"]	=	GW_51,
+["54"]	=	GW_54,
+["4"]	=	GW_4,
+["152"]	=	GW_152
 };
 
 
 --新手活动2
-local Newtwo_msg = 
+local Newtwo_msg =
 {
 
 	["105"]=SM_2019,
@@ -306,14 +420,33 @@ local Health_msg =
 
 }
 --战场奖励
-local Tige_msg = 
+local Tige_msg =
 {
 	["3102"]=SM_3102,
-	["3103"]=SM_3103
+	["3103"]=SM_3103,
+	["3104"]=SM_3104,
+	["3105"]=SM_3105,
+	["3106"]=SM_3106,
+	["3107"]=SM_3107,
+	["5000"]=SM_5000,
+	["5001"]=SM_5001,
+	["5102"]=SM_5102,
+	["51060"]=SM_51060,
+	["51160"]=SM_51160,
+	["4822"] = SKL_MS4822,
+	["4823"] = SKL_MS4823,
+	["4824"] = SKL_MS4824,
+	["4826"] = SKL_MS4826,
+    ["16119"] = SM_16119,
+    ["16120"] = SM_16120,
+    ["26120"] = SM_26120,
+    ["00002"] = NF_L0_TR0002,
+    ["00005"] = NF_L0_TR0005,
+
 
 };
 --战场奖励
-local Tiges_msg = 
+local Tiges_msg =
 {
 	["1000"]=SM_3111,
 	["1001"]=SM_3112,
@@ -328,13 +461,26 @@ local Tiges_msg =
 	["4008"]=SM_4008,
 	["4009"]=SM_4009,
 	["4010"]=SM_4010,
+	["4011"]=SM_4011,
+	["4012"]=SM_4012,
 	["5001"]=SM_3115,
 	["5002"]=SM_5002,
 	["5003"]=SM_5003,
-
+	["51010"]=SM_51010,
+	["51020"]=SM_51020,
+	["51100"]=SM_092,
+	["51110"]=SM_091,
+	["51180"]=SM_51180,
+	["51190"]=SM_51190,
+    ["61001"]=SM_61001,
+    ["61002"]=SM_61002,
+	["10004"]=WARMS_10004,
+	["10005"]=WARMS_10005,
+	["0"]=WARMS_0,
+	["1"]=WARMS_1,
 };
 --1
-local Newthree_msg = 
+local Newthree_msg =
 {
 
 	["107"]=SM_2021
@@ -343,7 +489,7 @@ local Newthree_msg =
 
 
 --2
-local Newfour_msg = 
+local Newfour_msg =
 {
 
 	["108"]=SM_2022
@@ -352,7 +498,7 @@ local Newfour_msg =
 
 
 --3
-local Newfive_msg = 
+local Newfive_msg =
 {
 
 	["109"]=SM_2023
@@ -360,7 +506,7 @@ local Newfive_msg =
 };
 
 --4
-local Newsix_msg = 
+local Newsix_msg =
 {
 
 	["110"]=SM_2024
@@ -369,7 +515,7 @@ local Newsix_msg =
 
 
 --5
-local Newseven_msg = 
+local Newseven_msg =
 {
 
 	["111"]=SM_2025
@@ -378,7 +524,7 @@ local Newseven_msg =
 
 
 --6
-local Neweight_msg = 
+local Neweight_msg =
 {
 
 	["112"]=SM_2026
@@ -387,7 +533,7 @@ local Neweight_msg =
 
 
 --7
-local Newnight_msg = 
+local Newnight_msg =
 {
 
 	["113"]=SM_2027
@@ -395,7 +541,7 @@ local Newnight_msg =
 };
 
 --zeus
-local Zeus_msg = 
+local Zeus_msg =
 {
 
 	["1230"]=ZEUS_1230,
@@ -409,7 +555,7 @@ local Zeus_msg =
 };
 
 --副本
-local FuBen_msg = 
+local FuBen_msg =
 {
 
 	["1"]=FB_0001,
@@ -417,10 +563,10 @@ local FuBen_msg =
 	["3"]=FB_0003,
 	["4"]=FB_0004,
 	["5"]=FB_0005,
-        ["6"]=FB_0006
+        ["6"]=FB_0006,
 };
 --道具调用技能
-local DaoJu_msg = 
+local DaoJu_msg =
 {
 
 	["50"]=DJ_0001,
@@ -432,7 +578,7 @@ local DaoJu_msg =
 };
 
 -- 潘神的化身
-local pan_msg = 
+local pan_msg =
 {
 
         ["3820"]=XD_001,
@@ -456,37 +602,157 @@ local pan_msg =
         ["10106"]=XD_019,
 	["4109"]=XD_020,
 	["9991"]=XD_021,
+	["4232"]=XD_022,
+	["4201"]=XD_023,
+	["4231"]=XD_024,
+	["4221"]=XD_025,
+	["4211"]=XD_026,
+	["4230"]=XD_027,
+	["9990"]=XD_028,
+	["9960"]=XD_029,
+	["4112"]=XD_030,
+	["4151"]=XD_031,
+	["4511"]=XD_032,
+	["4502"]=XD_033,
+	["10083"]=XD_034,
+	["3819"]=XD_035,
 	["1"]=XD_067,		--YD雅典玩家
 	["0"]=XD_068,		--SBD
 	["1000"]=XD_069
-        
+
 };
 
 
+--结婚
+local Mail_msg =
+{
+
+	["5101"]=MAIL_5101,
+	["5102"]=MAIL_5102,
+	["5103"]=MAIL_5103,
+	["5203"]=MAIL_5203,
+	["5303"]=MAIL_5303,
+	["5403"]=MAIL_5403
+
+
+};
+--利兰丁农场
+SrvMsg_Lelantine_msg =
+{
+	["51070"]=SM_51070,
+	["51080"]=SM_51080,
+	["51090"]=SM_51090,
+	["5201"]=NF_L0_THWAR5201,
+	["5202"]=NF_L0_THWAR5202,
+	["5203"]=NF_L0_THWAR5203,
+	["5204"]=NF_L0_THWAR5204,
+	["5301"]=NF_L0_THWAR5301,
+	["5303"]=NF_L0_THWAR5303,
+	["5402"]=NF_L0_THWAR5402,
+	["5403"]=NF_L0_THWAR5403,
+	["5602"]=NF_L0_THWAR5602,
+
+};
 function Broadcastmsg(notetype,channel,name,note)
 
 	strText = "";
 	if notetype == NOTE_1  then--技能书
 		msg_table = Split(note,"#");
 		strText ="|cff76EE00"..skill_msg[msg_table[0]]..name..skill_msg[msg_table[1]]..skill_msg[msg_table[2]].."|cFFFFFFFF";
-        elseif notetype == NOTE_10  then--战场
+		elseif notetype == NOTE_10  then--战场
 		msg_table = Split(note,"#");
-		strText = Battlefield_msg[msg_table[0]] .. name .. Battlefield_msg[msg_table[1]];
+		strText = Battlefield_msg[msg_table[0]] .. name .. LuaText["War_PDS_Notice100"] .. msg_table[1] .. LuaText["War_PDS_Notice101"];
 
-        elseif notetype == NOTE_20  then----跨级任务
-		rank = note+10;
+		elseif notetype == NOTE_20  then----跨级任务
 
-		if rank == 130 then 
-			strText = "\""..name.."\""..SM_L0_04;	
-		else 
-			if rank > 120 then
-				rank = 120;
-			end
-			strText = "\""..name.."\""..SM_L0_01 .. " "..note.." "..SM_L0_02.." "..rank.." "..SM_L0_03;		
-		end
-        elseif notetype == NOTE_30  then--公会活动
+		strText = SM_L0_05.."\""..name.."\""..SM_L0_06;
+
+		elseif notetype == NOTE_30  then--公会活动
 		msg_table = Split(note,"#");
 		strText =  Union_msg[msg_table[0]] .. name .. Union_msg[msg_table[1]];
+
+		elseif notetype == SrvMsg_NOTE_183  then--运气大比拼-领 / 刺杀
+				if name == "murderHpPercent" then --血量公告
+					camp = "";
+					add = "";
+					msg_table = Split(note,"#")
+
+					if msg_table[1] == "0" then -- 判断地点
+						add = LuaText["Murder_NoticeAGLS"];
+						camp = LuaText["Murder_NoticeSBD"];
+					else
+						add = LuaText["Murder_NoticeMJLHA"];
+						camp = LuaText["Murder_NoticeYD"];
+					end;
+
+					if msg_table[0] == "10" then
+						strText =  LuaText["Murder_Notice6"] .. add .. LuaText["Murder_Notice3"];
+					elseif msg_table[0] == "30" then
+						strText =  LuaText["Murder_Notice5"] .. add .. LuaText["Murder_Notice3"];
+					elseif msg_table[0] == "50" then
+						strText =  LuaText["Murder_Notice4"] .. add .. LuaText["Murder_Notice3"];
+					elseif msg_table[0] == "80" then
+						strText = LuaText["Murder_Notice1"] .. add .. LuaText["Murder_Notice3"];
+					end;
+
+				elseif name == "murderOver" then --死亡（活动结束）
+					camp = "";
+					if note == "0"  then
+						camp = LuaText["Murder_NoticeSBD"];
+					else
+						camp = LuaText["Murder_NoticeYD"];
+					end;
+					strText =  LuaText["Murder_Notice7"] .. camp .. LuaText["Murder_Notice8"] .. camp .. LuaText["Murder_Notice9"];
+				else
+		    msg_table = Split(note,"#");
+			strText =  NF_Z_M7 .. name .. NF_Z_M8 .. luck_msg[msg_table[0]];
+				end;
+
+        elseif notetype == SrvMsg_NOTE_184  then--运气大比拼-111，222，333.....
+		msg_table = Split(note,"#");
+		strText =  NF_Z_M7 .. name .. NF_Z_M9 .. msg_table[0] .. NF_Z_M10;
+        elseif notetype == SrvMsg_NOTE_185  then--运气大比拼-176 / 暑期大礼包
+		msg_table = Split(note,"#");
+		if msg_table[0] == "SummerVacation" then
+			if msg_table[1] == "GiftBag" then --礼包
+		        strText =  name .. LuaText["Summer_Notice_GiftBag"];
+		    elseif msg_table[1] == "Long" then --龙
+		        strText =  name .. LuaText["Summer_Notice_Long"];
+			end;
+		else
+		    strText =  NF_Z_M7 .. name .. NF_Z_M11 .. luck_msg[msg_table[0]];
+
+		end;
+	elseif notetype == SrvMsg_NOTE_186  then--幸运神明
+		msg_table = Split(note,"#");
+		strText =  NF_Z_M7 .. name .. NF_L0_L019 .. msg_table[0] .. NF_L0_L020 .. msg_table[1] .. NF_L0_L021;
+
+	elseif notetype == SrvMsg_NOTE_187  then--恶魔岛
+		strText =  name .. LuaText["NF_EM_G100"];
+
+	elseif notetype == SrvMsg_NOTE_100  then--周年庆
+                msg_table = Split(note,"#");
+		strText = NF_L0_TZN926 .. name .. NF_L0_TZN927 .. permit_msg[msg_table[0]];
+
+	elseif notetype == SrvMsg_NOTE_188  then--跨服挑战赛
+		name_table = Split(name,"/");
+		msg_table = Split(note,"#");
+		strText = SrvMsg_Lelantine_msg[msg_table[0]] .. name_table[0] .. SrvMsg_Lelantine_msg[msg_table[1]].. SrvMsg_Lelantine_msg[msg_table[2]].. name_table[1].. SrvMsg_Lelantine_msg[msg_table[3]]
+
+	elseif notetype == SrvMsg_NOTE_189  then--跨服挑战赛
+		name_table = Split(name,"/");
+		msg_table = Split(note,"#");
+		strText = SrvMsg_Lelantine_msg[msg_table[0]] .. name_table[0] .. SrvMsg_Lelantine_msg[msg_table[1]].. SrvMsg_Lelantine_msg[msg_table[2]].. name_table[1]..NF_L0_THWAR0011.. msg_table[3] ..NF_L0_THWAR0001
+
+	elseif notetype == SrvMsg_NOTE_190  then--跨服挑战赛
+		msg_table = Split(note,"#");
+		strText = SrvMsg_Lelantine_msg[msg_table[0]] .. name .. SrvMsg_Lelantine_msg[msg_table[1]].. msg_table[2].. NF_L0_THWAR0002
+
+    elseif notetype == SrvMsg_NOTE_192  then--七夕
+    	strText =  NF_Z_M7 .. name .. NF_L0_CD108;
+
+	elseif notetype == SrvMsg_NOTE_191  then--特洛伊
+		strText =  name .. note;
 
         elseif notetype == NOTE_40  then--新手活动
 		msg_table = Split(note,"#");
@@ -494,12 +760,12 @@ function Broadcastmsg(notetype,channel,name,note)
 
         elseif notetype == NOTE_50  then--新手活动1
 		msg_table = Split(note,"#");
-		strText = Newone_msg[msg_table[0]];
+		strText = Newone_msg[msg_table[0]] .. GW_map;
 
         elseif notetype == NOTE_60  then--新手活动2
 		msg_table = Split(note,"#");
 		strText = Newtwo_msg[msg_table[0]] .. Newtwo_msg[msg_table[1]] .. Newtwo_msg[msg_table[2]];
-                
+
 	elseif notetype == NOTE_70  then--新手活动2
 		msg_table = Split(note,"#");
 		strText = Association_msg[msg_table[0]] .. name .. Association_msg[msg_table[1]];
@@ -527,7 +793,7 @@ function Broadcastmsg(notetype,channel,name,note)
         elseif notetype == NOTE_130  then--6
 		msg_table = Split(note,"#");
 		strText = Neweight_msg[msg_table[0]];
-	
+
 	elseif notetype == NOTE_140  then--公会活动2
 		msg_table = Split(note,"#");
 		strText = name .. Association_msg2[msg_table[0]] .. name .. SM_132 .. msg_table[1] .. SM_133 .. msg_table[2];
@@ -578,9 +844,13 @@ function Broadcastmsg(notetype,channel,name,note)
         elseif notetype == NOTE_59  then
 		msg_table = Split(note,"#");
 		strText = Tiges_msg[msg_table[0]]..name..Tiges_msg[msg_table[1]]..Tiges_msg[msg_table[2]];
-        elseif notetype == NOTE_51  then--战场
+        elseif notetype == NOTE_51  then--战场/特洛伊
 		msg_table = Split(note,"#");
-		strText = Battlefield_msg[msg_table[0]];
+		if msg_table[0] == "troy" then
+		    strText = LuaText["Troy_Notice" .. msg_table[1]]		
+		else
+		    strText = Battlefield_msg[msg_table[0]];
+                end;
         elseif notetype == NOTE_180  then
 		msg_table = Split(note,"#");
 		strText = name .. FuBen_msg[msg_table[0]];
@@ -590,13 +860,40 @@ function Broadcastmsg(notetype,channel,name,note)
         elseif notetype == NOTE_180  then
 		msg_table = Split(note,"#");
 		strText = name .. FuBen_msg[msg_table[0]];
+        elseif notetype == SrvMsg_NOTE_181  then
+		msg_table = Split(note,"#");
+		strText = name .. SrvMsg_Lelantine_msg[msg_table[0]]..msg_table[2]..SrvMsg_Lelantine_msg[msg_table[1]];
         elseif notetype == NOTE_191  then
 		msg_table = Split(note,"#");
 		strText = DaoJu_msg[msg_table[0]];
+        elseif notetype == NOTE_193  then
+		name_table = Split(name,"/");
+		msg_table = Split(note,"#");
+		strText = Mail_msg[msg_table[0]] .. name_table[0] .. Mail_msg[msg_table[1]].. name_table[1] .. Mail_msg[msg_table[2]];
+        elseif notetype == NOTE_192  then
+		name_table = Split(name,"/");
+		msg_table = Split(note,"#");
+		strText = name_table[0] .. Mail_msg[msg_table[0]] .. name_table[1] .. Mail_msg[msg_table[1]].. name_table[2] .. Mail_msg[msg_table[2]];
+	    elseif notetype == SrvMsg_NOTE_182 then----答题系统
+      		msg_table = Split(note,"#");
+		if msg_table[0] == "1" then
+			strText = AS_L0_005
+		else
+			strText = AS_L0_004
+		end
+		if msg_table[1] == "1" then
+			strText = strText..name..AS_L0_001
+		else
+			strText = strText..name..AS_L0_002..msg_table[1]..AS_L0_003
+		end
+	    if msg_table[0] == "20" then
+			strText = AS_L0_006..name..AS_L0_007
+		end
+
 
 	end;
 
-	
+
 	if channel == CHANNEL_MIDDLE  then
 		GameAPI:AddProclaimMessage_UTF8(strText,1);
         elseif channel == CHANNEL_PRESONAL  then

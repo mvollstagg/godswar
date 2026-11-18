@@ -8,7 +8,7 @@ Name="Accept Quest",
 Description="The quests are part of your growth in GodsWar, and aside from experience, rewards like TP, silver, and equipment are distributed on completion. There are 5 types of quests to choose from, Main, Repeated, Polis, Daily, and Guild. Each provides a different setting in terms of growth and guidance.",
 Guide="Look for an NPC with a '?' on top of their head. These NPCs will have quests available for you to accept.",
 Aim="Accept a quest.",
-Reward="100 EXP, 10 silver, Medium Mana Potion*10",
+Reward=" 10 silver, Medium Mana Potion*10",
 }
 
 RookieGuide_Cofig[2] =
@@ -18,7 +18,7 @@ Name="Submit",
 Description="The quests are part of your growth in GodsWar, and aside from experience, rewards like TP, silver, and equipment are distributed on completion. There are 5 types of quests to choose from, Main, Repeated, Polis, Daily, and Guild. Each provides a different setting in terms of growth and guidance.",
 Guide="Look for an NPC with a '!' on top of their head. These NPCs have outstanding quests for you to respond to.",
 Aim="Submit a quest.",
-Reward="100 EXP, 10 silver, Medium Healing Potion*10",
+Reward=" 10 silver, Medium Healing Potion*10",
 }
 
 RookieGuide_Cofig[3] =
@@ -28,7 +28,7 @@ Name="Quest Search",
 Description="The quests are part of your growth in GodsWar, and aside from experience, rewards like TP, silver, and equipment are distributed on completion. There are 5 types of quests to choose from, Main, Repeated, Polis, Daily, and Guild. Each provides a different setting in terms of growth and guidance.",
 Guide="Use shortcut key 'Q' to open the quest menu, and use the quest searching function to guide you to your quests.",
 Aim="Search for a quest.",
-Reward="100 EXP, 10 silver, Weak EXP Potion*2",
+Reward=" 10 silver, Weak EXP Potion*2",
 }
 
 RookieGuide_Cofig[4] =
@@ -38,7 +38,7 @@ Name="Auto-track Feature",
 Description="The auto-track feature means a far off NPC or a remote location are just one click away.",
 Guide="In the mini map, the 'Search' button is part of the auto-track system. Select a target and you will get there automatically.",
 Aim="Use the Auto-track feature.",
-Reward="100 EXP, 1 TP, 10 silver, Level 1 Emerald*1.",
+Reward=" 1 TP, 10 silver, Level 1 Emerald*1.",
 }
 
 RookieGuide_Cofig[5] =
@@ -48,7 +48,7 @@ Name="Quest Auto-track",
 Description="Quest Auto-track is an easy way to reach the quest target destination.",
 Guide="On the quest menu, click on the words in green to start the quest auto-track.",
 Aim="Click on the name of an NPC or monster and start your first quest auto-track.",
-Reward="100 EXP, 1 TP, 10 silver, Level 1 Sapphire*1.",
+Reward=" 1 TP, 10 silver, Level 1 Sapphire*1.",
 }
 
 RookieGuide_Cofig[6] =
@@ -344,11 +344,11 @@ Reward="50 reputation, 500 EXP, 5 TP, 100 silver, 50 masters ethics.",
 RookieGuide_Cofig[45] =
 {
 TypeID=2,
-Name="Exchange for E-gold",
+Name="Exchange for B-gold",
 Description="The apprenticeship system is designed to encourage interaction between players old and new. It is a way for new players to get a head start in the game with help from more experienced players. For their effort, the masters will be awarded an honorable title and rewarded with silver and EXP.",
-Guide="Visit the E-gold Redeemer in the primary cities to exchange masters ethics for E-gold. Use the map auto-track to find the Redeemer.",
-Aim="Exchange masters ethics for E-gold.",
-Reward="33 E-gold, 1000 EXP, 5 TP, 50 masters ethics.",
+Guide="Visit the B-gold Redeemer in the primary cities to exchange masters ethics for B-gold. Use the map auto-track to find the Redeemer.",
+Aim="Exchange masters ethics for B-gold.",
+Reward="33 B-gold, 1000 EXP, 5 TP, 50 masters ethics.",
 }
 
 RookieGuide_Cofig[46] =
@@ -415,7 +415,7 @@ RookieGuide_Cofig[52] =
 {
 TypeID=2,
 Name="100 Reputation",
-Description="Due to differences in their beliefs, the tension between Athens and Sparta has escalated to a new level, and their goal is to dominate the other faction at all costs. Killing an enemy will bring you a certain amount of reputation points, which in turn, can be traded for E-gold.",
+Description="Due to differences in their beliefs, the tension between Athens and Sparta has escalated to a new level, and their goal is to dominate the other faction at all costs. Killing an enemy will bring you a certain amount of reputation points, which in turn, can be traded for B-gold.",
 Guide="To receive reputation points from enemy-kills, penetrate the Isthmus into enemy territory or wait at the border for intruders to show up. Every Wednesday and Saturday at the Mt. Pindus Battlefield event, you can gain reputation points by fighting with your faction.",
 Aim="Obtain 100 Reputation value.",
 Reward="2000 EXP, 2 TP, 1000 silver, 100 reputation.",
@@ -425,7 +425,7 @@ RookieGuide_Cofig[53] =
 {
 TypeID=2,
 Name="500 Reputation",
-Description="Due to differences in their beliefs, the tension between Athens and Sparta has escalated to a new level, and their goal is to dominate the other faction at all costs. Killing an enemy will bring you a certain amount of reputation points, which in turn, can be traded for E-gold. ",
+Description="Due to differences in their beliefs, the tension between Athens and Sparta has escalated to a new level, and their goal is to dominate the other faction at all costs. Killing an enemy will bring you a certain amount of reputation points, which in turn, can be traded for B-gold. ",
 Guide="To receive reputation points from enemy-kills, penetrate the Isthmus into enemy territory or wait at the border for intruders to show up. Every Wednesday and Saturday at the Mt. Pindus Battlefield event, you can gain reputation points by fighting with your faction.",
 Aim="Obtain 500 Reputation value.",
 Reward="5000 EXP, 4 TP, 5000 silver, 300 reputation.",
@@ -508,7 +508,7 @@ Name="Guild Donation 2",
 Description="At the Guild Footstone, a donation to your guld can be made in exchange for tokens and contribution points.",
 Guide="In the major cities, talk with the [Guild] Altar Building Supervisor and donate 500 gold.",
 Aim="Donate 500 gold to the Guild.",
-Reward="50000 contribution, 5000 EXP, 30 TP, 33 E-gold.",
+Reward="50000 contribution, 5000 EXP, 30 TP, 33 B-gold.",
 }
 
 RookieGuide_Cofig[68] =
@@ -518,7 +518,7 @@ Name="20 Guild Memberships",
 Description="By joining a guild, and with all the members connected, both your strength and the strength of your guild will increase substantially. Keep in mind that the strength of your enemy is also growing and it is only a matter of time before they will grwo stronger than you if you slow your pace.",
 Guide="Recruit more members to your guild",
 Aim="20 Guild Memberships",
-Reward="2000 contribution, 200 EXP, 2 TP, 66 E-gold.",
+Reward="2000 contribution, 200 EXP, 2 TP, 66 B-gold.",
 }
 
 RookieGuide_Cofig[69] =
@@ -528,7 +528,7 @@ Name="40 Guild Memberships",
 Description="By joining a guild, and with all the members connected, both your strength and the strength of your guild will increase substantially. Keep in mind that the strength of your enemy is also growing and it is only a matter of time before they will grwo stronger than you if you slow your pace.",
 Guide="Recruit more members to your guild",
 Aim="40 Guild Memberships",
-Reward="4000 contribution, 400 EXP, 2 TP, 133 E-gold.",
+Reward="4000 contribution, 400 EXP, 2 TP, 133 B-gold.",
 }
 
 RookieGuide_Cofig[70] =
@@ -538,7 +538,7 @@ Name="60 Guild Memberships",
 Description="By joining a guild, and with all the members connected, both your strength and the strength of your guild will increase substantially. Keep in mind that the strength of your enemy is also growing and it is only a matter of time before they will grwo stronger than you if you slow your pace.",
 Guide="Recruit more members to your guild",
 Aim="60 Guild Memberships",
-Reward="6000 contribution, 600 EXP, 2 TP, 200 E-gold.",
+Reward="6000 contribution, 600 EXP, 2 TP, 200 B-gold.",
 }
 
 RookieGuide_Cofig[71] =
@@ -548,7 +548,7 @@ Name="80 Guild Memberships",
 Description="By joining a guild, and with all the members connected, both your strength and the strength of your guild will increase substantially. Keep in mind that the strength of your enemy is also growing and it is only a matter of time before they will grwo stronger than you if you slow your pace.",
 Guide="Recruit more members to your guild",
 Aim="80 Guild Memberships",
-Reward="8000 contribution, 800 EXP, 2 TP, 266 E-gold.",
+Reward="8000 contribution, 800 EXP, 2 TP, 266 B-gold.",
 }
 
 RookieGuide_Cofig[72] =
@@ -558,7 +558,7 @@ Name="100 Guild Memberships",
 Description="By joining a guild, and with all the members connected, both your strength and the strength of your guild will increase substantially. Keep in mind that the strength of your enemy is also growing and it is only a matter of time before they will grwo stronger than you if you slow your pace.",
 Guide="Recruit more members to your guild",
 Aim="100 Guild Memberships",
-Reward="10000 contribution, 1000 EXP, 2 TP, 333 E-gold.",
+Reward="10000 contribution, 1000 EXP, 2 TP, 333 B-gold.",
 }
 
 RookieGuide_Cofig[73] =
@@ -868,7 +868,7 @@ Name="Ruby Forging",
 Description="Rubies can be forged to raise the equipment by 10 levels. For example, Level 20 equipment forged with a ruby can result in a Level 30 version of the same equipment.",
 Guide="Open the equipment menu, and on the bottom, there will be an icon with a hammer. Click on the icon to start the forging process. Insert the equipment and a ruby to be forged.",
 Aim="Use a ruby to increase the level of your equipment.",
-Reward="1000 EXP, 2 TP, 1000 silver, Level 3 Ruby*2.",
+Reward="1000 EXP, 2 TP, Level 3 Ruby*2.",
 }
 
 RookieGuide_Cofig[110] =
@@ -878,7 +878,7 @@ Name="Amethyst Remolding",
 Description="Remold equipment to any level with an amethyst. For example, Level 20 equipment remolded with an amethyst can result in identical equipment with any selected level.",
 Guide="Open the equipment menu, and on the bottom, there will be an icon with a hammer. Click on the icon to start the forging process. Insert the equipment and a ruby to be remolded.",
 Aim="Use an amethyst to change the level of your equipment.",
-Reward="5000 EXP, 5 TP, 5000 silver, Level 3 Amethyst*1.",
+Reward="5000 EXP, 5 TP, Level 3 Amethyst*1.",
 }
 
 RookieGuide_Cofig[111] =
@@ -898,7 +898,7 @@ Name="Enhance Gear Attribute",
 Description="You can enhance the attributes of your equipment by mounting original stones on them. Enhancing the attribute values can help you accelerate the overall performance of your equipment. The resources left over from gear decomposition can be put into good use here.",
 Guide="Visit the Gear Mentor in your major city and select 'enhance gear attribute' to start the enhancement process. Insert the equipment along with attribute stones and quartz plates, and then click 'confirm.'",
 Aim="Choose a piece of equipment and have its attributes enhanced.",
-Reward="1000 EXP, 10 TP, 3000 silver, Blood Stone*1.",
+Reward="1000 EXP, 10 TP, Blood Stone*1.",
 }
 
 RookieGuide_Cofig[113] =
@@ -908,7 +908,7 @@ Name="Add Gear Attribute",
 Description="Not all attributes can be made available to a single piece of equipment, in fact they are usually equipmentment specific. All equipment may have a maximum of 4 attributes.",
 Guide="Visit the Gear Mentor in your major city and select 'add gear attribute' to add an attribute to your equipment. Insert the equipment along with attribute stones and Flame Sparks, and click 'confirm.'",
 Aim="Choose a piece of equipment and have an attribute added to it.",
-Reward="1000 EXP, 10 TP, 3000 silver, Health Stone*1.",
+Reward="1000 EXP, 10 TP, Health Stone*1.",
 }
 
 RookieGuide_Cofig[114] =
@@ -918,7 +918,7 @@ Name="Delete Gear Attribute",
 Description="You can use a Water Grain to delete an attribute from your equipment in order to have a more desireable attribute added.",
 Guide="Visit the Gear Mentor in your major city and select 'delete gear attribute' to delete an attribute from your equipment.",
 Aim="Choose a piece of equipment and have an attribute deleted.",
-Reward="1000 EXP, 10 TP, 3000 silver, Shield Stone*1.",
+Reward="1000 EXP, 10 TP, Shield Stone*1.",
 }
 
 RookieGuide_Cofig[115] =
@@ -928,7 +928,7 @@ Name="Make Attribute Stone",
 Description="You can use the dust material left over from gear decomposition to make a new attribute stone. It is a great way to recycle materials. ",
 Guide="Visit the Gear Mentor in your major city and select 'make attribute stone' to make a random attribute stone.",
 Aim="Make a random attribute stone.",
-Reward="1000 EXP, 5 TP, 1000 silver.",
+Reward="1000 EXP, 5 TP.",
 }
 
 RookieGuide_Cofig[116] =
@@ -1028,7 +1028,7 @@ Name="To Level 20",
 Description="Level your character up to learn more advanced skills and use more advanced equipment. First level your character to Level 20.",
 Guide="Through quests and monster-killing you can increase your character's level to 20.|cfff79709(Note: Only by leveling up will the target be met)|cffffffff",
 Aim="Strengthen your character to Lv.20.",
-Reward="2000 EXP, 10 TP, 1000 silver, 333 E-gold, Delicate Heavy Armor, Delicate Heavy Bracers, Delicate Heavy Leggings.",
+Reward="2000 EXP, 10 TP, 1000 silver, 333 B-gold, Delicate Heavy Armor, Delicate Heavy Bracers, Delicate Heavy Leggings.",
 }
 
 RookieGuide_Cofig[131] =
@@ -1038,7 +1038,7 @@ Name="To Level 30",
 Description="Level your character up to learn more advanced skills and use more advanced equipment. First level your character to Level 30.",
 Guide="Through quests and monster-killing you can increase your character's level to 30.|cfff79709(Note: Only by leveling up will the target be met)|cffffffff",
 Aim="Strengthen your character to Lv.30",
-Reward="10000 EXP, 15 TP, 2000 silver, 333 E-gold, Delicate Silk Shirt, Delicate Silk Sleeves, Delicate Silk Leggings.",
+Reward="10000 EXP, 15 TP, 2000 silver, 333 B-gold, Delicate Silk Shirt, Delicate Silk Sleeves, Delicate Silk Leggings.",
 }
 
 RookieGuide_Cofig[132] =
@@ -1048,7 +1048,7 @@ Name="To Level 40",
 Description="Level your character up to learn more advanced skills and use more advanced equipment. First level your character to Level 40.",
 Guide="Through quests and monster-killing you can increase your character's level to 40.|cfff79709(Note: Only by leveling up will the target be met)|cffffffff",
 Aim="Strengthen your character to Lv.40",
-Reward="20000 EXP, 20 TP, 4000 silver, 666 E-gold, Delicate Hammer Chestplate, Delicate Hammer Bracelets, Delicate Hammer Leggings.",
+Reward="20000 EXP, 20 TP, 4000 silver, 666 B-gold, Delicate Hammer Chestplate, Delicate Hammer Bracelets, Delicate Hammer Leggings.",
 }
 
 RookieGuide_Cofig[133] =
@@ -1058,7 +1058,7 @@ Name="To Level 50",
 Description="Level your character up to learn more advanced skills and use more advanced equipment. First level your character to Level 50.",
 Guide="Through quests and monster-killing you can increase your character's level to 50.|cfff79709(Note: Only by leveling up will the target be met)|cffffffff",
 Aim="Strengthen your character to Lv.50",
-Reward="30000 EXP, 25 TP, 5000 silver, 666 E-gold, Delicate Barky Garment, Delicate Barky Sleeves, Delicate Barky Leggings.",
+Reward="30000 EXP, 25 TP, 5000 silver, 666 B-gold, Delicate Barky Garment, Delicate Barky Sleeves, Delicate Barky Leggings.",
 }
 
 RookieGuide_Cofig[134] =
@@ -1068,7 +1068,7 @@ Name="To Level 60",
 Description="Level your character up to learn more advanced skills and use more advanced equipment. First level your character to Level 60.",
 Guide="Through quests and monster-killing you can increase your character's level to 60.|cfff79709(Note: Only by leveling up will the target be met)|cffffffff",
 Aim="Strengthen your character to Lv.60",
-Reward="50000 EXP, 30 TP, 6000 silver, 666 E-gold, Good Hauberk Breastplate, Good Hauberk Cuffs, Good Hauberk Leggings.",
+Reward="50000 EXP, 30 TP, 6000 silver, 666 B-gold, Good Hauberk Breastplate, Good Hauberk Cuffs, Good Hauberk Leggings.",
 }
 
 RookieGuide_Cofig[135] =
@@ -1078,7 +1078,7 @@ Name="To Level 70",
 Description="Level your character up to learn more advanced skills and use more advanced equipment. First level your character to Level 70.",
 Guide="Through quests and monster-killing you can increase your character's level to 70.|cfff79709(Note: Only by leveling up will the target be met)|cffffffff",
 Aim="Strengthen your character to Lv.70",
-Reward="60000 EXP, 35 TP, 7000 silver, 666 E-gold, Good Icy Vestment, Good Icy Sleeves, Good Icy Leggings.",
+Reward="60000 EXP, 35 TP, 7000 silver, 666 B-gold, Good Icy Vestment, Good Icy Sleeves, Good Icy Leggings.",
 }
 
 RookieGuide_Cofig[136] =
@@ -1088,7 +1088,7 @@ Name="To Level 80",
 Description="Level your character up to learn more advanced skills and use more advanced equipment. First level your character to Level 80.",
 Guide="Through quests and monster-killing you can increase your character's level to 80.|cfff79709(Note: Only by leveling up will the target be met)|cffffffff",
 Aim="Strengthen your character to Lv.80",
-Reward="80000 EXP, 40 TP, 8000 silver, 666 E-gold, Good Silver Vestment, Good Silver Sleeves, Good Silver Leggings.",
+Reward="80000 EXP, 40 TP, 8000 silver, 666 B-gold, Good Silver Vestment, Good Silver Sleeves, Good Silver Leggings.",
 }
 
 RookieGuide_Cofig[137] =
@@ -1098,7 +1098,7 @@ Name="To Level 90",
 Description="Level your character up to learn more advanced skills and use more advanced equipment. First level your character to Level 90.",
 Guide="Through quests and monster-killing you can increase your character's level to 90.|cfff79709(Note: Only by leveling up will the target be met)|cffffffff",
 Aim="Strengthen your character to Lv.90",
-Reward="90000 EXP, 45 TP, 9000 silver, 666 E-gold, Good Exalted Robe, Good Exalted Sleeves, Good Exalted Leggings.",
+Reward="90000 EXP, 45 TP, 9000 silver, 666 B-gold, Good Exalted Robe, Good Exalted Sleeves, Good Exalted Leggings.",
 }
 
 RookieGuide_Cofig[138] =
@@ -1108,7 +1108,7 @@ Name="To Level 100",
 Description="Level your character up to learn more advanced skills and use more advanced equipment. First level your character to Level 100.",
 Guide="Through quests and monster-killing you can increase your character's level to 100.|cfff79709(Note: Only by leveling up will the target be met)|cffffffff",
 Aim="Strengthen your character to Lv.100",
-Reward="100000 EXP, 50 TP, 10000 silver, 1000 E-gold, Good Scale Armor, Good Scale Armguards, Good Scale Leggings.",
+Reward="100000 EXP, 50 TP, 10000 silver, 1000 B-gold, Good Scale Armor, Good Scale Armguards, Good Scale Leggings.",
 }
 
 RookieGuide_Cofig[139] =
@@ -1118,7 +1118,7 @@ Name="To Level 110",
 Description="Level your character up to learn more advanced skills and use more advanced equipment. First level your character to Level 110.",
 Guide="Through quests and monster-killing you can increase your character's level to 110.|cfff79709(Note: Only by leveling up will the target be met)|cffffffff",
 Aim="Strengthen your character to Lv.110",
-Reward="110000 EXP, 60 TP, 10000 silver, 1000 E-gold, Good Soldier Vestment, Good Soldier Armguards, Good Soldier Leggings.",
+Reward="110000 EXP, 60 TP, 10000 silver, 1000 B-gold, Good Soldier Vestment, Good Soldier Armguards, Good Soldier Leggings.",
 }
 
 RookieGuide_Cofig[140] =
@@ -1128,7 +1128,7 @@ Name="To Level 115",
 Description="Level your character up to learn more advanced skills and use more advanced equipment. First level your character to Level 115.",
 Guide="Through quests and monster-killing you can increase your character's level to 115.|cfff79709(Note: Only by leveling up will the target be met)|cffffffff",
 Aim="Strengthen your character to Lv.115",
-Reward="150000 EXP, 65 TP, 10000 silver, 1000 E-gold, Good Sunshine Armor, Good Sunshine Bracers, Good Sunshine Leggings.",
+Reward="150000 EXP, 65 TP, 10000 silver, 1000 B-gold, Good Sunshine Armor, Good Sunshine Bracers, Good Sunshine Leggings.",
 }
 
 RookieGuide_Cofig[141] =
@@ -1138,7 +1138,7 @@ Name="To Level 120",
 Description="Level your character up to learn more advanced skills and use more advanced equipment. First level your character to Level 120.",
 Guide="Through quests and monster-killing you can increase your character's level to 120.|cfff79709(Note: Only by leveling up will the target be met)|cffffffff",
 Aim="Strengthen your character to Lv.120",
-Reward="200000 EXP, 70 TP, 10000 silver, 1000 E-gold, Superior Burning Cuirass, Superior Burning Bracers, Superior Burning Leggings.",
+Reward="200000 EXP, 70 TP, 10000 silver, 1000 B-gold, Superior Burning Cuirass, Superior Burning Bracers, Superior Burning Leggings.",
 }
 
 

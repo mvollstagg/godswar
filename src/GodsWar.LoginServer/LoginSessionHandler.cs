@@ -33,7 +33,8 @@ public sealed class LoginSessionHandler
         PacketConnection connection,
         string? remoteIp,
         CancellationToken cancellationToken,
-        bool caesarDecodeLogin = false)
+        bool caesarDecodeLogin = false,
+        bool isV227 = false)
     {
         string? authenticatedAccount = null;
         int clientVersion = 0;
@@ -58,7 +59,8 @@ public sealed class LoginSessionHandler
                             payload,
                             remoteIp,
                             cancellationToken,
-                            caesarDecodeLogin).ConfigureAwait(false);
+                            caesarDecodeLogin,
+                            isV227).ConfigureAwait(false);
                         gameServerRequested = false;
                         break;
 
@@ -116,7 +118,8 @@ public sealed class LoginSessionHandler
         byte[] payload,
         string? remoteIp,
         CancellationToken cancellationToken,
-        bool caesarDecodeLogin = false)
+        bool caesarDecodeLogin = false,
+        bool isV227 = false)
     {
         MsgLogin msg = MsgLogin.Parse(payload);
         if (caesarDecodeLogin)
@@ -126,7 +129,7 @@ public sealed class LoginSessionHandler
                 msg.Password,
                 msg.Version);
         }
-        ushort replyOpcode = MsgLoginReturnInfo.GetOpcode(msg.Version);
+        ushort replyOpcode = MsgLoginReturnInfo.GetOpcode(msg.Version, isV227);
 
         if (_options.ExpectedVersion > 0 && msg.Version != _options.ExpectedVersion)
         {
@@ -196,11 +199,15 @@ public sealed class LoginSessionHandler
         }
 
         IReadOnlyList<MsgGameServerInfo> servers = _gameServerRegistry.GetServerListForClient();
-        foreach (MsgGameServerInfo server in servers)
+        for (int i = 0; i < servers.Count; i++)
         {
+            byte[] serverPayload = isV227
+                ? servers[i].ToV227ClientPayload(isLast: i == servers.Count - 1)
+                : servers[i].ToClientPayload();
+
             await connection.SendPacketAsync(
                 (ushort)LoginOpcode.MsgGameServerInfo,
-                server.ToClientPayload(),
+                serverPayload,
                 cancellationToken).ConfigureAwait(false);
         }
 

@@ -29,15 +29,15 @@
 
     <!--按钮-->
 
-    <Drop0 Type="Button" ID="100001" Rectangle="19,77,61,119" Texture="./Localization/en_us/UI/Texture/main.gwo" TexturePos="0,540"   BtnTopTexture="./Localization/en_us/UI/Texture/icon.gwo" BtnTopPos="982,982" BtnTopRect="3,3,39,39"/>
-    <Drop1 Type="Button" ID="100002" Rectangle="67,77,109,119" Texture="./Localization/en_us/UI/Texture/main.gwo" TexturePos="0,540"   BtnTopTexture="./Localization/en_us/UI/Texture/icon.gwo" BtnTopPos="982,982" BtnTopRect="3,3,39,39"/>
-    <Drop2 Type="Button" ID="100003" Rectangle="115,77,157,119" Texture="./Localization/en_us/UI/Texture/main.gwo" TexturePos="0,540"    BtnTopTexture="./Localization/en_us/UI/Texture/icon.gwo" BtnTopPos="982,982" BtnTopRect="3,3,39,39"/>
-    <Drop3 Type="Button" ID="100004" Rectangle="163,77,205,119" Texture="./Localization/en_us/UI/Texture/main.gwo" TexturePos="0,540"   BtnTopTexture="./Localization/en_us/UI/Texture/icon.gwo" BtnTopPos="982,982" BtnTopRect="3,3,39,39"/>
+    <Drop0 Type="Button" ID="100001" Rectangle="19,77,61,119" Texture="./Localization/en_us/UI/Texture/main.gwo" TexturePos="0,540"   BtnTopTexture="./Localization/en_us/UI/Texture/icon.gwo" BtnTopPos="982,982" BtnTopRect="3,3,39,39" Font="MainMap" FontColor="DEFAULT_TEXTCOLOR" TextFormat="10" Text="1"/>
+    <Drop1 Type="Button" ID="100002" Rectangle="67,77,109,119" Texture="./Localization/en_us/UI/Texture/main.gwo" TexturePos="0,540"   BtnTopTexture="./Localization/en_us/UI/Texture/icon.gwo" BtnTopPos="982,982" BtnTopRect="3,3,39,39" Font="MainMap" FontColor="DEFAULT_TEXTCOLOR" TextFormat="10"/>
+    <Drop2 Type="Button" ID="100003" Rectangle="115,77,157,119" Texture="./Localization/en_us/UI/Texture/main.gwo" TexturePos="0,540"    BtnTopTexture="./Localization/en_us/UI/Texture/icon.gwo" BtnTopPos="982,982" BtnTopRect="3,3,39,39" Font="MainMap" FontColor="DEFAULT_TEXTCOLOR" TextFormat="10"/>
+    <Drop3 Type="Button" ID="100004" Rectangle="163,77,205,119" Texture="./Localization/en_us/UI/Texture/main.gwo" TexturePos="0,540"   BtnTopTexture="./Localization/en_us/UI/Texture/icon.gwo" BtnTopPos="982,982" BtnTopRect="3,3,39,39" Font="MainMap" FontColor="DEFAULT_TEXTCOLOR" TextFormat="10"/>
    
-    <Drop4 Type="Button" ID="100005" Rectangle="19,127,62,169" Texture="./Localization/en_us/UI/Texture/main.gwo" TexturePos="0,540" BtnTopTexture="./Localization/en_us/UI/Texture/icon.gwo" BtnTopPos="982,982" BtnTopRect="3,3,39,39"/>
-    <Drop5 Type="Button" ID="100006" Rectangle="67,127,109,169" Texture="./Localization/en_us/UI/Texture/main.gwo" TexturePos="0,540" BtnTopTexture="./Localization/en_us/UI/Texture/icon.gwo" BtnTopPos="982,982" BtnTopRect="3,3,39,39"/>
-    <Drop6 Type="Button" ID="100007" Rectangle="115,127,157,169" Texture="./Localization/en_us/UI/Texture/main.gwo" TexturePos="0,540" Text="" BtnTopTexture="./Localization/en_us/UI/Texture/icon.gwo" BtnTopPos="982,982" BtnTopRect="3,3,39,39"/>
-    <Drop7 Type="Button" ID="100008" Rectangle="163,127,205,169" Texture="./Localization/en_us/UI/Texture/main.gwo" TexturePos="0,540" BtnTopTexture="./Localization/en_us/UI/Texture/icon.gwo" BtnTopPos="982,982" BtnTopRect="3,3,39,39"/>
+    <Drop4 Type="Button" ID="100005" Rectangle="19,127,62,169" Texture="./Localization/en_us/UI/Texture/main.gwo" TexturePos="0,540" BtnTopTexture="./Localization/en_us/UI/Texture/icon.gwo" BtnTopPos="982,982" BtnTopRect="3,3,39,39" Font="MainMap" FontColor="DEFAULT_TEXTCOLOR" TextFormat="10"/>
+    <Drop5 Type="Button" ID="100006" Rectangle="67,127,109,169" Texture="./Localization/en_us/UI/Texture/main.gwo" TexturePos="0,540" BtnTopTexture="./Localization/en_us/UI/Texture/icon.gwo" BtnTopPos="982,982" BtnTopRect="3,3,39,39" Font="MainMap" FontColor="DEFAULT_TEXTCOLOR" TextFormat="10"/>
+    <Drop6 Type="Button" ID="100007" Rectangle="115,127,157,169" Texture="./Localization/en_us/UI/Texture/main.gwo" TexturePos="0,540" Text="" BtnTopTexture="./Localization/en_us/UI/Texture/icon.gwo" BtnTopPos="982,982" BtnTopRect="3,3,39,39" Font="MainMap" FontColor="DEFAULT_TEXTCOLOR" TextFormat="10"/>
+    <Drop7 Type="Button" ID="100008" Rectangle="163,127,205,169" Texture="./Localization/en_us/UI/Texture/main.gwo" TexturePos="0,540" BtnTopTexture="./Localization/en_us/UI/Texture/icon.gwo" BtnTopPos="982,982" BtnTopRect="3,3,39,39" Font="MainMap" FontColor="DEFAULT_TEXTCOLOR" TextFormat="10"/>
     
 
   
