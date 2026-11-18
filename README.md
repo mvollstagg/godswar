@@ -15,6 +15,7 @@ src/
 docker/postgres/init/               PostgreSQL 17 schemas & seed SQL (01-03)
 GW 2.0/Server Files (Compiled)/gameserver/
                                     Game data files (Drop/, Item/, Obstacle/, Scene/, Script/, Skill/)
+Client/                             1.0.282 US game client (Windows, run Client/play.cmd)
 compose.dotnet.yaml                 PostgreSQL 17 + LoginServer + GameServer Docker stack
 compose.postgres.yaml               Standalone PostgreSQL 17 container for local IDE debugging
 ```
@@ -44,19 +45,10 @@ docker compose -f compose.dotnet.yaml ps
 docker compose -f compose.dotnet.yaml exec postgres psql -U godswar -d godswar -c "SELECT COUNT(*) FROM godswar.character_base;"
 ```
 
-### 2. Connect with the 1.0.282 Client
-1. In your 1.0.282 client's `config.ini`, set:
-   ```ini
-   [SERVER]
-   PORT=5999
-   IP=127.0.0.1
-
-   [SYSTEM]
-   Region=11
-   ISFB=0
-   ```
-2. Launch `GodsWar.exe` directly (**do not** run `Launch.exe` or `Patcher.exe`, which overwrite `config.ini` with defunct retail/Facebook settings).
-3. Default test account: **`test` / `test`** (auto-creation of new accounts is enabled by default via `LoginServer__AutoCreateAccount=true`).
+### 2. Connect with the Included 1.0.282 Client
+Run `Client/play.cmd` (it launches `Client/GodsWar.exe` directly — **do not** run `Launch.exe` or `Patcher.exe`, which overwrite `Client/config.ini` with defunct retail/Facebook settings).
+- Default test account: **`test` / `test`** (auto-creation of new accounts is enabled by default via `LoginServer__AutoCreateAccount=true`).
+- Preconfigured `Client/config.ini`: `IP=127.0.0.1`, `PORT=5999`, `Region=11`, `ISFB=0`.
 
 For **LAN play**, set `ADVERTISE_IP=<your-lan-ip>` when starting Compose and point `config.ini` on other PCs to that IP:
 ```bash

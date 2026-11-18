@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="GB2312"?>
+<!--this is EquipEffectSuit config-->
+<EquipEffectSuit>
+    <MaxHPD Type="1" Number="5" EffValue="10000"/>
+    <MaxMPD Type="2" Number="10" EffValue="500"/>
+    <Defence Type="5" Number="20" EffValue="800"/>
+    <MagicRec Type="6" Number="40" EffValue="600"/>
+    <Hit Type="7" Number="60" EffValue="150"/>
+    <Miss Type="8" Number="80" EffValue="120"/>
+    <InjureImbibe Type="9" Number="100" EffValue="500"/>
+    <Attack Type="3" Number="120" EffValue="1000"/>
+    <MagicAk Type="4" Number="120" EffValue="900"/>
+</EquipEffectSuit>
